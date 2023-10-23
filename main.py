@@ -1,17 +1,19 @@
 from flask import Flask, render_template
-
+import json
 app = Flask(__name__)
+database_name='data/punti.json'
+parametri=['Nome','Cognome','Email','Punti']
+with open(database_name, 'r') as file:
+    studenti = json.load(file)
+print(studenti)
 
-# Lista di studenti con nomi e punteggi
-students = [
-    {"name": "Alice", "score": 90},
-    {"name": "Bob", "score": 85},
-    {"name": "Charlie", "score": 78},
-]
 
-@app.route('/')
+
+
+
+@app.route('/main')
 def student_list():
-    return render_template('index.html', students=students)
+    return render_template("index.html", students=studenti)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()

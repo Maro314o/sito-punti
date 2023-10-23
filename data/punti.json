@@ -1,0 +1,14 @@
+[
+    {
+        "Nome": "buzo",
+        "Cognome": "buzotto",
+        "Email": "buzobuzotto@gmail.com",
+        "Punti": "69"
+    },
+    {
+        "Nome": "notbuzo",
+        "Cognome": "notbuzotto",
+        "Email": "notbuzonotbuzotto@gmai.com",
+        "Punti": "-69"
+    }
+]

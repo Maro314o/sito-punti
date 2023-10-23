@@ -8,12 +8,17 @@
     <table>
         <tr>
             <th>Nome</th>
+            <th>Cognome</th>
+            <th>Email</th>
             <th>Punteggio</th>
+
         </tr>
         {% for student in students %}
         <tr>
-            <td>{{ student.name }}</td>
-            <td>{{ student.score }}</td>
+            <td>{{ student.Nome }}</td>
+            <td>{{ student.Cognome }}</td>
+            <td>{{ student.Email }}</td>
+            <td>{{ student.Punteggio }}</td>
         </tr>
         {% endfor %}
     </table>
