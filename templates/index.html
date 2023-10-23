@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Elenco Studenti</title>
+</head>
+<body>
+    <h1>Elenco degli Studenti</h1>
+    <table>
+        <tr>
+            <th>Nome</th>
+            <th>Punteggio</th>
+        </tr>
+        {% for student in students %}
+        <tr>
+            <td>{{ student.name }}</td>
+            <td>{{ student.score }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
