@@ -10,15 +10,15 @@
             <th>Nome</th>
             <th>Cognome</th>
             <th>Email</th>
-            <th>Punteggio</th>
+            <th>Punti</th>
 
         </tr>
         {% for student in students %}
-        <tr>
+        <tr bgcolor="lightgray" align="center">
             <td>{{ student.Nome }}</td>
             <td>{{ student.Cognome }}</td>
             <td>{{ student.Email }}</td>
-            <td>{{ student.Punteggio }}</td>
+            <td>{{ student.Punti }}</td>
         </tr>
         {% endfor %}
     </table>

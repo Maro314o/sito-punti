@@ -11,7 +11,7 @@ print(studenti)
 
 
 
-@app.route('/main')
+@app.route('/')
 def student_list():
     return render_template("index.html", students=studenti)
 
