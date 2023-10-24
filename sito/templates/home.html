@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.min.css">
+    <link rel="stylesheet" href="{{ url_for('static',
+                filename='css/style.css')}}">
+    <title>Classifica Scuola da Aggiornare</title>
+    <link rel="shortcut icon" type="image/x-icon" href="images/logo.png">
+</head>
+
+<body>
+
+    <nav>
+        <div class="nav-logo">
+            <a href="#">
+                <img src="{{ url_for('static',
+                filename='images/logo.png')}}">
+            </a>
+        </div>
+
+        <ul class="nav-links">
+            <li class="link"><a href="#">Info</a></li>
+            <li id="link2" class="link"><a href="#">Classi</a></li>
+        </ul>
+        <li id="link3" class="link"><a href="/login">Accedi</a></li>
+    </nav>
+
+    <header class="container">
+        <div class="content">
+            <span class="blur"></span>
+            <span class="blur"></span>
+            <h4>LEADERBOARD DELLE CLASSI J.M KEYNES</h4>
+            <H1>Ciao, Sono una Leaderboard avanzata che ti permettera di poter inserire una lista di persone a cui poter assegnare dei punteggi</H1>
+            <button class="btn">Scopri le classi</button>
+        </div>
+        <div class="image">
+            <img src={{ url_for('static',
+            filename='images/header.webp')}}>
+        </div>
+    </header>
+
+    <footer class="container">
+        <span class="blur"></span>
+        <span class="blur"></span>
+        <div class="column">
+            <div class="logo">
+                <img src={{ url_for('static',
+                filename='images/logo.png')}}>
+            </div>
+            <p>
+                Istituto Statale Istruzione Superiore Keynes Gazzada Schianno.
+            </p>
+            <div class="socials">
+                <a href="https://www.google.it/maps/place/Via+Morazzone,+37,+21045+Gazzada+Schianno+VA/@45.7742747,8.8261295,17z/data=!3m1!4b1!4m6!3m5!1s0x47868742dda7ac21:0x4ff75c6a8d710b85!8m2!3d45.774271!4d8.8287044!16s%2Fg%2F11cpnt3l7w?entry=ttu"><i class="ri-gps-line"></i></a>
+                <a href="mailto: vais01800p@istruzione.it"><i class="ri-mail-send-line"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <div class="copyright">
+        Copyright © 2023 J.M Keynes. All Rights Reserved.
+    </div>
+
+
+    <script src="{{ url_for('static',
+    filename='js/script.js')}}"></script>
+</body>
+
+</html>

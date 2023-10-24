@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+    <html lang="it">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Classifica Scuola da Aggiornare</title>
+        <link href="https://fonts.googleapis.com/css2?family=Muli:wght@400;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="{{ url_for('static',
+                    filename='css/style-with-prefix.css')}}">
+        <link rel="shortcut icon" type="image/x-icon" href="images/logo.png">
+        <style>
+            .srouce{
+                text-align: center;
+                color: #ffffff;
+                padding: 10px;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="main-container">
+            <div class="form-container">
+                <div class="form-body">
+                    <h2 class="title">Accedi</h2>
+                    <div class="social-login">
+                    <form method="POST" class="the-form">
+                        <label for="email">Email</label>
+                        <input type="email" name="email" id="email" placeholder="Inserisci la tua e-mail">
+                        <label for="password">Password</label>
+                        <input type="password" name="password" id="password" placeholder="Inserisci la tua password">
+                        <input type="submit" value="Accedi">
+                    </form>
+
+                <div class="form-footer">
+                    <div>
+                        <span>Non hai un account?</span> <a href="">Iscriviti</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </body>
+    </html>
+</form>
