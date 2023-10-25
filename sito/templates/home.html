@@ -23,9 +23,14 @@
 
         <ul class="nav-links">
             <li class="link"><a href="#">Info</a></li>
-            <li id="link2" class="link"><a href="#">Classi</a></li>
+            {% if user.is_authenticated %}
+            <li id="link2" class="link"><a href="/classe">Classi</a></li>
+            <a class="nav-item nav-link" id="logout" href="/logout">Esci dall'account</a>
+            {%else %}
+            <li id="link3" class="link"><a href="/login">Accedi</a></li>
+            {% endif %}
         </ul>
-        <li id="link3" class="link"><a href="/login">Accedi</a></li>
+
     </nav>
 
     <header class="container">
@@ -37,8 +42,7 @@
             <button class="btn">Scopri le classi</button>
         </div>
         <div class="image">
-            <img src={{ url_for('static',
-            filename='images/header.webp')}}>
+            <img src="{{ url_for('static',filename='images/header.webp')}}">
         </div>
     </header>
 
@@ -47,8 +51,8 @@
         <span class="blur"></span>
         <div class="column">
             <div class="logo">
-                <img src={{ url_for('static',
-                filename='images/logo.png')}}>
+                <img src="{{ url_for('static',
+                filename='images/logo.png')}}">
             </div>
             <p>
                 Istituto Statale Istruzione Superiore Keynes Gazzada Schianno.

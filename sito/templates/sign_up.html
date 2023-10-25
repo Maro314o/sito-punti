@@ -9,7 +9,8 @@
         <link rel="stylesheet" href="{{ url_for('static',
                     filename='css/style-with-prefix.css')}}">
         <link rel="shortcut icon" type="image/x-icon" href="images/logo.png">
-        <style>
+
+            <style>
             .srouce{
                 text-align: center;
                 color: #ffffff;
@@ -17,7 +18,7 @@
             }
         </style>
 </head>
-<body>
+    <body>
 
         <div class="main-container">
             <div class="form-container">
@@ -40,6 +41,14 @@
 
 
                     </form>
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                            {% if category =='error' %}
+                                {{messages}}                <!--qui-->
+                            {% else %}
+                                {{messages}}                <!--qui-->
+                        {% endif %} {% endfor %} {% endif %} {% endwith %}
 
                 <div class="form-footer">
                     <div>
@@ -48,8 +57,7 @@
                 </div>
             </div>
         </div>
-
-</body>
+    </body>
 </html>
 
 
