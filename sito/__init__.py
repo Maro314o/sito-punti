@@ -21,7 +21,7 @@ def crea_app():
     app.register_blueprint(pagine_sito, url_prefix='/')
     app.register_blueprint(autenticazione, url_prefix='/')
 
-    from .modelli import User
+    from .modelli import User,Classi
     with app.app_context():
         db.create_all()
         print('database creato')

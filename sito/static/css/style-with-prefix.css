@@ -190,7 +190,7 @@ li.fb a::before {
 
 .the-form [type="email"]:hover,
 .the-form [type="password"]:hover,
- .the-form [type="text"]:hover{
+.the-form [type="text"]:hover{
   background: rgba(0, 0, 0, 0.1);
 }
 
