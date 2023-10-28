@@ -2,4 +2,4 @@ Flask==3.0.0
 Flask_Login==0.6.2
 flask_sqlalchemy==3.1.1
 SQLAlchemy==2.0.22
-Werkzeug==2.2.2
+
