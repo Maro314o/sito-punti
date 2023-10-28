@@ -235,3 +235,42 @@ li.fb a::before {
 .form-footer div a {
   color: #00a018;
 }
+ select {
+         padding: 15px;
+          font-size: 16px;
+          background: rgba(0, 0, 0, 0.2);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 3px;
+          margin-bottom: 15px;
+          transition: background .3s;
+          color: #000000;
+
+ }
+ .alert {
+  padding: 20px;
+  background-color: #f44336; /* Red */
+  color: white;
+  margin-bottom: 15px;
+}
+.good-alert {
+  padding: 20px;
+  background-color: #77B788; /* green */
+  color: white;
+  margin-bottom: 15px;
+}
+/* The close button */
+.closebtn {
+  margin-left: 15px;
+  color: white;
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* When moving the mouse over the close button */
+.closebtn:hover {
+  color: black;
+}

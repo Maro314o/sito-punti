@@ -22,12 +22,13 @@
         </div>
 
         <ul class="nav-links">
-            <li class="link"><a href="#">Info</a></li>
+            <!--<a class="nav-item nav-link" id="regole" href="/regole">Regole</a>-->
             {% if user.is_authenticated %}
-            <li id="link2" class="link"><a href="/classe">Classi</a></li>
+
+            <a class="nav-item nav-link" id="classe" href="/classe">Classe</a>
             <a class="nav-item nav-link" id="logout" href="/logout">Esci dall'account</a>
             {%else %}
-            <li id="link3" class="link"><a href="/login">Accedi</a></li>
+            <a class="nav-item nav-link" id="login" href="/login">Login</a>
             {% endif %}
         </ul>
 

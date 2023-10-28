@@ -9,9 +9,8 @@ class User(db.Model,UserMixin):
     nome=db.Column(db.String(150))
     cognome =db.Column(db.String(150))
     password =db.Column(db.String(150))
-    classe_id=db.Column(db.String(150),db.ForeignKey('class.id'))
     punti=db.Column(db.Integer)
-
+    classe_id=db.Column(db.Integer,db.ForeignKey('classi.id'))
 class Classi(db.Model,UserMixin):
     id=db.Column(db.Integer,primary_key=True)
     classe=db.Column(db.String(150),unique=True)

@@ -4,7 +4,7 @@ from flask_login import LoginManager
 
 
 db=SQLAlchemy()
-
+lista_classi = ['2CI']
 DB_NAME='database.db'
 def crea_app():
 
@@ -28,6 +28,7 @@ def crea_app():
     login_manager = LoginManager()
     login_manager.login_view = 'autenticazione.login'
     login_manager.init_app(app)
+
 
     @login_manager.user_loader
     def load_user(id):

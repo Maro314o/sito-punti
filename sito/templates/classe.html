@@ -1,4 +1,56 @@
-{% extends "base.html" %} {% block titolo %}Classe {{classe}}{% endblock %}{%block contenuti_sito%}
-<a>this is the class page</a>
-{%endblock%}
+<!DOCTYPE html>
+<html lang="it">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Classe {{classe}}</title>
+    <link rel="stylesheet" href="{{ url_for('static',
+                filename='css/leaderboard-style.css')}}">
+</head>
+
+<body>
+
+    <main class="table">
+        <section class="table__header">
+
+            <h1>{{classe}}</h1>
+            <div class="input-group">
+                <input type="search" placeholder="Cerca Studenti...">
+                <img src="{{ url_for('static',
+                filename='images/search.png')}}">
+            </div>
+        </section>
+        <section class="table__body">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Posizione<span class="icon-arrow">&UpArrow;</span></th>
+                        <th>Nome<span class="icon-arrow">&UpArrow;</span></th>
+                        <th>Cognome<span class="icon-arrow">&UpArrow;</span></th>
+                        <th>Punti Totali<span class="icon-arrow">&UpArrow;</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                     {% for studente in studenti %}
+                        <tr>
+                            <td>{{loop.index}}</td>
+                            <td>{{ studente.nome }}</td>
+                            <td>{{ studente.cognome }}</td>
+                            <td>{{ studente.punti }}</td>
+
+
+                        </tr>
+
+                     {% endfor %}
+
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+</body>
+
+</html>
