@@ -8,6 +8,7 @@
     <title>Classe {{classe}}</title>
     <link rel="stylesheet" href="{{ url_for('static',
                 filename='css/leaderboard-style.css')}}">
+
 </head>
 
 <body>
@@ -15,31 +16,38 @@
     <main class="table">
         <section class="table__header">
 
-            <h1>{{classe}}</h1>
-            <div class="input-group">
-                <input type="search" placeholder="Cerca Studenti...">
-                <img src="{{ url_for('static',
-                filename='images/search.png')}}">
-            </div>
+            <h1>&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160 Classe {{classe}} </h1>
+
         </section>
         <section class="table__body">
             <table>
                 <thead>
                     <tr>
-                        <th>Posizione<span class="icon-arrow">&UpArrow;</span></th>
-                        <th>Nome<span class="icon-arrow">&UpArrow;</span></th>
-                        <th>Cognome<span class="icon-arrow">&UpArrow;</span></th>
-                        <th>Punti Totali<span class="icon-arrow">&UpArrow;</span></th>
+                        <th >Posizione</th>
+                        <th style="text-align:center">Nome</th>
+                        <th style="text-align:center">Cognome</th>
+                        <th style="text-align:center">Punti Totali</th>
                     </tr>
                 </thead>
                 <tbody>
 
                      {% for studente in studenti %}
                         <tr>
-                            <td>{{loop.index}}</td>
-                            <td>{{ studente.nome }}</td>
-                            <td>{{ studente.cognome }}</td>
-                            <td>{{ studente.punti }}</td>
+                            {% if loop.index==1 %}
+                                <td><img src="{{ url_for('static',
+                filename='images/primo.png')}}"></td>
+                            {% elif loop.index==2%}
+                                <td><img src="{{ url_for('static',
+                filename='images/secondo.png')}}"></td>
+                            {% elif loop.index==3%}
+                                <td><img src="{{ url_for('static',
+                filename='images/terzo.png')}}"></td>
+                            {% else %}
+                                <td>&#160&#160 {{loop.index}} </td>
+                            {%endif%}
+                            <td style="text-align:center">{{ studente.nome }}</td>
+                            <td style="text-align:center" >{{ studente.cognome }}</td>
+                            <td style="text-align:center" >{{ studente.punti }}</td>
 
 
                         </tr>

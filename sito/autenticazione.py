@@ -56,8 +56,8 @@ def sign_up():
         dati=request.form
 
         email = dati.get('email').lower()
-        nome = dati.get('nome')
-        cognome = dati.get('cognome')
+        nome = dati.get('nome').capitalize()
+        cognome = dati.get('cognome').capitalize()
         password = dati.get('password')
         password_di_conferma = dati.get('password_di_conferma')
         nome_classe=dati.get('classe')
