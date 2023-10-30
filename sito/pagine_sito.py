@@ -14,3 +14,6 @@ def classe():
     studenti=sorted(classe.studenti,key=lambda  studente: studente.punti)
 
     return render_template('classe.html',user=current_user,classe=classe.classe,studenti=classe.studenti)
+@pagine_sito.route('/regole')
+def regole():
+    return render_template('regole.html',user=current_user)

@@ -89,6 +89,7 @@ def sign_up():
             db.session.add(nuovo_utente)
             db.session.commit()
             flash('Account creato con successo!', category='success')
+            login_user(user, remember=True)
             return redirect((url_for('pagine_sito.classe')))
 
 

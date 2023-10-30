@@ -185,7 +185,7 @@ li.fb a::before {
 .the-form [type="email"]::placeholder,
 .the-form [type="password"]::placeholder,
 .the-form [type="text"] ::placeholder {
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(0, 0, 0, 0.3);
 }
 
 .the-form [type="email"]:hover,
@@ -197,7 +197,7 @@ li.fb a::before {
 .the-form [type="email"]:focus,
 .the-form [type="password"]:focus,
 .the-form [type="text"]:focus{
-  background: #000000;
+  background: #ffffff;
   box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
   border-color: #000000;
   color: #000000;
