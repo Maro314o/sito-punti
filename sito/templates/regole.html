@@ -1,12 +1,142 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-
-</head>
-<body>
-  <h1>pagina delle regole (WIP)</h1>
-
-</body>
+<html lang="it">
+    <head>
+        <meta charset="utf-8"
+        <meta name="viewport" content="width=device-width", initial-scale="1"/>
+        <title>Regole</title>
+        <link href="{{ url_for('static',
+        filename='css/regole-styles.css')}}" rel="stylesheet">
+    </head>
+    <body>
+        <nav>
+            <div class="nav-logo">
+                <a href="#">
+                    <img src="{{ url_for('static',
+                    filename='images/logo.png')}}">
+                </a>
+            </div>
+            <ul class="nav-links">
+                <a class="nav-item nav-link" id="home" href="/">Home</a>
+                <a class="nav-item nav-link" id="regole" href="/regole">Regole</a>
+                {% if user.is_authenticated %}
+    
+                <a class="nav-item nav-link" id="classe" href="/classe">Classe</a>
+                <a class="nav-item nav-link" id="logout" href="/logout">Esci dall'account</a>
+                {%else %}
+                <a class="nav-item nav-link" id="login" href="/login">Login</a>
+                {% endif %}
+            </ul>
+        </nav>
+        <header class="container">
+            <div class="content">
+                <span class="blur"></span>
+                <span class="blur"></span>
+            </div>
+        </header>
+        <header>
+            <div class="content_">
+                <h1>Sistema dei punti</h1>
+                <h3>È possibile guadagnare o perdere punti in diversi modi, alcuni sono:</h3>
+                <ul>
+                    <li>Verifiche (x3)</li>
+                    <li>Interrogazioni (x2)</li>
+                    <li>Project+ (x2)</li>
+                    <li>Project (x1)</li>
+                </ul>
+            </div>
+        </header>
+        <header>
+            <div class="content_">
+                <p>Queste metodologie includono anche valutazioni sul registro ed è solo possibile guadagnare punti grazie a esse.
+                        Il punteggio è calcolabile moltiplicando il voto ottenuto per il coefficiente presente a fianco ai metodi.</p>
+                <br/>
+            </div>
+        </header>
+        <header>
+            <div class="content_">
+                <h3>Gli altri metodi sono:</h3>
+                <ul>
+                    <li>Giochi (2)</li>
+                    <li>Compiti (1)</li>
+                    <li>Interventi (1/-1)</li>
+                    <li>Assenze (-1)</li>
+                    <li>Assenze strategiche (-2)</li>
+                    <li>Note disciplinari (-3)</li>
+                </ul>
+            </div>
+        </header>
+        <header>
+            <div class="content_">
+                <p>I giochi, che verranno descritti dopo, e i compiti portano un guadagno di punti.
+                    Al contrario, le assenze, strategiche e non, e le note disciplinari portano a una perdita di punti.
+                    Gli interventi invece possono portare a entrambe le cose, in base alla pertinenza degli stessi.
+                    Nelle parentesi è segnato il punteggio dato da ogni azione o attività.
+                </p>
+                <br>
+            </div>
+        </header>
+        <header>
+            <div class="content_">
+                <h3>I giochi sono i seguenti:</h3>
+                <ul>
+                    <li>Team Work</li>
+                    <li>Video Post</li>
+                    <li>Debate</li>
+                    <li>Black Mirror</li>
+                    <li>Catch the bug</li>
+                    <li>Multiverse</li>
+                </ul>
+            </div>
+        </header>
+        <header>
+            <div class="content_">
+                <p>Ogni gioco vale due punti. Team Work consiste nella realizzazione di un certo progetto attraverso il lavoro di gruppo, 
+                    Video Post invece nella produzione di un video, Debate è un gioco nel quale bisogna ingaggiare un discorso su un certo argomento,
+                    Black Mirror uno nel quale si deve produrre un mini episodio di serie tv ispirato all'omonimo show nel quale l'informatica ha preso il
+                    controllo dell'umanità o ne ha comunque reso instabile la società, Catch The Bug riguarda l'avvistamento di errori 
+                    messi a punto dal professore e infine Multiverse consiste nel riuscire a elencare un argomento fatto in informatica che
+                    sia stato proposto anche in un'altra materia, spiegando i motivi per cui si pensa che possa essere correlato.</p>
+            </div>
+        </header>
+        <header>
+            <div class="content_">
+                <h1>Squadre</h1>
+                <p>Ogni classe si divide in quattro gruppi, che gareggeranno in ogni season, alla fine della quale verranno proclamati
+                     i migliori alunni e la squadra migliore. La somma dei punti dei singoli componenti del gruppo ne determina il punteggio.
+                     Nella stagione finale per calcolare i punteggi verranno sommati quelli ottenuti nelle altre stagioni.</p>
+            </div>
+        </header>
+        <header>
+            <div class="image3">
+                <img src="{{url_for('static',filename='images/teamwork.png')}}"
+            </div>
+        </header>
+        <header>
+            <div class="image2">
+                <img src="{{url_for('static',filename='images/rules.png')}}"
+            </div>
+        </header>
+        <header>
+            <div class="image">
+                <img src="{{url_for('static',filename='images/tests.png')}}"
+            </div>
+        </header>
+        <footer class="container">
+            <span class="blur"></span>
+            <span class="blur"></span>
+            <div class="column">
+                <div class="logo">
+                    <img src="{{ url_for('static',
+                    filename='images/logo.png')}}">
+                </div>
+                <p>
+                    Istituto Statale Istruzione Superiore Keynes Gazzada Schianno.
+                </p>
+                <div class="socials">
+                    <a href="https://www.google.it/maps/place/Via+Morazzone,+37,+21045+Gazzada+Schianno+VA/@45.7742747,8.8261295,17z/data=!3m1!4b1!4m6!3m5!1s0x47868742dda7ac21:0x4ff75c6a8d710b85!8m2!3d45.774271!4d8.8287044!16s%2Fg%2F11cpnt3l7w?entry=ttu"><i class="ri-gps-line"></i></a>
+                    <a href="mailto: vais01800p@istruzione.it"><i class="ri-mail-send-line"></i></a>
+                </div>
+            </div>
+        </footer>
+    </body>
 </html>
