@@ -16,17 +16,23 @@
     <main class="table">
         <section class="table__header">
 
-            <h1>&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160 Classe {{classe}} </h1>
+            <h1 >Classe {{classe}} </h1>
 
         </section>
         <section class="table__body">
             <table>
+              <form method="POST" class="the-form">
                 <thead>
                     <tr>
                         <th >Posizione</th>
                         <th style="text-align:center">Nome</th>
                         <th style="text-align:center">Cognome</th>
                         <th style="text-align:center">Punti Totali</th>
+                        {% if user.admin_user==1%}
+                          <div class="social-login">       
+                            <th style="text-align:center">  <input type="submit" value="Conferma la modifica dei punti"></th>
+                          </div>
+                        {%endif%}
                     </tr>
                 </thead>
                 <tbody>
@@ -47,8 +53,13 @@
                             {%endif%}
                             <td style="text-align:center">{{ studente.nome }}</td>
                             <td style="text-align:center" >{{ studente.cognome }}</td>
-                            <td style="text-align:center" >{{ studente.punti }}</td>
+                            {%if user.admin_user==0%}
+                              <td style="text-align:center" >{{ studente.punti }}</td>
+                            {%else%}
 
+                                                         
+                                <td style="text-align:center"> <input type="text" name={{studente.email}} id={{studente.email}} placeholder={{studente.punti}}>
+                            {%endif%}
 
                         </tr>
 
@@ -56,6 +67,7 @@
 
                     </tr>
                 </tbody>
+              </form>
             </table>
         </section>
     </main>

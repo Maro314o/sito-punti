@@ -10,6 +10,7 @@ class User(db.Model,UserMixin):
     cognome =db.Column(db.String(150))
     password =db.Column(db.String(150))
     punti=db.Column(db.Integer)
+    admin_user=db.Column(db.Integer)
     classe_id=db.Column(db.Integer,db.ForeignKey('classi.id'))
 class Classi(db.Model,UserMixin):
     id=db.Column(db.Integer,primary_key=True)

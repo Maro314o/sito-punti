@@ -23,8 +23,11 @@
 
         <ul class="nav-links">
             <a class="nav-item nav-link" id="regole" href="/regole">Regole</a>
-            {% if user.is_authenticated %}
-
+            {% if user.is_authenticated and user.admin_user==1 %}
+            <a class="nav-item nav-link" id="admin_dashboard" href="/admin_dashboard">Admin Dashboard</a>
+            <a class="nav-item nav-link" id="crea_admin" href="/crea_admin">Aggiungi un nuovo admin</a>
+            <a class="nav-item nav-link" id="logout" href="/logout">Esci dall'account</a>
+            {% elif user and user.is_authenticated %}
             <a class="nav-item nav-link" id="classe" href="/classe">Classe</a>
             <a class="nav-item nav-link" id="logout" href="/logout">Esci dall'account</a>
             {%else %}
