@@ -11,6 +11,7 @@ def crea_app():
     app.config['SECRET_KEY']='Speppimawwosowwi'
     app.config['SQLALCHEMY_DATABASE_URI']=f'sqlite:///{DB_NAME}'
     app.config["SOLALCHEMY TRACK MODIFICATIONS"] = False
+
     db.init_app(app)
 
     from .pagine_sito import pagine_sito
@@ -22,7 +23,8 @@ def crea_app():
     from .modelli import User,Classi
     with app.app_context():
         db.create_all()
-        print('database creato')
+
+
     login_manager = LoginManager()
     login_manager.login_view = 'autenticazione.login'
     login_manager.init_app(app)

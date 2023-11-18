@@ -17,22 +17,23 @@
         <section class="table__header">
 
             <h1 >Classe {{classe}} </h1>
+            {% if user.admin_user==1%}
+             <form method="POST" class="the-form">
+              <div class="social-login">       
+                <h1 style="text-align:center">  <input type="submit" value="Conferma la modifica dei punti"></h1>
+            </div>
+          {%endif%}
 
-        </section>
-        <section class="table__body">
-            <table>
-              <form method="POST" class="the-form">
+      </section>
+      <section class="table__body">
+          <table>
+           
                 <thead>
                     <tr>
                         <th >Posizione</th>
                         <th style="text-align:center">Nome</th>
                         <th style="text-align:center">Cognome</th>
                         <th style="text-align:center">Punti Totali</th>
-                        {% if user.admin_user==1%}
-                          <div class="social-login">       
-                            <th style="text-align:center">  <input type="submit" value="Conferma la modifica dei punti"></th>
-                          </div>
-                        {%endif%}
                     </tr>
                 </thead>
                 <tbody>

@@ -1,6 +1,7 @@
 from flask import Blueprint,render_template,request,flash,redirect,url_for
 from .modelli import User,Classi
 from . import db
+from .pagine_sito import elenco_classi,elenco_di_tutte_le_classi,classe_da_nome,user_da_email,elenco_admin
 from werkzeug.security import generate_password_hash,check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
 autenticazione=Blueprint('autenticazione',__name__)
@@ -11,18 +12,15 @@ def campi_vuoti(dati):
             return True
     return False
 def crea_classe():
-           lista_classi=Classi.query.filter_by().all()
-           lista_classi=[x.classe for x in lista_classi]
-           lista_classi.remove('admin')
-           return lista_classi
-
+    return[classe.classe for classe in elenco_classi()]
 
 @autenticazione.route('/login',methods=['GET','POST'])
 def login():
-    if len(Classi.query.filter_by().all())==0:
+    print(elenco_di_tutte_le_classi())
+    if len(elenco_di_tutte_le_classi())==0:
         db.session.add(Classi(classe='admin'))
-        db.session.commit
-        nuovo_utente= User(email="s-admin.starter@isiskeynes.it", nome='admin',cognome="starter",password=generate_password_hash("highsecureadminpassword",method='sha256'),punti=0,admin_user=1,classe_id=Classi.query.filter_by(classe='admin').first().id)
+
+        nuovo_utente= User(email="s-admin.starter@isiskeynes.it", nome='admin',cognome="starter",password=generate_password_hash('highsecureadminpassword',method='sha256'),punti=0,admin_user=1,classe_id=classe_da_nome('admin').id)
         db.session.add(nuovo_utente)
         db.session.commit()
 
@@ -30,11 +28,11 @@ def login():
         email = request.form.get('email')
         password = request.form.get('password')
 
-        user = User.query.filter_by(email=email).first()
+        user = user_da_email(email)
         if not user:
-            flash('Email does not exist.', category='error')
+            flash("L'email non esiste", category='error')
         elif not check_password_hash(user.password, password):
-            flash('Incorrect password, try again.', category='error')
+            flash("La password non e' corretta", category='error')
         else:
 
             login_user(user, remember=True)
@@ -64,10 +62,10 @@ def sign_up():
         password_di_conferma = dati.get('password_di_conferma')
         nome_classe=dati.get('classe')
 
-        classe=Classi.query.filter_by(classe=nome_classe).first()
+        classe=classe_da_nome(nome_classe)
 
 
-        user = User.query.filter_by(email=email).first()
+        user =user_da_email(email) 
 
 
         if campi_vuoti(dati) is True:
@@ -105,8 +103,7 @@ def sign_up():
 @autenticazione.route("/crea_admin",methods=["GET","POST"])
 @login_required
 def crea_admin():
-    admin_user=current_user.admin_user
-    if admin_user==1:
+    if current_user.admin_user:
         if request.method=='POST':
 
             dati=request.form
@@ -117,10 +114,7 @@ def crea_admin():
             password = dati.get('password')
             password_di_conferma = dati.get('password_di_conferma')
 
-
-
-            user = User.query.filter_by(email=email).first()
-
+            user =user_da_email(email)
 
             if campi_vuoti(dati) is True:
                 flash('Devi compilare tutti i campi', category='error')
@@ -139,10 +133,10 @@ def crea_admin():
             else:
                 nuovo_utente= User(email=email, nome=nome,cognome=cognome,password=generate_password_hash(password,method='sha256'),punti=0,admin_user=1,classe_id=Classi.query.filter_by(classe='admin').first().id)
                 db.session.add(nuovo_utente)
+                admin_provvisiorio= user_da_email("s-admin.starter@isiskeynes.it") 
+                if admin_provvisorio and len(elenco_admin()) >1:
+                    admin_provvisiorio.delete()
                 db.session.commit()
-                if User.query.filter_by(email="s-admin.starter@isiskeynes.it") and len(User.query.filter_by(admin_user=1).all()) >1:
-                    User.query.filter_by(email="s-admin.starter@isiskeynes.it").delete()
-                    db.session.commit()
                 flash('Account creato con successo!', category='success')
                 login_user(nuovo_utente, remember=True)
                 return redirect((url_for('pagine_sito.home')))
