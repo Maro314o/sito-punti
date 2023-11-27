@@ -14,7 +14,7 @@
 <body>
     <nav>
         <div class="nav-logo">
-            <a href="#">
+            <a href="https://www.isiskeynes.edu.it">
                 <img src="{{ url_for('static',
                 filename='images/logo.png')}}">
             </a>
@@ -22,9 +22,12 @@
 
         <ul class="nav-links">
             <a class="nav-item nav-link" id="regole" href="/regole">Regole</a>
-            {% if user.is_authenticated %}
+            {% if user.is_authenticated and user.admin_user==1 %}
+            <a class="nav-item nav-link" id="admin_dashboard" href="/admin_dashboard">Admin Dashboard</a>
 
-            <a class="nav-item nav-link" id="classe" href="/classe">Classe</a>
+            <a class="nav-item nav-link" id="logout" href="/logout">Esci dall'account</a>
+            {% elif user and user.is_authenticated %}
+            <a class="nav-item nav-link" id="classe" href="/classe/{{classe_name}}">Classe</a>
             <a class="nav-item nav-link" id="logout" href="/logout">Esci dall'account</a>
             {%else %}
             <a class="nav-item nav-link" id="login" href="/login">Login</a>

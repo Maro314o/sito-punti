@@ -16,11 +16,18 @@
     <main class="table">
         <section class="table__header">
 
-            <h1>&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160 Classe {{classe}} </h1>
+            <h1 >Classe {{classe}} </h1>
+            {% if user.admin_user==1%}
+             <form method="POST" class="the-form">
+              <div class="social-login">       
+                <h1 style="text-align:center">  <input type="submit" value="Conferma la modifica dei punti"></h1>
+            </div>
+          {%endif%}
 
-        </section>
-        <section class="table__body">
-            <table>
+      </section>
+      <section class="table__body">
+          <table>
+           
                 <thead>
                     <tr>
                         <th >Posizione</th>
@@ -47,8 +54,13 @@
                             {%endif%}
                             <td style="text-align:center">{{ studente.nome }}</td>
                             <td style="text-align:center" >{{ studente.cognome }}</td>
-                            <td style="text-align:center" >{{ studente.punti }}</td>
+                            {%if user.admin_user==0%}
+                              <td style="text-align:center" >{{ studente.punti }}</td>
+                            {%else%}
 
+                                                         
+                                <td style="text-align:center"> <input type="text" name={{studente.email}} id={{studente.email}} placeholder={{studente.punti}}>
+                            {%endif%}
 
                         </tr>
 
@@ -56,6 +68,7 @@
 
                     </tr>
                 </tbody>
+              </form>
             </table>
         </section>
     </main>
