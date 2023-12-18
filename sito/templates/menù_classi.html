@@ -73,6 +73,9 @@
     padding: 10px 14px;
 
     }
+    .spazio {
+      margin-left: 25%; /* Aggiunge uno spazio di 20px a destra del bottone */
+    }
   </style>
 
 </head>
@@ -83,11 +86,25 @@
 <form method="POST" action="/classe/{{classe.classe}}"> 
   <div class="container">
     <button type='submit' class="button">
+     {% if loop.index%5==1%}
       <img src="{{ url_for('static',
-              filename='images/logo_classe.png')}}" alt="Cla1ca">
+              filename='images/logo_classe_4.png')}}" >
+      {%elif loop.index%5==2%}
+      <img src="{{ url_for('static',
+              filename='images/logo_classe_3.png')}}" >
 
-      <div class="centered">{{classe.classe}}</div>    
-      <h1>{{classe.classe}}</h1>
+     {% elif loop.index%5==3%}
+      <img src="{{ url_for('static',
+              filename='images/logo_classe_2.png')}}" >
+       {% elif loop.index%5==4%}
+      <img src="{{ url_for('static',
+              filename='images/logo_classe_1.png')}}" >
+      {%else%}
+      <img src="{{ url_for('static',
+
+              filename='images/logo_classe_5.png')}}" >
+      {%endif%}
+      <h1 style="color :black;">{{classe.classe}}</h1>
   </div>
 
 
@@ -103,6 +120,7 @@
         </div>
 
         <span class="logo_name">J.M Keynes</span>
+
     </div>
 
     <div class="menu-items">
@@ -115,7 +133,7 @@
                 <i class="uil uil-estate"></i>
                 <span class="link-name">Torna alla dashboard</span>
             </a></li>
-
+            <br>
 
                 
        <div id="popup-container">
@@ -131,7 +149,7 @@
     </div>
   </div>
 
-  <button onclick="openPopup()">Crea classe</button>
+  <button class="spazio" onclick="openPopup()">Crea classe</button>
     </a></li>
         </ul>
         

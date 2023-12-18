@@ -487,6 +487,8 @@ height :100%
   width: 215px; /* Regola la larghezza dell'immagine come preferisci */
   height: 215px; /* Regola l'altezza dell'immagine come preferisci */
   border-radius: 30px; /* Rendi l'immagine circolare */
+
+
 }
 
 .button:hover {
