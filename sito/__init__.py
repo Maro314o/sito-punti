@@ -4,8 +4,9 @@ from flask_login import LoginManager
 
 db=SQLAlchemy()
 DB_NAME='database.db'
-def crea_app():
 
+
+def crea_app():
     app = Flask(__name__)
     DB_NAME = 'database.db'
     app.config['SECRET_KEY']='Speppimawwosowwi'

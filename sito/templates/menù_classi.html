@@ -1,4 +1,180 @@
-<form method="POST" >
-  <input type="text" name="classe" id="classe" placeholder="Inserisci il nome della classe che vuoi modificare">
-  <input type="submit" value="Accedi">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static',
+                filename='css/menù_classi_styles.css')}}">
+  <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu' classi</title>
+ <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    #popup-container {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 1;
+    }
+    #popup {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    #close-btn {
+      float: right;
+      cursor: pointer;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-bottom: 8px;
+    }
+
+    input {
+      padding: 8px;
+      margin-bottom: 16px;
+    }
+
+    button {
+      padding: 10px;
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    boxe{
+    left: 0;
+    height: 100%;
+    width: 250px;
+    padding: 10px 14px;
+
+    }
+  </style>
+
+</head>
+<body>
+
+  <div class="button-list">
+{%for classe in classi%}
+<form method="POST" action="/classe/{{classe.classe}}"> 
+  <div class="container">
+    <button type='submit' class="button">
+      <img src="{{ url_for('static',
+              filename='images/logo_classe.png')}}" alt="Cla1ca">
+
+      <div class="centered">{{classe.classe}}</div>    
+      <h1>{{classe.classe}}</h1>
+  </div>
+
+
 </form>
+
+{%endfor%}
+
+<nav> 
+    <div class="logo-name">
+        <div class="logo-image">
+            <img src="{{ url_for('static',
+                filename='images/logo.png')}}" alt="">
+        </div>
+
+        <span class="logo_name">J.M Keynes</span>
+    </div>
+
+    <div class="menu-items">
+        <ul class="nav-links">
+            <li><a href="/">
+                <i class="uil uil-estate"></i>
+                <span class="link-name">Torna alla Home</span>
+            </a></li>
+            <li><a href="/admin_dashboard">
+                <i class="uil uil-estate"></i>
+                <span class="link-name">Torna alla dashboard</span>
+            </a></li>
+
+
+                
+       <div id="popup-container">
+    <div id="popup">
+      <span id="close-btn" onclick="closePopup()">&times;</span>
+      <h2>CREA CLASSE</h2>
+      <form method="POST">
+        <label for="name">Nome della classe</label>
+        <input type="text" id="classe" name="classe">
+
+        <button type="submit">Conferma</button>
+      </form>
+    </div>
+  </div>
+
+  <button onclick="openPopup()">Crea classe</button>
+    </a></li>
+        </ul>
+        
+        <ul class="logout-mode">
+            <li><a href="/logout">
+                <i class="uil uil-signout"></i>
+                <span class="link-name">Esci dall' Account</span>
+            </a></li>
+
+        </li>
+        </ul>
+    </div>
+</nav> 
+<div class='boxe'>
+</div>
+
+
+
+
+</div>
+
+ <script>
+    function openPopup() {
+      document.getElementById('popup-container').style.display = 'flex';
+    }
+    function closePopup() {
+      document.getElementById('popup-container').style.display = 'none';
+    }
+  </script>
+
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <title>Pop-up Form</title>
+ </head>
+<body>
+
+
+
+ 
+</body>
+</html>

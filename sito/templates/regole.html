@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="it">
     <head>
-        <meta charset="utf-8"
+        <meta charset="utf-8">
         <meta name="viewport" content="width=device-width", initial-scale="1"/>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.min.css">
         <title>Regole</title>
         <link href="{{ url_for('static',
         filename='css/regole-styles.css')}}" rel="stylesheet">
@@ -17,12 +18,11 @@
             </div>
             <ul class="nav-links">
               <a class="nav-item nav-link" id="home" href="/">Home</a>
-              <a class="nav-item nav-link" id="regole" href="/regole">Regole</a>
               {% if user.is_authenticated and user.admin_user==1 %}
               <a class="nav-item nav-link" id="admin_dashboard" href="/admin_dashboard">Admin Dashboard</a>
               <a class="nav-item nav-link" id="logout" href="/logout">Esci dall'account</a>
               {% elif user and user.is_authenticated %}
-              <a class="nav-item nav-link" id="classe" href="/classe">Classe</a>
+              <a class="nav-item nav-link" id="classe" href="/classe/{{classe_name}}">Classe</a>
               <a class="nav-item nav-link" id="logout" href="/logout">Esci dall'account</a>
               {%else %}
               <a class="nav-item nav-link" id="login" href="/login">Login</a>
@@ -112,17 +112,17 @@
         </header>
         <header>
             <div class="image3">
-                <img src="{{url_for('static',filename='images/teamwork.png')}}"
+                <img src="{{url_for('static',filename='images/teamwork.png')}}">
             </div>
         </header>
         <header>
             <div class="image2">
-                <img src="{{url_for('static',filename='images/rules.png')}}"
+                <img src="{{url_for('static',filename='images/rules.png')}}">
             </div>
         </header>
         <header>
             <div class="image">
-                <img src="{{url_for('static',filename='images/tests.png')}}"
+                <img src="{{url_for('static',filename='images/tests.png')}}">
             </div>
         </header>
         <footer class="container">
@@ -136,15 +136,16 @@
                 <p>
                     Istituto Statale Istruzione Superiore Keynes Gazzada Schianno.
                 </p>
-                   <div class="socials">
+                <div class="socials">
                     <a href="https://www.google.it/maps/place/Via+Morazzone,+37,+21045+Gazzada+Schianno+VA/@45.7742747,8.8261295,17z/data=!3m1!4b1!4m6!3m5!1s0x47868742dda7ac21:0x4ff75c6a8d710b85!8m2!3d45.774271!4d8.8287044!16s%2Fg%2F11cpnt3l7w?entry=ttu"><i class="ri-gps-line"></i></a>
                     <a href="mailto: vais01800p@istruzione.it"><i class="ri-mail-send-line"></i></a>
               </div>
+            </div>
         </footer>
 
     <div class="copyright">
         Copyright © 2023 J.M Keynes. All Rights Reserved.
     </div>
-        </footer>
+
     </body>
 </html>
