@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Classe {{classe}}</title>
+    <link rel="stylesheet" href="{{ url_for('static',
+                filename='css/leaderboard-style.css')}}">
+
+</head>
+
+<body>
+
+    <main class="table">
+        <section class="table__header">
+
+            <h1 >Classe {{classe}} </h1>
+            {% if user.admin_user==1%}
+             <form method="POST" class="the-form">
+              <div class="social-login">       
+                <h1 style="text-align:center">  <input type="submit" value="Conferma la modifica dei punti"></h1>
+            </div>
+          {%endif%}
+
+      </section>
+      <section class="table__body">
+          <table>
+           
+                <thead>
+                    <tr>
+                        <th >Posizione</th>
+                        <th style="text-align:center">Nome</th>
+                        <th style="text-align:center">Cognome</th>
+                        <th style="text-align:center">Punti Totali</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                     {% for studente in studenti %}
+                        <tr>
+                            {% if loop.index==1 %}
+                                <td><img src="{{ url_for('static',
+                filename='images/primo.png')}}"></td>
+                            {% elif loop.index==2%}
+                                <td><img src="{{ url_for('static',
+                filename='images/secondo.png')}}"></td>
+                            {% elif loop.index==3%}
+                                <td><img src="{{ url_for('static',
+                filename='images/terzo.png')}}"></td>
+                            {% else %}
+                                <td>&#160&#160 {{loop.index}} </td>
+                            {%endif%}
+                            <td style="text-align:center">{{ studente.nome }}</td>
+                            <td style="text-align:center" >{{ studente.cognome }}</td>
+                            {%if user.admin_user==0%}
+                              <td style="text-align:center" >{{ studente.punti }}</td>
+                            {%else%}
+
+                                                         
+                                <td style="text-align:center"> <input type="text" name={{studente.email}} id={{studente.email}} placeholder={{studente.punti}}>
+                            {%endif%}
+
+                        </tr>
+
+                     {% endfor %}
+
+                    </tr>
+                </tbody>
+              </form>
+            </table>
+        </section>
+    </main>
+</body>
+
+</html>

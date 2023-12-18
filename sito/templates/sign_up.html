@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+<html lang="it">
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Crea un account</title>
+        <link href="https://fonts.googleapis.com/css2?family=Muli:wght@400;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="{{ url_for('static',
+                    filename='css/style-with-prefix.css')}}">
+        <link rel="shortcut icon" type="image/x-icon" href="images/logo.png">
+        <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+        />
+
+            <style>
+            .srouce{
+                text-align: center;
+                color: #ffffff;
+                padding: 10px;
+            }
+        </style>
+</head>
+    <body>
+
+        <div class="main-container">
+            <div class="form-container">
+                <div class="form-body">
+                    <h2 class="title">Crea un account</h2>
+                    <div class="social-login">
+                    <form method="POST" class="the-form">
+                        <label for="email">Email</label>
+                        <input type="email" name="email" id="email" placeholder="Inserisci la tua e-mail">
+                        <label for="nome">Nome</label>
+                        <input type="text" name="nome" id="nome" placeholder="Inserisci il tuo nome">
+
+                        <label for="cognome">Cognome</label>
+
+                        <input type="text" name="cognome" id="cognome" placeholder="Inserisci il tuo cognome">
+                        <label for="Classe">Classe</label>
+
+                        <select name="classe" id="classe" >
+                                    <option disabled selected>Seleziona la tua classe</option>
+
+                                {% for classe in lista_classi %}
+
+                                    <option value="{{classe}}" >{{ classe }}</option>
+
+
+                                {% endfor %}
+
+
+                        </select>
+
+
+                        <label for="password">Password</label>
+                        <input type="password" name="password" id="password" placeholder="Inserisci la tua password">
+                        <label for="password">Conferma la password</label>
+                        <input type="password" name="password_di_conferma" id="password_di_conferma" placeholder="Inserisci nuovamente la password">
+
+                        <input type="submit" value="Registrati">
+                        </form>
+                        <br>
+
+
+
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                            {% if category =='error' %}
+
+                                <div class="alert">
+                                  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                                  {{messages[0][1]}}
+                                </div>
+
+
+
+                                               <!--qui-->
+                        {% endif %} {% endfor %} {% endif %} {% endwith %}
+
+                <div class="form-footer">
+                    <div>
+                        <span>Hai gia' un account?</span> <a href="/login">Accedi</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+
+
+
