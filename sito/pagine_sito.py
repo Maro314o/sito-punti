@@ -3,9 +3,17 @@ from . import db
 from flask_login import login_required, current_user
 from .modelli import User, Classi
 from werkzeug.security import generate_password_hash
+from werkzeug.utils import secure_filename
+from os import path,remove
+from .refactor import refactor_file
 
+from pathlib import Path
 pagine_sito = Blueprint('pagine_sito', __name__)
+ALLOWED_EXTENSIONS = set(['xlsx'])
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def user_da_email(email):
     return User.query.filter_by(email=email).first()
@@ -89,8 +97,7 @@ def admin_panel():
     if admin_user == 1:
         numero_degli_studenti = len(elenco_studenti())
         numero_delle_classi = len(elenco_classi())
-        return render_template('admin_panel.html', numero_studenti=numero_degli_studenti,
-                               numero_classi=numero_delle_classi, novità=elenco_utenti()[::-1][:7])
+        return render_template('admin_panel.html', numero_studenti=numero_degli_studenti,numero_classi=numero_delle_classi, novità=elenco_utenti()[::-1][:7])
 
 
 @pagine_sito.route("/classi", methods=["GET", "POST"])
@@ -101,15 +108,33 @@ def classi():
 
         if request.method == 'POST':
             dati = request.form
-            classe_name = dati.get('classe')
-            classe = classe_da_nome(classe_name)
-            print(classe_name)
-            if classe_name is None:
-                return redirect(url_for('pagine_sito.classe', classe_name=classe.classe))
-            else:
-                if classe_name not in [x.classe for x in elenco_di_tutte_le_classi()]:
-                    db.session.add(Classi(classe=classe_name))
-                    db.session.commit()
-                return redirect(url_for('pagine_sito.classi'))
+            if dati['bottone']=='raggiungi':
+               classe_name = dati.get('classe')
+               classe = classe_da_nome(classe_name)
+               return redirect(url_for('pagine_sito.classe', classe_name=classe.classe))
 
-        return render_template('menù_classi.html', classi=classi)
+            if dati['bottone']=='nuova':
+                    classe_name =dati.get('classe')
+                    if classe_name!='' and classe_name not in [x.classe for x in elenco_di_tutte_le_classi()]:
+                        db.session.add(Classi(classe=classe_name))
+                        db.session.commit()
+
+
+            if dati['bottone']=='datab':
+      
+                print(dati)
+                file=request.files['filen']
+                if allowed_file(file.filename):
+                    
+                    new_filename = 'foglio.xlsx'
+
+                    new_filename = 'foglio.xlsx'
+                    save_location = path.join(path.join(Path.cwd(),'instance'), new_filename)
+                    file.save(save_location)
+                    refactor_file()
+            if dati['bottone']=='ji':
+                refactor_file()
+            return redirect(url_for('pagine_sito.classi'))
+
+
+        return render_template('menu_classi.html', classi=classi)

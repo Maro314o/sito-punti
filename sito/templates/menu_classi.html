@@ -76,6 +76,7 @@
     .spazio {
       margin-left: 25%; /* Aggiunge uno spazio di 20px a destra del bottone */
     }
+
   </style>
 
 </head>
@@ -85,7 +86,7 @@
 {%for classe in classi%}
 <form method="POST" action="/classe/{{classe.classe}}"> 
   <div class="container">
-    <button type='submit' class="button">
+    <button type='submit' class="button" name='bottone' value="raggiungi">
      {% if loop.index%5==1%}
       <img src="{{ url_for('static',
               filename='images/logo_classe_4.png')}}" >
@@ -144,14 +145,37 @@
         <label for="name">Nome della classe</label>
         <input type="text" id="classe" name="classe">
 
-        <button type="submit">Conferma</button>
+        <button value='nuova' name='bottone' type="submit">Conferma</button>
       </form>
     </div>
   </div>
-
+  <li>
   <button class="spazio" onclick="openPopup()">Crea classe</button>
-    </a></li>
+ 
+<li><br></li>
+ </li>
+      <ul class="logout-mode">
+      </ul>
+<h3 >  Carica un database</h3>
+
+<li>
+<form method="POST" enctype="multipart/form-data">
+<label for="db" class="drop-container" id="dropcontainer"></label>
+  <input type="file" id="db" name='filen'>
+  <button name='bottone' value='datab' type="submit">Conferma i cambiamenti</button>
+
+</li></form>
+<form method="POST">
+  <button name='bottone' value='ji' type='submit'>jizz button</button>
+</form>
+
+
+
+
+
+
         </ul>
+
         
         <ul class="logout-mode">
             <li><a href="/logout">

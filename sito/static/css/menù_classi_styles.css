@@ -551,5 +551,18 @@ body {
     padding: 10px;
     border-radius: 3px;
     cursor: pointer;
+  }
+input[type=file]::file-selector-button {
+  margin-right: 20px;
+  border: none;
+  background: #4CAF50;
+  padding: 10px 20px;
+  border-radius: 10px;
+  color: #fff;
+  cursor: pointer;
+  transition: background .2s ease-in-out;
 }
 
+
+
+  

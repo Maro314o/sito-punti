@@ -1,7 +1,8 @@
 from flask import Flask
+import os
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-
+from pathlib import Path
 db=SQLAlchemy()
 DB_NAME='database.db'
 
@@ -10,8 +11,8 @@ def crea_app():
     app = Flask(__name__)
     DB_NAME = 'database.db'
     app.config['SECRET_KEY']='Speppimawwosowwi'
-    app.config['SQLALCHEMY_DATABASE_URI']=f'sqlite:///{DB_NAME}'
-    app.config["SOLALCHEMY TRACK MODIFICATIONS"] = False
+    app.config['SQLALCHEMY_DATABASE_URI']=f'sqlite:///{os.path.join(Path.cwd(),"instance",DB_NAME)}'
+    app.config["SOLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     db.init_app(app)
 

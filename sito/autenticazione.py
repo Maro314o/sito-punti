@@ -25,7 +25,7 @@ def login():
         db.session.add(Classi(classe='admin'))
         nuovo_utente = User(email="s-admin.starter@isiskeynes.it", nome='admin', cognome="starter",
                             password=generate_password_hash('highsecureadminpassword', method='sha256'), punti=0,
-                            admin_user=1, classe_id=classe_da_nome('admin').id)
+                            admin_user=1,account_attivo=1, classe_id=classe_da_nome('admin').id)
         db.session.add(nuovo_utente)
         db.session.commit()
     if request.method == 'POST':
@@ -59,8 +59,8 @@ def sign_up():
         dati = request.form
 
         email = dati.get('email').lower()
-        nome = dati.get('nome').capitalize()
-        cognome = dati.get('cognome').capitalize()
+        nome = dati.get('nome').lower()
+        cognome = dati.get('cognome').lower()
         password = dati.get('password')
         password_di_conferma = dati.get('password_di_conferma')
         nome_classe = dati.get('classe')
@@ -71,14 +71,18 @@ def sign_up():
 
         if campi_vuoti(dati) is True:
             flash('Devi compilare tutti i campi', category='error')
-        elif user:
-            flash('Esiste gia\' un account con questa email', category='error')
         elif '@isiskeynes.it' not in email:
             flash('Il dominio dell\' email é sbagliato', category='error')
         elif 's-' not in email:
             flash('hai dimenticato di mettere \'s-\' nell\' email', category='error')
-        elif email != f's-{cognome.lower()}.{nome.lower()}@isiskeynes.it':
+        elif email != f's-{cognome}.{nome}@isiskeynes.it':
             flash('L\'email non corrisponde con il nome e cognome', category='error')
+        elif not user:
+             flash("Non esiste uno studente con questa email")
+        elif user.account_attivo:
+            flash('Esiste gia\' un account con questa email', category='error')
+
+
         elif classe is None:
             flash('Seleziona una classe', category='error')
         elif len(password) < 5:
@@ -86,14 +90,12 @@ def sign_up():
         elif password != password_di_conferma:
             flash('La password di conferma non e\' corretta', category='error')
         else:
-            nuovo_utente = User(email=email, nome=nome, cognome=cognome,
-                                password=generate_password_hash(password, method='sha256'), punti=0, admin_user=0,
-                                classe_id=classe.id)
-            db.session.add(nuovo_utente)
+            user.account_attivo=1
+            user.password=generate_password_hash(password, method='sha256')
             db.session.commit()
 
             flash('Account creato con successo!', category='success')
-            login_user(nuovo_utente, remember=True)
+            login_user(user, remember=True)
             return redirect((url_for('pagine_sito.home')))
 
     return render_template("sign_up.html", user=current_user, lista_classi=lista_classi)
@@ -131,7 +133,7 @@ def crea_admin():
                 flash('La password di conferma non e\' corretta', category='error')
             else:
                 nuovo_utente = User(email=email, nome=nome, cognome=cognome,
-                                    password=generate_password_hash(password, method='sha256'), punti=0, admin_user=1,
+                                    password=generate_password_hash(password, method='sha256'), punti=0, admin_user=1,account_attivo=1,
                                     classe_id=Classi.query.filter_by(classe='admin').first().id)
                 db.session.add(nuovo_utente)
                 admin_provvisiorio = user_da_email("s-admin.starter@isiskeynes.it")
