@@ -9,7 +9,70 @@
     <link rel="stylesheet" href="{{ url_for('static',
                 filename='css/leaderboard-style.css')}}">
 
-</head>
+</head> <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    #popup-container {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 1;
+    }
+    #popup {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    #close-btn {
+      float: right;
+      cursor: pointer;
+    }
+
+    label {
+      margin-bottom: 8px;
+    }
+
+    input {
+      padding: 8px;
+      margin-bottom: 16px;
+    }
+
+    button {
+      padding: 10px;
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    boxe{
+    left: 0;
+    height: 100%;
+    width: 250px;
+    padding: 10px 14px;
+
+    }
+    .spazio {
+      margin-left: 25%; /* Aggiunge uno spazio di 20px a destra del bottone */
+    }
+
+  </style>
 
 <body>
 
@@ -17,12 +80,7 @@
         <section class="table__header">
 
             <h1 >Classe {{classe}} </h1>
-            {% if user.admin_user==1%}
-             <form method="POST" class="the-form">
-              <div class="social-login">       
-                <h1 style="text-align:center">  <input type="submit" value="Conferma la modifica dei punti"></h1>
-            </div>
-          {%endif%}
+         
 
       </section>
       <section class="table__body">
@@ -30,16 +88,39 @@
            
                 <thead>
                     <tr>
+                      {% if user.admin_user%}
+                      <th> Elimina</th>
+                      {% endif%}
                         <th >Posizione</th>
-                        <th style="text-align:center">Nome</th>
-                        <th style="text-align:center">Cognome</th>
-                        <th style="text-align:center">Punti Totali</th>
+                        <th style="text-align:center">Studente</th>
+                            <th style="text-align:center">Punti Totali</th>
                     </tr>
                 </thead>
                 <tbody>
 
                      {% for studente in studenti %}
                         <tr>
+                            {% if user.admin_user %}
+                            <div id="popup-container" class="popup-container-{{studente.id}}">
+    <div id="popup">
+      <span id="close-btn" onclick="closePopup('{{studente.id}}')">&times;</span>
+      <h2>SEI SICURO DI VOLER ELIMINARE L'UTENTE {{studente.nominativo}}&#63;<h2>
+      <form method="POST">
+
+        <br> 
+      <span style="      padding: 10px;
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;"onclick="closePopup('{{ studente.id }}')">No</span>
+      <button style="background-color: #FF0000;" value='{{studente.nominativo}}' name='elimina' type="submit">Elimina l'utente</button>
+      </form>
+    </div>
+  </div>
+    <td><button style="background-color:red;" class="spazio" onclick="openPopup('{{ studente.id }}')">Elimina utente</button></td>
+
+                            {%endif%}
                             {% if loop.index==1 %}
                                 <td><img src="{{ url_for('static',
                 filename='images/primo.png')}}"></td>
@@ -52,14 +133,13 @@
                             {% else %}
                                 <td>&#160&#160 {{loop.index}} </td>
                             {%endif%}
-                            <td style="text-align:center">{{ studente.nome }}</td>
-                            <td style="text-align:center" >{{ studente.cognome }}</td>
-                            {%if user.admin_user==0%}
+                            <td style="text-align:center">{{ studente.nominativo}}</td>
+                                  {%if user.admin_user==0%}
                               <td style="text-align:center" >{{ studente.punti }}</td>
                             {%else%}
 
-                                                         
-                                <td style="text-align:center"> <input type="text" name={{studente.email}} id={{studente.email}} placeholder={{studente.punti}}>
+                                                            <form method="POST" >
+                                <td style="text-align:center"> <input type="text" name="{{studente.nominativo}}" id="{{studente.nominativo}}" placeholder="{{studente.punti}}">      </form>
                             {%endif%}
 
                         </tr>
@@ -68,10 +148,19 @@
 
                     </tr>
                 </tbody>
-              </form>
+        
             </table>
         </section>
     </main>
+    <script>
+  function openPopup(studenteId) {
+    document.getElementsByClassName('popup-container-' + studenteId)[0].style.display = 'flex';
+  }
+
+  function closePopup(studenteId) {
+    document.getElementsByClassName('popup-container-' + studenteId)[0].style.display = 'none';
+  }
+</script>
 </body>
 
 </html>

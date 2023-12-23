@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from .modelli import User, Classi
 from . import db
-from .pagine_sito import elenco_classi, elenco_di_tutte_le_classi, classe_da_nome, user_da_email, elenco_admin
+from .pagine_sito import elenco_classi, elenco_di_tutte_le_classi, classe_da_nome, user_da_email, elenco_admin, \
+    user_da_nominativo
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
 
@@ -24,8 +25,10 @@ def login():
     if len(elenco_di_tutte_le_classi()) == 0:
         db.session.add(Classi(classe='admin'))
         nuovo_utente = User(email="s-admin.starter@isiskeynes.it", nome='admin', cognome="starter",
-                            password=generate_password_hash('highsecureadminpassword', method='sha256'), punti=0,
-                            admin_user=1,account_attivo=1, classe_id=classe_da_nome('admin').id)
+                            nominativo="starter admin",
+                            password=generate_password_hash('highsecureadminpassword', method='sha256'), punti='0',
+                            account_attivo=1,
+                            admin_user=1, classe_id=classe_da_nome('admin').id)
         db.session.add(nuovo_utente)
         db.session.commit()
     if request.method == 'POST':
@@ -59,15 +62,14 @@ def sign_up():
         dati = request.form
 
         email = dati.get('email').lower()
-        nome = dati.get('nome').lower()
-        cognome = dati.get('cognome').lower()
+        nome = dati.get('nome').capitalize()
+        cognome = dati.get('cognome').capitalize()
         password = dati.get('password')
         password_di_conferma = dati.get('password_di_conferma')
-        nome_classe = dati.get('classe')
 
-        classe = classe_da_nome(nome_classe)
+        nominativo = ' '.join([x.strip().capitalize() for x in f"{cognome} {nome}".strip().split()])
 
-        user = user_da_email(email)
+        user = user_da_nominativo(nominativo)
 
         if campi_vuoti(dati) is True:
             flash('Devi compilare tutti i campi', category='error')
@@ -75,23 +77,24 @@ def sign_up():
             flash('Il dominio dell\' email é sbagliato', category='error')
         elif 's-' not in email:
             flash('hai dimenticato di mettere \'s-\' nell\' email', category='error')
-        elif email != f's-{cognome}.{nome}@isiskeynes.it':
-            flash('L\'email non corrisponde con il nome e cognome', category='error')
         elif not user:
-             flash("Non esiste uno studente con questa email")
+            print(nominativo)
+            flash(
+                "Non esiste uno studente con questo nome e cognome, se ne hai piu' di uno inseriscili entrambi e "
+                "separali da uno spazio",
+                category="error")
         elif user.account_attivo:
-            flash('Esiste gia\' un account con questa email', category='error')
-
-
-        elif classe is None:
-            flash('Seleziona una classe', category='error')
+            flash('Esiste gia\' un account associato a questa persona', category='error')
         elif len(password) < 5:
             flash('La password deve essere almeno di 5 caratteri', category='error')
         elif password != password_di_conferma:
             flash('La password di conferma non e\' corretta', category='error')
         else:
-            user.account_attivo=1
-            user.password=generate_password_hash(password, method='sha256')
+            user.password = generate_password_hash(password, method='sha256')
+            user.nome = nome
+            user.cognome = cognome
+            user.email = email
+            user.account_attivo = 1
             db.session.commit()
 
             flash('Account creato con successo!', category='success')
@@ -114,6 +117,7 @@ def crea_admin():
             cognome = dati.get('cognome').capitalize()
             password = dati.get('password')
             password_di_conferma = dati.get('password_di_conferma')
+            nominativo = f"{cognome.lower()} {nome.lower()}"
 
             user = user_da_email(email)
 
@@ -132,13 +136,14 @@ def crea_admin():
             elif password != password_di_conferma:
                 flash('La password di conferma non e\' corretta', category='error')
             else:
-                nuovo_utente = User(email=email, nome=nome, cognome=cognome,
-                                    password=generate_password_hash(password, method='sha256'), punti=0, admin_user=1,account_attivo=1,
+                nuovo_utente = User(email=email, nome=nome, cognome=cognome, nominativo=nominativo,
+                                    password=generate_password_hash(password, method='sha256'), punti='0',
+                                    account_attivo=1, admin_user=1,
                                     classe_id=Classi.query.filter_by(classe='admin').first().id)
                 db.session.add(nuovo_utente)
-                admin_provvisiorio = user_da_email("s-admin.starter@isiskeynes.it")
+                admin_provvisorio = user_da_email("s-admin.starter@isiskeynes.it")
                 if admin_provvisorio and len(elenco_admin()) > 1:
-                    admin_provvisiorio.delete()
+                    db.session.delete(admin_provvisorio)
                 db.session.commit()
                 flash('Account creato con successo!', category='success')
                 login_user(nuovo_utente, remember=True)
