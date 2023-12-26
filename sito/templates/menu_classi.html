@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static',
+                filename='css/menù_classi_styles.css')}}">
+  <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu' classi</title>
+ <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    #popup-container {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 1;
+    }
+    #popup {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    #close-btn {
+      float: right;
+      cursor: pointer;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-bottom: 8px;
+    }
+
+    input {
+      padding: 8px;
+      margin-bottom: 16px;
+    }
+
+    button {
+      padding: 10px;
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    boxe{
+    left: 0;
+    height: 100%;
+    width: 250px;
+    padding: 10px 14px;
+
+    }
+    .spazio {
+      margin-left: 25%; /* Aggiunge uno spazio di 20px a destra del bottone */
+    }
+
+  </style>
+
+</head>
+<body>
+
+  <div class="button-list">
+{%for classe in classi%}
+<form method="POST" action="/classe/{{classe.classe}}"> 
+  <div class="container">
+    <button type='submit' class="button" name='bottone' value="raggiungi">
+     {% if loop.index%5==1%}
+      <img src="{{ url_for('static',
+              filename='images/logo_classe_4.png')}}" >
+      {%elif loop.index%5==2%}
+      <img src="{{ url_for('static',
+              filename='images/logo_classe_3.png')}}" >
+
+     {% elif loop.index%5==3%}
+      <img src="{{ url_for('static',
+              filename='images/logo_classe_2.png')}}" >
+       {% elif loop.index%5==4%}
+      <img src="{{ url_for('static',
+              filename='images/logo_classe_1.png')}}" >
+      {%else%}
+      <img src="{{ url_for('static',
+
+              filename='images/logo_classe_5.png')}}" >
+      {%endif%}
+      <h1 style="color :black;">{{classe.classe}}</h1>
+  </div>
+
+
+</form>
+
+{%endfor%}
+
+<nav> 
+    <div class="logo-name">
+        <div class="logo-image">
+            <img src="{{ url_for('static',
+                filename='images/logo.png')}}" alt="">
+        </div>
+
+        <span class="logo_name">J.M Keynes</span>
+
+    </div>
+
+    <div class="menu-items">
+        <ul class="nav-links">
+            <li><a href="/">
+                <i class="uil uil-estate"></i>
+                <span class="link-name">Torna alla Home</span>
+            </a></li>
+            <li><a href="/admin_dashboard">
+                <i class="uil uil-estate"></i>
+                <span class="link-name">Torna alla dashboard</span>
+            </a></li>            
+     
+            <br>
+
+                
+<br></li>
+ </li>
+      <ul class="logout-mode">
+      </ul>
+<h3 >  Carica un database</h3>
+
+<li>
+<form method="POST" enctype="multipart/form-data">
+<label for="db" class="drop-container" id="dropcontainer"></label>
+  <input type="file" id="db" name='filen'>
+  <button name='bottone' value='datab' type="submit">Conferma i cambiamenti</button>
+
+</li></form>
+
+
+            <br>
+       <li><a href="/db_errori">
+
+       
+                <button  style="background-color:red;">Errori nel dataset,clicca per vederli</button>
+            </a></li>
+
+
+
+
+
+        </ul>
+
+        
+        <ul class="logout-mode">
+            <li><a href="/logout">
+                <i class="uil uil-signout"></i>
+                <span class="link-name">Esci dall' Account</span>
+            </a></li>
+
+        </li>
+        </ul>
+    </div>
+</nav> 
+</div>
+
+
+
+
+</div>
+
+ <script>
+    function openPopup() {
+      document.getElementById('popup-container').style.display = 'flex';
+    }
+    function closePopup() {
+      document.getElementById('popup-container').style.display = 'none';
+    }
+  </script>
+
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <title>Pop-up Form</title>
+ </head>
+<body>
+
+
+
+ 
+</body>
+</html>
