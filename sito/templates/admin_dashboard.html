@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_dashboard.css')}}">
+    <title>Dashboard Admin</title>
+</head>
+
+<body>
+
+    <!-- Barra laterale -->
+    <div class="sidebar">
+        <a href="/admin_dashboard" class="logo">
+            <i class='bx bx-code-alt'></i>
+            <div class="logo-name"><span>ADMIN</span>MENU</div>
+        </a>
+        <ul class="side-menu">
+            <li class="active"><a href="#"><i class='bx bxs-dashboard'></i>Dashboard</a></li>
+            <li><a href="/classi"><i class='bx bx-show-alt'></i>Classi</a></li>
+            <li><a href="/crea_admin"><i class='bx bx-shield'></i>Crea admin</a></li>
+
+        </ul>
+        <ul class="side-menu">
+            <li>
+                <a href="/logout" class="logout">
+                    <i class='bx bx-log-out-circle'></i>
+                    Esci dall' account
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Contenuto Generale -->
+    <div class="content">
+        <!-- Barra alta per sidebar -->
+        <nav>
+            <i class='bx bx-menu'></i>
+            <form action="#">
+            </form>
+        </nav>
+
+        <main>
+            <div class="header">
+                <div class="left">
+                    <h1>Dashboard</h1>
+                    <ul class="breadcrumb">
+                        <li><a href="#">
+                                Admin Menu
+                            </a></li>
+                        /
+                        <li><a href="#" class="active">Dashboard</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 4 bottoni centrali -->
+            <ul class="insights">
+                <li>
+                    <i class='bx bx-user-pin'></i>
+                    <span class="info">
+                        <h3>
+                          {{numero_studenti}}
+                        </h3>
+                        <p>Alunni Totali</p>
+                    </span>
+                </li>
+                <li><i class='bx bx-show-alt'></i>
+                    <span class="info">
+                        <h3>
+                          {{numero_classi}} 
+                        </h3>
+                        <p>Classi Totali</p>
+                    </span>
+                </li>
+                <li><i class='bx bx-group'></i>
+                    <span class="info">
+                        <h3>
+                          {{numero_squadre}}
+                        </h3>
+                        <p>Squadre Totali</p>
+                    </span>
+                </li>
+                <li><i class='bx bx-shield'></i>
+                    <span class="info">
+                        <h3>
+                          {{numero_admin}}
+                        </h3>
+                        <p>Admins</p>
+                    </span>
+                </li>
+            </ul>
+            <!-- Quando un utente si iscrive -->
+            <div class="bottom-data">
+                <div class="orders">
+                    <div class="header">
+                        <i class='bx bx-receipt'></i>
+                        <h3>Ultime Novità</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Cognome</th>
+                                <th>E-Mail</th>
+                                <th>Punti Totali</th>
+                                <th>Squadra</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <img src="images/profile-1.png">
+                                    <p>Persona 1</p>
+                                </td>
+                                <td>Bth</td>
+                                <td>s-alunno1@isiskeynes.it</td>
+                                <td>2599</td>
+                                <td><span class="status completed">The Heaves</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img src="images/profile-1.png">
+                                    <p>Persona 2</p>
+                                </td>
+                                <td>Bth</td>
+                                <td>s-alunno2@isiskeynes.it</td>
+                                <td>1045</td>
+                                <td><span class="status pending">Hexabros</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img src="images/profile-1.png">
+                                    <p>Persona 3</p>
+                                </td>
+                                <td>Bth</td>
+                                <td>s-alunno3@isiskeynes.it</td>
+                                <td>68945</td>
+                                <td><span class="status process">Figli del Padre</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img src="images/profile-1.png">
+                                    <p>Persona 3</p>
+                                </td>
+                                <td>Bth</td>
+                                <td>s-alunno3@isiskeynes.it</td>
+                                <td>68945</td>
+                                <td><span class="status process">Figli del Padre</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img src="images/profile-1.png">
+                                    <p>Persona 3</p>
+                                </td>
+                                <td>Bth</td>
+                                <td>s-alunno3@isiskeynes.it</td>
+                                <td>68945</td>
+                                <td><span class="status process">Figli del Padre</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img src="images/profile-1.png">
+                                    <p>Persona 3</p>
+                                </td>
+                                <td>Bth</td>
+                                <td>s-alunno3@isiskeynes.it</td>
+                                <td>68945</td>
+                                <td><span class="status process">Figli del Padre</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='js/admin_dashboard.js')}}"></script>
+</body>
+
+</html>

@@ -1,84 +1,81 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.min.css">
+    <title>Home</title>
+    <!---link del css--->
     <link rel="stylesheet" href="{{ url_for('static',
-                filename='css/style.css')}}">
-    <title>Classifica Scuola da Aggiornare</title>
-    <link rel="shortcut icon" type="image/x-icon" href="images/logo.png">
+                filename='css/home.css')}}">
+    <!---link per i bottoni--->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!---link per le icone custom--->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet">
+    <!---import del font--->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
 </head>
-
 <body>
-    <nav>
-        <div class="nav-logo">
-            <a href="https://www.isiskeynes.edu.it">
-                <img src="{{ url_for('static',
-                filename='images/logo.png')}}">
-            </a>
-        </div>
-
-        <ul class="nav-links">
-            <a class="nav-item nav-link" id="regole" href="/regole">Regole</a>
-            {% if user.is_authenticated and user.admin_user==1 %}
-            <a class="nav-item nav-link" id="admin_dashboard" href="/admin_dashboard">Admin Dashboard</a>
+    <header>
+        <a href="https://www.isiskeynes.edu.it/" class="logo"><img src="{{ url_for('static',
+                filename='images/logo.png')}}" alt=""></a>
 
 
-            {% elif user and user.is_authenticated %}
-            <a class="nav-item nav-link" id="classe" href="/classe/{{classe_name}}">Classe</a>
-
-
-
-            {%else %}
-            <a class="nav-item nav-link" id="login" href="/login">Login</a>
-            {% endif %}
-                 {% if user.is_authenticated%}
-                  <a class="nav-item nav-link" id="logout" href="/logout">Esci dall'account</a>
-            {%endif%}
-        </ul>
-
-    </nav>
-
-    <header class="container">
-        <div class="content">
-            <span class="blur"></span>
-            <span class="blur"></span>
-            <h4>LEADERBOARD DELLE CLASSI J.M KEYNES</h4>
-            <H1>Ciao, Sono una Leaderboard avanzata che ti permettera di poter inserire una lista di persone a cui poter  assegnare  dei punteggi</H1>
-            <button class="btn">Scopri le classi</button>
-        </div>
-        <div class="image">
-            <img src="{{ url_for('static',filename='images/header.webp')}}">
-        </div>
+        <ul class="navbarra"> <!---barra navigazione (puoi cambiare anche i nomi)--->
+            <li><a href="/regole">Regole</a></li>
+          {% if user.is_authenticated%}
+          {%if user.admin_user%}
+            
+            <li><a href="/admin_dashboard">Admin Dashboard</a></li>
+          {% else%}
+          <li><a href="/classe/{{classe_name}}">Classe {{classe_name}}</a></li>
+          {%endif%}
+            <li><a href="/logout">Esci dall'account</a></li>
+          {%else%}
+            <li><a href="/login">Accedi</a></li>
+          {%endif%}
+              <div class="bx bx-menu" id="menu-icon"></div> <!---icona per il menu da smartphone--->
     </header>
 
-    <footer class="container">
-        <span class="blur"></span>
-        <span class="blur"></span>
-        <div class="column">
-            <div class="logo">
-                <img src="{{ url_for('static',
-                filename='images/logo.png')}}">
-            </div>
-            <p>
-                Istituto Statale Istruzione Superiore Keynes Gazzada Schianno.
-            </p>
-            <div class="socials">
-                <a href="https://www.google.it/maps/place/Via+Morazzone,+37,+21045+Gazzada+Schianno+VA/@45.7742747,8.8261295,17z/data=!3m1!4b1!4m6!3m5!1s0x47868742dda7ac21:0x4ff75c6a8d710b85!8m2!3d45.774271!4d8.8287044!16s%2Fg%2F11cpnt3l7w?entry=ttu"><i class="ri-gps-line"></i></a>
-                <a href="mailto: vais01800p@istruzione.it"><i class="ri-mail-send-line"></i></a>
-            </div>
+    <section class="sezione">
+        <div class="testo"> <!---testi sotto i bottoni--->
+            <h5>&nbspISIS J.M KEYNES</h5>
+            <h1>SITO PUNTI</h1>
+            <p>Guarda informazioni sui tuoi punti, quelli della tua squadra e quelli della classe, tutto alla portata di un Click!</p>
+            {%if user.is_authenticated%}
+            {%if user.admin_user%}
+            <a href="admin_dashboard">Admin Dashboard</a>
+            {%else%}  
+            <a href="/classe/{{classe_name}}">Classe {{classe_name}}</a>
+            {%endif%}
+            {%else%}
+            <a href="/login">Accedi</a>
+            {%endif%}
+            <a href="/regole" class="bottone"><i class="ri-play-fill"></i>Leggi il regolamento</a> <!---bottoni per il font--->
         </div>
-    </footer>
 
-    <div class="copyright">
-        Copyright © 2023 J.M Keynes. All Rights Reserved.
+        <div class="immagine"> <!---immagine vicino al testo--->
+            <img src="{{ url_for('static',
+                filename='images/immagine_home.png')}}">
+        </div>
+    </section>
+
+    <div class="icone"> <!---icone laterali--->
+        <a href=""><i class="ri-map-pin-line"></i></a>
+        <a href=""><i class="ri-mail-send-line"></i></a>
     </div>
 
-
-    <script src="{{ url_for('static',
-    filename='js/script.js')}}"></script>
+    <div class="scroll-down"> <!---icona scrolldown--->
+        <a href="/versioni"><i class=""></i></a>
+    </div>
+     <!---import del js--->
+        <script src="{{ url_for('static',
+                filename='js/home.js')}}"></script>
+        <script src="https://unpkg.com/scrollreveal"></script>   
 </body>
 
 </html>

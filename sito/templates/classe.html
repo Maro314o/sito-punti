@@ -1,166 +1,60 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Classe {{classe}}</title>
-    <link rel="stylesheet" href="{{ url_for('static',
-                filename='css/leaderboard-style.css')}}">
-
-</head> <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-
-    #popup-container {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      justify-content: center;
-      align-items: center;
-      z-index: 1;
-    }
-    #popup {
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 5px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    }
-    #close-btn {
-      float: right;
-      cursor: pointer;
-    }
-
-    label {
-      margin-bottom: 8px;
-    }
-
-    input {
-      padding: 8px;
-      margin-bottom: 16px;
-    }
-
-    button {
-      padding: 10px;
-      background-color: #4caf50;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    boxe{
-    left: 0;
-    height: 100%;
-    width: 250px;
-    padding: 10px 14px;
-
-    }
-    .spazio {
-      margin-left: 25%; /* Aggiunge uno spazio di 20px a destra del bottone */
-    }
-
-  </style>
+    <title>Cockin Classifica</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',
+                filename='css/classe.css')}}">
+</head>
 
 <body>
-
-    <main class="table">
+    <main class="table" id="customers_table">
         <section class="table__header">
-
-            <h1 >Classe {{classe}} </h1>
-         
-
-      </section>
-      <section class="table__body">
-          <table>
-           
+            <h1>Classifica Classe</h1>
+            <div class="export__file">
+                <label for="export-file" class="export__file-btn" title="Season Menu"></label>
+                <input type="checkbox" id="export-file">
+                <div class="export__file-options">
+                    <label>Season Menu &nbsp; &#10140;</label>
+                    <label for="export-file" id="toPDF">Season 1 </label>
+                    <label for="export-file" id="toJSON">Season 2</label>
+                    <label for="export-file" id="toCSV">Add Season </label>
+                </div>
+            </div>
+        </section>
+        <section class="table__body">
+            <table>
                 <thead>
                     <tr>
-                      {% if user.admin_user%}
-                      <th> Elimina</th>
-                      {% endif%}
-                        <th >Posizione</th>
-                        <th style="text-align:center">Studente</th>
-                            <th style="text-align:center">Punti Totali</th>
+                        <th> ID</th>
+                        <th> Nome e Cognome </th>
+                        <th> E-Mail </th>
+                        <th> Punti Totali </th>
+                        <th> Squadra </th>
+                        <th> Punti Squadra </th>
                     </tr>
                 </thead>
                 <tbody>
-
-                     {% for studente in studenti %}
-                        <tr>
-                            {% if user.admin_user %}
-                            <div id="popup-container" class="popup-container-{{studente.id}}">
-    <div id="popup">
-      <span id="close-btn" onclick="closePopup('{{studente.id}}')">&times;</span>
-      <h2>SEI SICURO DI VOLER ELIMINARE L'UTENTE {{studente.nominativo}}&#63;<h2>
-      <form method="POST">
-
-        <br> 
-      <span style="      padding: 10px;
-      background-color: #4caf50;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;"onclick="closePopup('{{ studente.id }}')">No</span>
-      <button style="background-color: #FF0000;" value='{{studente.nominativo}}' name='elimina' type="submit">Elimina l'utente</button>
-      </form>
-    </div>
-  </div>
-    <td><button style="background-color:red;" class="spazio" onclick="openPopup('{{ studente.id }}')">Elimina utente</button></td>
-
-                            {%endif%}
-                            {% if loop.index==1 %}
-                                <td><img src="{{ url_for('static',
-                filename='images/primo.png')}}"></td>
-                            {% elif loop.index==2%}
-                                <td><img src="{{ url_for('static',
-                filename='images/secondo.png')}}"></td>
-                            {% elif loop.index==3%}
-                                <td><img src="{{ url_for('static',
-                filename='images/terzo.png')}}"></td>
-                            {% else %}
-                                <td>&#160&#160 {{loop.index}} </td>
-                            {%endif%}
-                            <td style="text-align:center">{{ studente.nominativo}}</td>
-                                  {%if user.admin_user==0%}
-                              <td style="text-align:center" >{{ studente.punti }}</td>
-                            {%else%}
-
-                                                            <form method="POST" >
-                                <td style="text-align:center"> <input type="text" name="{{studente.nominativo}}" id="{{studente.nominativo}}" placeholder="{{studente.punti}}">      </form>
-                            {%endif%}
-
-                        </tr>
-
-                     {% endfor %}
-
+                    <tr>
+                        <td> 1 </td>
+                        <td>Esempio</td>
+                        <td> s-esempio.alunn@isiskeynes.it </td>
+                        <td> 208 </td>
+                        <td>
+                            <p>Hexabros</p>
+                        </td>
+                        <td> <strong> 400 </strong></td>
                     </tr>
                 </tbody>
-        
             </table>
         </section>
     </main>
-    <script>
-  function openPopup(studenteId) {
-    document.getElementsByClassName('popup-container-' + studenteId)[0].style.display = 'flex';
-  }
+    <script src="{{ url_for('static',
+                filename='js/classe.js')}}"></script>
 
-  function closePopup(studenteId) {
-    document.getElementsByClassName('popup-container-' + studenteId)[0].style.display = 'none';
-  }
-</script>
 </body>
 
 </html>
