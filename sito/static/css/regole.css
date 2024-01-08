@@ -82,7 +82,8 @@ nav{
 .container{
     max-width: 1200px;
     margin: auto;
-    padding: 5rem 2rem;
+    padding-top: 2%;
+    padding-left: 2rem;
 }
 
 .blur{
@@ -91,60 +92,24 @@ nav{
     z-index: -100;
 }
 
-header{
-    position: relative;
-    padding-top: 2%;
-    display: grid;
-    grid-template-columns: repeat(2, 1.5fr);
-    align-items: center;
-    gap: 2rem;
+.content{
+    max-width: 750px; /* Imposta la larghezza massima desiderata */
+  overflow-wrap: break-word;
 }
 
-.content_ h1{
-    color: #000000;
-    margin-bottom: 1rem;
-    font-size: 3rem;
-    font-weight: 700;
-    line-height: 4rem;
-}
-
-.content_ h3{
-    color: #000000;
-    font-size: 1.5rem;
-    font-weight: 700;
-    line-height: 2rem;
-}
-
-.content_{
-    margin-left: 12rem;
-    margin-top: -6rem;
-    margin-bottom: 6rem;
-}
-
-p{
+.content p{
     color: #000000;
     font-style: italic;
     text-align: justify;
     font-size: large;
+    margin-bottom: 2rem;
 }
 
-.image-right{
-    float: right;
-    margin-left: 20px;
-}
-
-header .content h4{
-    margin-bottom: 1rem;
-    color: #ccc;
-    font-size: 1rem;
-    font-weight: 600;
-}
-
-header .content h1{
+.content h1{
     color: #000000;
-    margin-bottom: 1rem;
-    font-size: 3rem;
-    font-weight: 700;
+    margin-bottom: 5rem;
+    font-size: 5rem;
+    font-weight: 800;
     line-height: 4rem;
 }
 
@@ -153,44 +118,21 @@ header .content h1 span{
     -webkit-text-stroke: 1px #000000;
 }
 
-header .content p{
-    margin-bottom: 2rem;
-    color: #ccc;
+.content h3{
+    color: #000000;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 2rem;
+    margin-bottom: 0.8rem;
 }
 
-header .image{
-    max-width: 450px;
-    margin: auto;
-    position: absolute;
-    top: -1800px;
-    right: 110px;
+section{
+    margin-bottom: 0.8rem;
 }
 
 
-header .image2{
-    max-width: 600px;
-    margin: auto;
-    position: absolute;
-    top: -1250px;
-    right: 60px;
-} 
-
-header .image3{
-    max-width: 600px;
-    margin: auto;
-    position: absolute;
-    top: -700px;
-    right: 60px;
-} 
 
 
-section .header{
-    margin-bottom: 1rem;
-    color: #fff;
-    text-align: center;
-    font-size: 2.25rem;
-    font-weight: 600;
-}
 
 footer{
     position: relative;
