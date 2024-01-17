@@ -6,10 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-    <!---link del css--->
+    <!---link dello stylesheet di reset--->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css')}}">
-    <link rel="stylesheet" href="{{ url_for('static',
-                filename='css/home.css')}}">
+    <!---link del css--->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}" >
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css')}}">
     <!---link per i bottoni--->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <!---link per le icone custom--->
@@ -46,7 +47,7 @@
         <div class="testo"> <!---testi sotto i bottoni--->
             <h5>&nbspISIS J.M KEYNES</h5>
             <h1>SITO PUNTI</h1>
-            <p>Guarda informazioni sui tuoi punti, quelli della tua squadra e quelli della classe, tutto alla portata di un Click!</p>
+            <p>Guarda informazioni sui tuoi punti, quelli della tua squadra e quelli della classe, tutto alla portata di un click!</p>
             {%if user.is_authenticated%}
             {%if user.admin_user%}
             <a href="admin_dashboard">Admin Dashboard</a>

@@ -1,157 +1,140 @@
 <!DOCTYPE html>
 <html lang="it">
     <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width", initial-scale="1"/>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Regole</title>
+        <!---link dello stylesheet di reset--->
         <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css')}}">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.min.css">
-        <link href="{{ url_for('static',
-        filename='css/regole.css')}}" rel="stylesheet">
+        <!---link del css--->
+        <link href="{{ url_for('static', filename='css/main.css')}}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/regole.css')}}" rel="stylesheet">
+        <!---link per i bottoni--->
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        <!---link per le icone custom--->
+        <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet">
+        <!---import del font--->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
     </head>
     <body>
-        <nav>
-            <div class="nav-logo">
-                <a href="#">
-                    <img src="{{ url_for('static',
-                    filename='images/logo.png')}}">
-                </a>
-            </div>
-            <ul class="nav-links">
-              <a class="nav-item nav-link" id="home" href="/">Home</a>
-              {% if user.is_authenticated and user.admin_user==1 %}
-              <a class="nav-item nav-link" id="admin_dashboard" href="/admin_dashboard">Admin Dashboard</a>
-              <a class="nav-item nav-link" id="logout" href="/logout">Esci dall'account</a>
-              {% elif user and user.is_authenticated %}
-              <a class="nav-item nav-link" id="classe" href="/classe/{{classe_name}}">Classe</a>
-              <a class="nav-item nav-link" id="logout" href="/logout">Esci dall'account</a>
-              {%else %}
-              <a class="nav-item nav-link" id="login" href="/login">Login</a>
-              {% endif %}
+
+        <header>
+            <a href="https://www.isiskeynes.edu.it/" class="logo"><img src="{{ url_for('static',
+                filename='images/logo.png')}}" alt=""></a>
+
+
+        <ul class="navbarra"> <!---barra navigazione (puoi cambiare anche i nomi)--->
+            <li><a href="/">Home</a></li>
+          {% if user.is_authenticated%}
+          {%if user.admin_user%}
             
-        </ul>
-
-        </nav>
-        <header class="container">
-            <div class="content">
-                <span class="blur"></span>
-                <span class="blur"></span>
-            </div>
+            <li><a href="/admin_dashboard">Admin Dashboard</a></li>
+          {% else%}
+          <li><a href="/classe/{{classe_name}}">Classe {{classe_name}}</a></li>
+          {%endif%}
+            <li><a href="/logout">Esci dall'account</a></li>
+          {%else%}
+            <li><a href="/login">Accedi</a></li>
+          {%endif%}
+              <div class="bx bx-menu" id="menu-icon"></div> <!---icona per il menu da smartphone--->
         </header>
-
-
-
+    
+ 
         
         <main class="container">
 
-            <section class="content">
-                <h1>Sistema dei punti</h1>
-            </section>
-            
-            <section class="content">
-                <h3>È possibile guadagnare o perdere punti in diversi modi, alcuni sono:</h3>
-                <ul>
-                    <li>Verifiche (x3)</li>
-                    <li>Interrogazioni (x2)</li>
-                    <li>Project+ (x2)</li>
-                    <li>Project (x1)</li>
-                </ul>
-            </section>
+            <div>
+                <section class="content">
+                    <h2>SISTEMA<br>DEI PUNTI</h2>
+                </section>
+                
+                <section class="content">
+                    <h4>È possibile guadagnare o perdere punti in diversi modi, alcuni sono:</h4>
+                    <ul>
+                        <li>Verifiche (x3)</li>
+                        <li>Interrogazioni (x2)</li>
+                        <li>Project+ (x2)</li>
+                        <li>Project (x1)</li>
+                    </ul>
+                </section>
 
-            <section class="content">
-                <p>Queste metodologie includono anche valutazioni sul registro ed è solo possibile guadagnare punti grazie a esse.
-                        Il punteggio è calcolabile moltiplicando il voto ottenuto per il coefficiente presente a fianco ai metodi.</p>
-            </section>
-   
-            <section class="content">
-                <h3>Altri metodi</h3>
-                <ul>
-                    <li>Giochi (2)</li>
-                    <li>Compiti (1)</li>
-                    <li>Interventi (1/-1)</li>
-                    <li>Assenze (-1)</li>
-                    <li>Assenze strategiche (-2)</li>
-                    <li>Note disciplinari (-3)</li>
-                </ul>
-            </section>
-
-            <section class="content">
-                <p>I giochi, che verranno descritti dopo, e i compiti portano un guadagno di punti.
-                    Al contrario, le assenze, strategiche e non, e le note disciplinari portano a una perdita di punti.
-                    Gli interventi invece possono portare a entrambe le cose, in base alla pertinenza degli stessi.
-                    Nelle parentesi è segnato il punteggio dato da ogni azione o attività.
-                </p>
-            </section>
+                <section class="content">
+                    <p>Queste metodologie includono anche valutazioni sul registro ed è solo possibile guadagnare punti grazie a esse.
+                            Il punteggio è calcolabile moltiplicando il voto ottenuto per il coefficiente presente a fianco ai metodi.</p>
+                </section>
     
-            <section class="content">
-                <h3>Giochi</h3>
-                <ul>
-                    <li>Team Work</li>
-                    <li>Video Post</li>
-                    <li>Debate</li>
-                    <li>Black Mirror</li>
-                    <li>Catch the bug</li>
-                    <li>Multiverse</li>
-                </ul>
-            </section>
+                <section class="content">
+                    <h4>Altri metodi</h4>
+                    <ul>
+                        <li>Giochi (2)</li>
+                        <li>Compiti (1)</li>
+                        <li>Interventi (1/-1)</li>
+                        <li>Assenze (-1)</li>
+                        <li>Assenze strategiche (-2)</li>
+                        <li>Note disciplinari (-3)</li>
+                    </ul>
+                </section>
 
-            <section class="content">
-                <p>Ogni gioco vale due punti. Team Work consiste nella realizzazione di un certo progetto attraverso il lavoro di gruppo, 
-                    Video Post invece nella produzione di un video, Debate è un gioco nel quale bisogna ingaggiare un discorso su un certo argomento,
-                    Black Mirror uno nel quale si deve produrre un mini episodio di serie tv ispirato all'omonimo show nel quale l'informatica ha preso il
-                    controllo dell'umanità o ne ha comunque reso instabile la società, Catch The Bug riguarda l'avvistamento di errori 
-                    messi a punto dal professore e infine Multiverse consiste nel riuscire a elencare un argomento fatto in informatica che
-                    sia stato proposto anche in un'altra materia, spiegando i motivi per cui si pensa che possa essere correlato.</p>
-            </section>
+                <section class="content">
+                    <p>I giochi, che verranno descritti dopo, e i compiti portano un guadagno di punti.
+                        Al contrario, le assenze, strategiche e non, e le note disciplinari portano a una perdita di punti.
+                        Gli interventi invece possono portare a entrambe le cose, in base alla pertinenza degli stessi.
+                        Nelle parentesi è segnato il punteggio dato da ogni azione o attività.
+                    </p>
+                </section>
+        
+                <section class="content">
+                    <h4>Giochi</h4>
+                    <ul>
+                        <li>Team Work</li>
+                        <li>Video Post</li>
+                        <li>Debate</li>
+                        <li>Black Mirror</li>
+                        <li>Catch the bug</li>
+                        <li>Multiverse</li>
+                    </ul>
+                </section>
 
-            <section class="content">
-                <h3>Squadre</h3>
-                <p>Ogni classe si divide in un numero variabile di squadre in base al numero degli studenti, che gareggeranno in ogni season, alla fine della quale verranno proclamati
-                     i migliori alunni e la squadra migliore. La somma dei punti dei singoli componenti del gruppo ne determina il punteggio.
-                     Nella stagione finale per calcolare i punteggi verranno sommati quelli ottenuti nelle altre stagioni.</p>
-            </section>
-     
+                <section class="content">
+                    <p>Ogni gioco vale due punti. Team Work consiste nella realizzazione di un certo progetto attraverso il lavoro di gruppo, 
+                        Video Post invece nella produzione di un video, Debate è un gioco nel quale bisogna ingaggiare un discorso su un certo argomento,
+                        Black Mirror uno nel quale si deve produrre un mini episodio di serie tv ispirato all'omonimo show nel quale l'informatica ha preso il
+                        controllo dell'umanità o ne ha comunque reso instabile la società, Catch The Bug riguarda l'avvistamento di errori 
+                        messi a punto dal professore e infine Multiverse consiste nel riuscire a elencare un argomento fatto in informatica che
+                        sia stato proposto anche in un'altra materia, spiegando i motivi per cui si pensa che possa essere correlato.</p>
+                </section>
+
+                <section class="content">
+                    <h4>Squadre</h4>
+                    <p>Ogni classe si divide in un numero variabile di squadre in base al numero degli studenti, che gareggeranno in ogni season, alla fine della quale verranno proclamati
+                        i migliori alunni e la squadra migliore. La somma dei punti dei singoli componenti del gruppo ne determina il punteggio.
+                        Nella stagione finale per calcolare i punteggi verranno sommati quelli ottenuti nelle altre stagioni.</p>
+                </section>
+            </div>
+            
+            <div class="images">
+                <section>
+                    <img src="{{url_for('static',filename='images/teamwork.png')}}">
+                </section>
+    
+                <section>
+                    <img src="{{url_for('static',filename='images/rules.png')}}">
+                </section>
+    
+                <section class="image">
+                    <img src="{{url_for('static',filename='images/tests.png')}}">
+                </section>
+            </div>
+
         </main>
 
-
-        <section class="image3">
-            <img src="{{url_for('static',filename='images/teamwork.png')}}">
-        </section>
-
-        <section class="image2">
-            <img src="{{url_for('static',filename='images/rules.png')}}">
-        </section>
-
-        <section class="image">
-            <img src="{{url_for('static',filename='images/tests.png')}}">
-        </section>
-    
-
-
-
-
-
-        <footer class="container">
-            <span class="blur"></span>
-            <span class="blur"></span>
-            <div class="column">
-                <div class="logo">
-                    <img src="{{ url_for('static',
-                    filename='images/logo.png')}}">
-                </div>
-                <p>
-                    Istituto Statale Istruzione Superiore Keynes Gazzada Schianno.
-                </p>
-                <div class="socials">
-                    <a href="https://www.google.it/maps/place/Via+Morazzone,+37,+21045+Gazzada+Schianno+VA/@45.7742747,8.8261295,17z/data=!3m1!4b1!4m6!3m5!1s0x47868742dda7ac21:0x4ff75c6a8d710b85!8m2!3d45.774271!4d8.8287044!16s%2Fg%2F11cpnt3l7w?entry=ttu"><i class="ri-gps-line"></i></a>
-                    <a href="mailto: vais01800p@istruzione.it"><i class="ri-mail-send-line"></i></a>
-              </div>
-            </div>
-        </footer>
-
-    <div class="copyright">
-        Copyright © 2023 J.M Keynes. All Rights Reserved.
-    </div>
+            <!---import del js--->
+            <script src="static/js/home.js"></script>
+            <script src="https://unpkg.com/scrollreveal"></script>  
 
     </body>
 </html>
