@@ -23,6 +23,7 @@ class Cronologia(db.Model, UserMixin):
     stagione = db.Column(db.Integer)
     attivita = db.Column(db.String(150))
     modifica_punti = db.Column(db.Integer)
+    punti_cumulativi = db.Column(db.Integer)
     utente_id = db.Column(db.Integer, db.ForeignKey("user.id"))
 
 

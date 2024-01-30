@@ -104,27 +104,8 @@
 
                      {% for studente in studenti %}
                         <tr>
-                            {% if user.admin_user %}
-                            <div id="popup-container" class="popup-container-{{studente.id}}">
-    <div id="popup">
-      <span id="close-btn" onclick="closePopup('{{studente.id}}')">&times;</span>
-      <h2>SEI SICURO DI VOLER ELIMINARE L'UTENTE {{studente.nominativo}}&#63;<h2>
-      <form method="POST">
 
-        <br> 
-      <span style="      padding: 10px;
-      background-color: #4caf50;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;"onclick="closePopup('{{ studente.id }}')">No</span>
-      <button style="background-color: #FF0000;" value='{{studente.nominativo}}' name='elimina' type="submit">Elimina l'utente</button>
-      </form>
-    </div>
-  </div>
-    <td><button style="background-color:red;" class="spazio" onclick="openPopup('{{ studente.id }}')">Elimina utente</button></td>
 
-                            {%endif%}
                             {% if loop.index==1 %}
                                 <td><img src="{{ url_for('static',
                 filename='images/primo.png')}}"></td>
@@ -138,14 +119,10 @@
                                 <td>&#160&#160 {{loop.index}} </td>
                             {%endif%}
                             <td style="text-align:center">{{ studente.nominativo}}</td>
-                                  {%if user.admin_user==0%}
-                              <td style="text-align:center" >{{ studente.punti.split(',')[1-1] }}</td>
-                            {%else%}
 
-                                                            <form method="POST" >
-                                <td style="text-align:center"> <input type="text" name="{{studente.nominativo}}" id="{{studente.nominativo}}" placeholder="{{studente.punti.split(',')[1-1]}}">      </form>
-                                                            
-                            {%endif%}
+                              <td style="text-align:center" >{{ studente.punti.split(',')[1-1] }}</td>
+
+
 
                         </tr>
 

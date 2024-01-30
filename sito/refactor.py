@@ -26,8 +26,6 @@ def refactor_file():
     dataset, *lista_fogli = file.keys()
     pd.to_datetime(file[dataset]["Data"])
     error_file = path.join(Path.cwd(), "instance", "errore.txt")
-    with open(error_file, "w") as f:
-        f.write("")
 
     for classe in lista_fogli:
         if not classe_da_nome(classe):
@@ -59,7 +57,7 @@ def refactor_file():
                 user_da_nominativo(nominativo).classe = classe
 
     db.session.commit()
-
+    last_season = 0
     for numero_riga, riga in enumerate(file[dataset].values.tolist()):
         # 0 data
         # 1 stagione
@@ -74,7 +72,7 @@ def refactor_file():
 
         attivita = riga[4]
         punti = riga[5]
-        last_season = 0
+
         if not user_da_nominativo(nominativo):
             with open(error_file, "a") as f:
                 f.write(
@@ -91,6 +89,7 @@ def refactor_file():
                 stagione=stagione,
                 attivita=attivita,
                 modifica_punti=punti,
+                punti_cumulativi=0,
                 utente_id=user_da_nominativo(nominativo).id,
             )
         )
@@ -106,4 +105,12 @@ def refactor_file():
             nuovi_punti[riga.stagione - 1] += riga.modifica_punti
 
         utente.punti = ",".join(map(str, nuovi_punti))
+
+    db.session.commit()
+    studenti = elenco_studenti()
+    for studente in studenti:
+        punti_cumulativi = 0
+        for evento in cronologia_da_user(studente):
+            punti_cumulativi += evento.modifica_punti
+            evento.punti_cumulativi = punti_cumulativi
     db.session.commit()

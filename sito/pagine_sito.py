@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from . import db
 from flask_login import login_required, current_user
-from .modelli import User, Classi
+from .modelli import User, Classi, Info
 from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
 from os import path, remove
@@ -83,6 +83,28 @@ def errore_accesso():
     return redirect(url_for("pagine_sito.home"))
 
 
+def list_data(Cronologia, stagione):
+    return [x.punti_cumulativi for x in Cronologia if x.stagione == stagione]
+
+
+def list_label(Cronologia, stagione):
+    return [x.data for x in Cronologia if x.stagione == stagione]
+
+
+def list_attivita(Cronologia, stagione):
+    return [x.attivita for x in Cronologia if x.stagione == stagione]
+
+
+def calcola_valore_rgb(squadra):
+    somma_ascii = sum(ord(char) for char in squadra)
+
+    r = somma_ascii % 256
+    g = (somma_ascii // 2) % 256
+    b = (somma_ascii // 3) % 256
+
+    return r, g, b, 0.3
+
+
 @pagine_sito.route("/")
 def home():
     try:
@@ -100,41 +122,32 @@ def home():
 @pagine_sito.route("/classe/<classe_name>", methods=["GET", "POST"])
 @login_required
 def classe(classe_name):
+    stagione_corrente = 1
     if not current_user.admin_user:
         classe = classe_da_id(current_user.classe_id)
     else:
         classe = classe_da_nome(classe_name)
-    studenti = ordina_studenti_in_modo_decrescente(classe, 1)
-    if current_user.admin_user is True and request.method == "POST":
-        stagione = 1
+    if request.method == "POST":
         dati = request.form
-        if "bottone" in dati:
-            return render_template(
-                "classe.html",
-                user=current_user,
-                classe=classe.classe,
-                studenti=studenti,
-            )
-        if "elimina" in dati:
-            db.session.delete(user_da_nominativo(dati["elimina"]))
+        if dati.get("selected_season"):
+            stagione_corrente = int(dati.get("selected_season"))
 
-        for nominativo in dati:
-            try:
-                punti_modificati = float(dati[nominativo])
-                lista_punti_stagioni = list(
-                    map(float, user_da_nominativo(nominativo).punti.split(","))
-                )
-                lista_punti_stagioni[stagione - 1] += punti_modificati
-                user_da_nominativo(nominativo).punti = ",".join(
-                    map(str, lista_punti_stagioni)
-                )
-            except ValueError:
-                continue
-
-        db.session.commit()
-        studenti = ordina_studenti_in_modo_decrescente(classe, 1)
+    studenti = ordina_studenti_in_modo_decrescente(classe, stagione_corrente)
+    n_stagioni = Info.query.filter_by().all()[0].last_season
+    print(n_stagioni)
     return render_template(
-        "classe.html", user=current_user, classe=classe.classe, studenti=studenti
+        "classe.html",
+        user=current_user,
+        classe=classe.classe,
+        studenti=studenti,
+        n_stagioni=n_stagioni,
+        stagione_corrente=stagione_corrente,
+        cronologia_da_user=cronologia_da_user,
+        list_label=list_label,
+        list_data=list_data,
+        calcola_valore_rgb=calcola_valore_rgb,
+        list_attivita=list_attivita,
+        zip=zip,
     )
 
 
@@ -177,7 +190,9 @@ def admin_dashboard():
 @login_required
 def classi():
     if current_user.admin_user:
+        error = 0
         classi = elenco_classi()
+        error_file = path.join(Path.cwd(), "instance", "errore.txt")
 
         if request.method == "POST":
             dati = request.form
@@ -209,9 +224,11 @@ def classi():
                     with open(error_file, "w") as f:
                         f.write(VUOTO)
                     refactor_file()
-            return redirect(url_for("pagine_sito.classi"))
+        with open(error_file, LEGGI) as f:
+            if f == VUOTO:
+                error = 1
 
-        return render_template("menu_classi.html", classi=classi)
+        return render_template("menu_classi.html", classi=classi, error=error)
 
 
 @pagine_sito.route("/db_errori")
@@ -219,9 +236,11 @@ def classi():
 def db_errori():
     if current_user.admin_user is False:
         return errore_accesso()
-    return open(FILE_ERRORE, LEGGI).read().splitlines()
+    with open(FILE_ERRORE, LEGGI) as file_errore:
+        content_error = file_errore.read().splitlines()
+    return "<br><br>".join(content_error)
 
 
 @pagine_sito.route("/versioni")
 def versioni():
-    return reversed(open(FILE_VERSIONI, LEGGI).read().splitlines())
+    return "<br>".join(reversed(open(FILE_VERSIONI, LEGGI).read().splitlines()))

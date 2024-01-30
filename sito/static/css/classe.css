@@ -149,9 +149,7 @@ tbody tr.hide {
     transform: translateX(100%);
 }
 
-tbody tr:hover {
-    background-color: #fff6 !important;
-}
+
 
 tbody tr td,
 tbody tr td p,
@@ -218,7 +216,6 @@ thead th.active,tbody td.active {
     display: inline-block;
     width: 2rem;
     height: 2rem;
-    background: #fff6 url(images/export.png) center / 80% no-repeat;
     border-radius: 50%;
     transition: .2s ease-in-out;
 }
@@ -284,4 +281,100 @@ thead th.active,tbody td.active {
 .export__file .export__file-options img{
     width: 2rem;
     height: auto;
+}
+ .popup-container {
+      display: flex;
+      flex-direction:row;
+      flex-wrap:nowrap;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 1;
+    }
+    .popup {
+      display: flex;
+      flex-direction:row;
+      flex-wrap:nowrap;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    .close-btn {
+      float: right;
+      cursor: pointer;
+    }
+ .spazio {
+      margin-left: 25%; /* Aggiunge uno spazio di 20px a destra del bottone */
+    }
+
+body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    #popup-container {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 1;
+    }
+    #popup {
+      position:relative;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      width:100;
+    }
+    #close-btn {
+      float: right;
+      cursor: pointer;
+    }    button {
+      padding: 10px;
+    
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+}
+.material-symbols--info-outline {
+  display: inline-block;
+position: relative;
+  top: -5px;
+  width: 1.2em;
+  height: 1.2em;
+  --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M11 17h2v-6h-2zm1-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20m0-8'/%3E%3C/svg%3E");
+  background-color: currentColor;
+  -webkit-mask-image: var(--svg);
+  mask-image: var(--svg);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+.left-popup-bar{
+  display:flex;
+  flex-direction:column;
+  flex-wrap:wrap;
+  position:relative;
+  height:500px;
+  width:300px;
+}.circle{
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
 }
