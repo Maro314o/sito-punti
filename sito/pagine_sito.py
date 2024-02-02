@@ -47,6 +47,9 @@ def classe_da_id(classe_id):
 
 
 def ordina_studenti_in_modo_decrescente(classe, stagione):
+    print(stagione)
+    for i in classe.studenti:
+        print(i.punti)
     return sorted(
         classe.studenti,
         key=lambda studente: float(studente.punti.split(",")[stagione - 1]),
@@ -122,7 +125,7 @@ def home():
 @pagine_sito.route("/classe/<classe_name>", methods=["GET", "POST"])
 @login_required
 def classe(classe_name):
-    stagione_corrente = 1
+    stagione_corrente = Info.query.filter_by().all()[0].last_season
     if not current_user.admin_user:
         classe = classe_da_id(current_user.classe_id)
     else:
@@ -134,7 +137,6 @@ def classe(classe_name):
 
     studenti = ordina_studenti_in_modo_decrescente(classe, stagione_corrente)
     n_stagioni = Info.query.filter_by().all()[0].last_season
-    print(n_stagioni)
     return render_template(
         "classe.html",
         user=current_user,
@@ -224,6 +226,14 @@ def classi():
                     with open(error_file, "w") as f:
                         f.write(VUOTO)
                     refactor_file()
+
+                else:
+                    with open(error_file, "w") as f:
+                        f.write(VUOTO)
+                    with open(error_file, "w") as f:
+                        f.write(
+                            f"Impossibile aprire questa estensione dei file, per adesso puoi caricare il database sono in questo/i formato/i : {ALLOWED_EXTENSIONS}"
+                        )
         with open(error_file, LEGGI) as f:
             if f == VUOTO:
                 error = 1

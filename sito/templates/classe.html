@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Classifica</title>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',
                 filename='css/classe.css')}}">
@@ -48,7 +49,7 @@
 
                             <th style="text-align:center">Nome e Cognome</th>
                             <th style="text-align:center">Squadra</th>
-                            <th style="text-align:center">Punti Totali</th>
+                            <th style="text-align:center;z-index:1;">Punti Totali</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -88,6 +89,36 @@
      <h2 style="width:100%;text-align:left;font-size: 13px;">Email: {{studente.email}}</h2>
     <br>
      <h2 style="width:100%;text-align:left;font-size: 13px;">Squadra: {{studente.squadra}}</h2>
+<table class="content-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Name</th>
+            <th>Points</th>
+            <th>Team</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Domenic</td>
+            <td>88,110</td>
+            <td>dcode</td>
+          </tr>
+          <tr class="active-row">
+            <td>2</td>
+            <td>Sally</td>
+            <td>72,400</td>
+            <td>Students</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Nick</td>
+            <td>52,300</td>
+            <td>dcode</td>
+          </tr>
+        </tbody>
+      </table>
      </div>
      <div>
       <canvas id="lineChart-{{studente.id}}" width="800" height="400"></canvas>
