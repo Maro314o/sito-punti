@@ -26,11 +26,9 @@ main.table {
     width: 82vw;
     height: 90vh;
     background-color: #fff5;
-
     backdrop-filter: blur(7px);
     box-shadow: 0 .4rem .8rem #0005;
     border-radius: .8rem;
-
     overflow: hidden;
 }
 
@@ -39,10 +37,10 @@ main.table {
     height: 10%;
     background-color: #fff4;
     padding: .8rem 1rem;
-
     display: flex;
     justify-content: space-between;
     align-items: center;
+
 }
 
 .table__header .input-group {
@@ -208,8 +206,13 @@ thead th.active,tbody td.active {
     color: #00bd29;
 }
 
+.nomeclasse{
+    width: 10rem;
+}
+
 .export__file {
-    position: relative;
+    width: 7rem;
+
 }
 
 .export__file .export__file-btn {
@@ -321,39 +324,44 @@ body {
       height: 100vh;
     }
 
-    #popup-container {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      justify-content: center;
-      align-items: center;
-      z-index: 1;
-    }
-    #popup {
-      position:relative;
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 5px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-      width:100;
-    }
-    #close-btn {
-      float: right;
-      cursor: pointer;
-    }    button {
-      padding: 10px;
-    
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
+#popup-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
 }
+
+#popup {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    width:75vw;
+}
+
+#close-btn {
+    float: right;
+    cursor: pointer;
+}   button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
 .material-symbols--info-outline {
   display: inline-block;
-position: relative;
+  position: relative;
   top: -5px;
   width: 1.2em;
   height: 1.2em;
@@ -370,19 +378,20 @@ position: relative;
 .left-popup-bar{
   display:flex;
   flex-direction:column;
-  flex-wrap:wrap;
   position:relative;
-  height:500px;
-  width:300px;
-}.circle{
-  width: 15px;
-  height: 15px;
+  width: 21vw;
+}
+.circle{
+  width: 20px;
+  height: 20px;
+  margin-top: 0.4em;
   border-radius: 50%;
 }
 
 
 .content-table {
     border-collapse: collapse;
+    margin-top: 2em;
     font-size: 0.9em;
     min-width: 400px;
     border-radius: 5px 5px 0 0;
@@ -393,13 +402,13 @@ position: relative;
 .content-table thead tr {
     background-color: #009879;
     color: #ffffff;
-    text-align: left;
     font-weight: bold;
 }
 
 .content-table th,
 .content-table td {
     padding: 12px 15px;
+    text-align: center;
 }
 
 .content-table tbody tr {
@@ -417,4 +426,8 @@ position: relative;
 .content-table tbody tr.active-row {
     font-weight: bold;
     color: #009879;
+}
+
+.grafico {
+    margin-left: 8em;
 }

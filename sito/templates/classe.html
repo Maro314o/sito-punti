@@ -20,36 +20,38 @@
 <body>
     <main class="table" id="customers_table">
         <section class="table__header">
-          <h1>Classifica Classe {{classe}}</h1>  
+          <div class="nomeclasse">
+            <h1>Classe {{classe}}</h1>  
+          </div>
           <form method="POST" class="the-form">
 
-            <div class="export__file">
-                <label for="export-file" class="export__file-btn" title="Season Menu">Bottone </label>
-                <input type="checkbox" id="export-file">
-                <div class="export__file-options">
-                    <label>Season Menu&nbsp; &#10140;</label>
-                    {% for i in range(n_stagioni)%}
-                    <label for="{{i}}">Season {{i+1}}</label>
-                    <input type="submit" id="{{i}}" name="selected_season" value={{i+1}}>
-                    {% endfor%}
+          <div class="export__file">
+              <label for="export-file" class="export__file-btn" title="Season Menu">Season</label>
+              <input type="checkbox" id="export-file">
+              <div class="export__file-options">
+                  <label>Season Menu&nbsp; &#10140;</label>
+                  {% for i in range(n_stagioni)%}
+                  <label for="{{i}}">Season {{i+1}}</label>
+                  <input type="submit" id="{{i}}" name="selected_season" value={{i+1}}>
+                  {% endfor%}
 
- 
-                </div>
+
+              </div>
+
                 <input type="submit" value="Submit">
-
 
             </div>
           </form>
         </section>
+        
         <section class="table__body">
             <table>
                 <thead>
                     <tr>
-                        <th> Posizione</th>
-
-                            <th style="text-align:center">Nome e Cognome</th>
-                            <th style="text-align:center">Squadra</th>
-                            <th style="text-align:center;z-index:1;">Punti Totali</th>
+                        <th>Posizione</th>
+                        <th style="text-align:center">Nome e Cognome</th>
+                        <th style="text-align:center">Squadra</th>
+                        <th style="text-align:center;z-index:1;">Punti Totali</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -81,47 +83,48 @@
     <div id="popup" class="popup">
      <div class="left-popup-bar">
        <div style="display:flex;height:15px;">
-       <div style="background :rgb{{calcola_valore_rgb(studente.squadra)}};"class="circle"></div>
-     <h1 style="flex-grow:1;height:15px;text-align:left;">&#160{{studente.nominativo}}</h1>
+         <div style="background:rgb{{calcola_valore_rgb(studente.squadra)}};"class="circle"></div>
+         <h1 style="flex-grow:1;height:15px;font-size:30px;text-align:left;">&#160{{studente.nominativo}}</h1>
+       </div>
 
-     </div>
-     <br>
-     <h2 style="width:100%;text-align:left;font-size: 13px;">Email: {{studente.email}}</h2>
-    <br>
-     <h2 style="width:100%;text-align:left;font-size: 13px;">Squadra: {{studente.squadra}}</h2>
-<table class="content-table">
+      <h2 style="width:100%;text-align:left;font-size: 20px;padding-top:1.5em">Email: {{studente.email}}</h2>
+      <h2 style="width:100%;text-align:left;font-size: 20px;">Squadra: {{studente.squadra}}</h2>
+      
+      <table class="content-table">
         <thead>
           <tr>
-            <th>Rank</th>
-            <th>Name</th>
-            <th>Points</th>
-            <th>Team</th>
+            <th>Data</th>
+            <th>Tipologia</th>
+            <th>Punti</th>
+            <th>Punteggio</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>1</td>
-            <td>Domenic</td>
-            <td>88,110</td>
-            <td>dcode</td>
-          </tr>
-          <tr class="active-row">
-            <td>2</td>
-            <td>Sally</td>
-            <td>72,400</td>
-            <td>Students</td>
+            <td>7/02/23</td>
+            <td>Test</td>
+            <td>+30</td>
+            <td>120</td>
           </tr>
           <tr>
-            <td>3</td>
-            <td>Nick</td>
-            <td>52,300</td>
-            <td>dcode</td>
+            <td>17/02/23</td>
+            <td>Void</td>
+            <td>-1</td>
+            <td>119</td>
+          </tr>
+          <tr>
+            <td>1/03/23</td>
+            <td>Void</td>
+            <td>-1</td>
+            <td>118</td>
           </tr>
         </tbody>
       </table>
+
      </div>
-     <div>
-      <canvas id="lineChart-{{studente.id}}" width="800" height="400"></canvas>
+
+     <div class="grafico">
+      <canvas id="lineChart-{{studente.id}}" width="650" height="400"></canvas>
       <script>
         var ctx = document.getElementById("lineChart-{{studente.id}}").getContext("2d");
         var lineChart = new Chart(ctx, {
