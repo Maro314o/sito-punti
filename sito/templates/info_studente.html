@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Classifica</title>
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',
+                filename='css/info_studente.css')}}">
+
+    <link rel="stylesheet"  type="text/css" href="{{ url_for('static', filename='css/reset.css')}}">
+  <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+
+     <div class="left-popup-bar">
+       <div style="display:flex;height:15px;">
+         <div style="background:rgb{{calcola_valore_rgb(studente.squadra)}};"class="circle"></div>
+         <h1 style="flex-grow:1;height:15px;font-size:30px;text-align:left;">&#160{{studente.nominativo}}</h1>
+       </div>
+
+      <h2 style="width:100%;text-align:left;font-size: 20px;padding-top:1.5em">Email: {{studente.email}}</h2>
+      <h2 style="width:100%;text-align:left;font-size: 20px;">Squadra: {{studente.squadra}}</h2>
+      
+      <table class="content-table">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Tipologia</th>
+            <th>Punti</th>
+            <th>Punteggio</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>7/02/23</td>
+            <td>Test</td>
+            <td>+30</td>
+            <td>120</td>
+          </tr>
+          <tr>
+            <td>17/02/23</td>
+            <td>Void</td>
+            <td>-1</td>
+            <td>119</td>
+          </tr>
+          <tr>
+            <td>1/03/23</td>
+            <td>Void</td>
+            <td>-1</td>
+            <td>118</td>
+          </tr>
+        </tbody>
+      </table>
+
+     </div>
+
+     <div class="grafico">
+      <canvas id="lineChart-{{studente.id}}" width="650" height="400"></canvas>
+      <script>
+        var ctx = document.getElementById("lineChart-{{studente.id}}").getContext("2d");
+        var lineChart = new Chart(ctx, {
+            type: "line",
+            data: {
+               labels: {{ list_label(cronologia_da_user(studente),stagione_corrente) | safe }},
+               datasets: [
+                {
+                  label: "Punti di {{studente.nominativo}}",
+                  data:  {{ list_data(cronologia_da_user(studente),stagione_corrente) | safe }},
+                  fill: false,
+                  borderColor: "rgb{{calcola_valore_rgb(studente.squadra)}}",
+                  backgroundColor:"rgb{{calcola_valore_rgb(studente.squadra)}}",
+
+                  lineTension: 0.1
+                }
+              ]
+            },
+    options: {
+        responsive: false,
+        plugins: {
+            tooltip: {
+                callbacks: {
+
+                    label: function (context) {
+                        return context.formattedValue;
+                    },
+                },
+            },
+        },
+    },
+});
+      </script>
+     </div>
+
+
+
+
+
+
+    </div>
+
+</body>
+
+

@@ -3,6 +3,21 @@ from pathlib import Path
 from os import path
 import datetime
 
+mesi = {
+    "gennaio": 1,
+    "febbraio": 2,
+    "marzo": 3,
+    "aprile": 4,
+    "maggio": 5,
+    "giugno": 6,
+    "luglio": 7,
+    "agosto": 8,
+    "settembre": 9,
+    "ottobre": 10,
+    "novembre": 11,
+    "dicembre": 12,
+}
+
 
 def refactor_file():
     from . import db
@@ -24,13 +39,6 @@ def refactor_file():
     name_file = path.join(Path.cwd(), "instance", "foglio.xlsx")
     file = pd.read_excel(name_file, sheet_name=None)
     dataset, *lista_fogli = file.keys()
-    try:
-        pd.to_datetime(file[dataset]["Data"])
-    except:
-        with open(error_file, "a") as f:
-            f.write(
-                f"{datetime.datetime.now()} | C'e' stato un errore nella conversione delle date\n"
-            )
 
     error_file = path.join(Path.cwd(), "instance", "errore.txt")
 
@@ -72,7 +80,12 @@ def refactor_file():
         # 3 alunno
         # 4 attivita'
         # 5 punti
-        data = str(riga[0]).split()[0]
+        data = str(riga[0]).split()
+        try:
+            data = f"{data[1]}/{mesi[data[2]]}/{data[3]}"
+        except:
+            print(data)
+            data = data[0]
         stagione = riga[1]
         classe = riga[2]
         nominativo = " ".join(
@@ -96,7 +109,6 @@ def refactor_file():
             continue
 
         last_season = stagione if stagione > last_season else last_season
-
         db.session.add(
             Cronologia(
                 data=data,

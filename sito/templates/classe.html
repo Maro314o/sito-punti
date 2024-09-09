@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -25,11 +26,10 @@
           </div>
           <form method="POST" class="the-form">
 
-          <div class="export__file">
-              <label for="export-file" class="export__file-btn" title="Season Menu">Season</label>
+          <div class="season_btn">
+            <label for="export-file" class="season_btn-btn" title="Season Menu">Season</label>  
               <input type="checkbox" id="export-file">
-              <div class="export__file-options">
-                  <label>Season Menu&nbsp; &#10140;</label>
+              <div class="season_btn-options">
                   {% for i in range(n_stagioni)%}
                   <label for="{{i}}">Season {{i+1}}</label>
                   <input type="submit" id="{{i}}" name="selected_season" value={{i+1}}>
@@ -76,100 +76,10 @@
 
                               <td style="text-align:center" >{{ studente.punti.split(',')[stagione_corrente-1] }}
 
-                              {% if user.id==studente.id or user.admin_user%}
-                              
-                              <div id="popup-container" class="popup-container-{{studente.id}}">
 
-    <div id="popup" class="popup">
-     <div class="left-popup-bar">
-       <div style="display:flex;height:15px;">
-         <div style="background:rgb{{calcola_valore_rgb(studente.squadra)}};"class="circle"></div>
-         <h1 style="flex-grow:1;height:15px;font-size:30px;text-align:left;">&#160{{studente.nominativo}}</h1>
-       </div>
+ </div> <a href="/classe/{{classe}}/{{studente.id}}/{{stagione_corrente+1}}">
+    <button  class="material-symbols--info-outline" onclick="openPopup('{{ studente.id }}')"></button></a></td>
 
-      <h2 style="width:100%;text-align:left;font-size: 20px;padding-top:1.5em">Email: {{studente.email}}</h2>
-      <h2 style="width:100%;text-align:left;font-size: 20px;">Squadra: {{studente.squadra}}</h2>
-      
-      <table class="content-table">
-        <thead>
-          <tr>
-            <th>Data</th>
-            <th>Tipologia</th>
-            <th>Punti</th>
-            <th>Punteggio</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>7/02/23</td>
-            <td>Test</td>
-            <td>+30</td>
-            <td>120</td>
-          </tr>
-          <tr>
-            <td>17/02/23</td>
-            <td>Void</td>
-            <td>-1</td>
-            <td>119</td>
-          </tr>
-          <tr>
-            <td>1/03/23</td>
-            <td>Void</td>
-            <td>-1</td>
-            <td>118</td>
-          </tr>
-        </tbody>
-      </table>
-
-     </div>
-
-     <div class="grafico">
-      <canvas id="lineChart-{{studente.id}}" width="650" height="400"></canvas>
-      <script>
-        var ctx = document.getElementById("lineChart-{{studente.id}}").getContext("2d");
-        var lineChart = new Chart(ctx, {
-            type: "line",
-            data: {
-               labels: {{ list_label(cronologia_da_user(studente),stagione_corrente) | safe }},
-               datasets: [
-                {
-                  label: "Punti di {{studente.nominativo}}",
-                  data:  {{ list_data(cronologia_da_user(studente),stagione_corrente) | safe }},
-                  fill: false,
-                  borderColor: "rgb{{calcola_valore_rgb(studente.squadra)}}",
-                  backgroundColor:"rgb{{calcola_valore_rgb(studente.squadra)}}",
-
-                  lineTension: 0.1
-                }
-              ]
-            },
-    options: {
-        responsive: false,
-        plugins: {
-            tooltip: {
-                callbacks: {
-
-                    label: function (context) {
-                        return context.formattedValue;
-                    },
-                },
-            },
-        },
-    },
-});
-      </script>
-     </div>
-
-
-
-
-
-
-     <span id="close-btn" onclick="closePopup('{{studente.id}}')">&times;</span>
-    </div>
-  </div> 
-    <button  class="material-symbols--info-outline" onclick="openPopup('{{ studente.id }}')"></button></td>
-                              {%endif%}
 
 
 
@@ -181,15 +91,7 @@
             </table>
         </section>
     </main>
-    <script>
-    function openPopup(studenteId) {
-    document.getElementsByClassName('popup-container-' + studenteId)[0].style.display = 'flex';
-  }
-
-  function closePopup(studenteId) {
-    document.getElementsByClassName('popup-container-' + studenteId)[0].style.display = 'none';
-  }
-    </script>
 </body>
 
 </html>
+

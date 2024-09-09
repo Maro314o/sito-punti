@@ -34,6 +34,10 @@ def user_da_nominativo(nominativo):
     return User.query.filter_by(nominativo=nominativo).first()
 
 
+def user_da_id(id):
+    return User.query.filter_by(id=id).first()
+
+
 def user_da_email(email):
     return User.query.filter_by(email=email).first()
 
@@ -47,9 +51,6 @@ def classe_da_id(classe_id):
 
 
 def ordina_studenti_in_modo_decrescente(classe, stagione):
-    print(stagione)
-    for i in classe.studenti:
-        print(i.punti)
     return sorted(
         classe.studenti,
         key=lambda studente: float(studente.punti.split(",")[stagione - 1]),
@@ -124,12 +125,12 @@ def home():
 
 @pagine_sito.route("/classe/<classe_name>", methods=["GET", "POST"])
 @login_required
-def classe(classe_name):
+def pag_classe(classe_name):
     stagione_corrente = Info.query.filter_by().all()[0].last_season
-    if not current_user.admin_user:
-        classe = classe_da_id(current_user.classe_id)
-    else:
+    if current_user.admin_user:
         classe = classe_da_nome(classe_name)
+    else:
+        classe = classe_da_id(current_user.classe_id)
     if request.method == "POST":
         dati = request.form
         if dati.get("selected_season"):
@@ -148,6 +149,24 @@ def classe(classe_name):
         list_label=list_label,
         list_data=list_data,
         calcola_valore_rgb=calcola_valore_rgb,
+        list_attivita=list_attivita,
+        zip=zip,
+    )
+
+
+@pagine_sito.route("/classe/<classe_name>/<studente_id>/<stagione>", methods=["GET"])
+@login_required
+def info_studente(classe_name, studente_id, stagione):
+    stagione = int(stagione) - 1
+    return render_template(
+        "info_studente.html",
+        user=current_user,
+        stagione_corrente=stagione,
+        studente=user_da_id(studente_id),
+        cronologia_da_user=cronologia_da_user,
+        list_label=list_label,
+        calcola_valore_rgb=calcola_valore_rgb,
+        list_data=list_data,
         list_attivita=list_attivita,
         zip=zip,
     )
@@ -172,7 +191,7 @@ def regole():
 def admin_dashboard():
     admin_user = current_user.admin_user
     errori = open(path.join(Path.cwd(), "instance", "errore.txt"), "r").read() == VUOTO
-    if admin_user == 1:
+    if admin_user:
         numero_degli_studenti = len(elenco_studenti())
         numero_delle_classi = len(elenco_classi())
         numero_degli_admin = len(elenco_admin())
