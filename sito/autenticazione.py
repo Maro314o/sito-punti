@@ -136,12 +136,6 @@ def crea_admin():
                 flash("Devi compilare tutti i campi", category="error")
             elif user:
                 flash("Esiste gia' un account con questa email", category="error")
-            elif "@isiskeynes.it" not in email:
-                flash("Il dominio dell' email é sbagliato", category="error")
-            elif "s-" not in email:
-                flash("hai dimenticato di mettere 's-' nell' email", category="error")
-            elif email != f"s-{cognome.lower()}.{nome.lower()}@isiskeynes.it":
-                flash("L'email non corrisponde con il nome e cognome", category="error")
             elif len(password) < 5:
                 flash("La password deve essere almeno di 5 caratteri", category="error")
             elif password != password_di_conferma:
@@ -159,9 +153,7 @@ def crea_admin():
                     classe_id=Classi.query.filter_by(classe="admin").first().id,
                 )
                 db.session.add(nuovo_utente)
-                admin_provvisorio = user_da_email("s-admin.starter@isiskeynes.it")
-                if admin_provvisorio and len(elenco_admin()) > 1:
-                    db.session.delete(admin_provvisorio)
+
                 db.session.commit()
                 flash("Account creato con successo!", category="success")
                 login_user(nuovo_utente, remember=True)

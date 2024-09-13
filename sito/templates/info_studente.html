@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,7 +9,7 @@
     <title>Classifica</title>
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',
-                filename='css/info_studente.css')}}">
+                filename='css/classe.css')}}">
 
     <link rel="stylesheet"  type="text/css" href="{{ url_for('static', filename='css/reset.css')}}">
   <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
@@ -26,11 +27,13 @@
        <div style="display:flex;height:15px;">
          <div style="background:rgb{{calcola_valore_rgb(studente.squadra)}};"class="circle"></div>
          <h1 style="flex-grow:1;height:15px;font-size:30px;text-align:left;">&#160{{studente.nominativo}}</h1>
-       </div>
 
+       </div>
+       <div>
       <h2 style="width:100%;text-align:left;font-size: 20px;padding-top:1.5em">Email: {{studente.email}}</h2>
       <h2 style="width:100%;text-align:left;font-size: 20px;">Squadra: {{studente.squadra}}</h2>
-      
+       </div>
+
       <table class="content-table">
         <thead>
           <tr>
@@ -41,29 +44,18 @@
           </tr>
         </thead>
         <tbody>
+          {% for evento in cronologia_da_user(studente) %}
           <tr>
-            <td>7/02/23</td>
-            <td>Test</td>
-            <td>+30</td>
-            <td>120</td>
+            <td>{{evento.data}}</td>
+            <td>{{evento.attivita}}</td>
+            <td>{{evento.modifica_punti}}</td>
+            <td>{{evento.punti_cumulativi}}</td>
           </tr>
-          <tr>
-            <td>17/02/23</td>
-            <td>Void</td>
-            <td>-1</td>
-            <td>119</td>
-          </tr>
-          <tr>
-            <td>1/03/23</td>
-            <td>Void</td>
-            <td>-1</td>
-            <td>118</td>
-          </tr>
+        {% endfor %} 
         </tbody>
       </table>
 
      </div>
-
      <div class="grafico">
       <canvas id="lineChart-{{studente.id}}" width="650" height="400"></canvas>
       <script>
@@ -101,13 +93,4 @@
       </script>
      </div>
 
-
-
-
-
-
-    </div>
-
-</body>
-
-
+</html>

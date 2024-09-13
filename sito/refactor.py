@@ -32,7 +32,27 @@ def refactor_file():
         user_da_nominativo,
     )
 
+    from werkzeug.security import generate_password_hash
+
     db.session.query(Cronologia).delete()
+
+    db.session.query(Info).delete()
+
+    db.session.query(User).delete()
+    db.session.query(Classi).delete()
+    db.session.add(Classi(classe="admin"))
+    nuovo_utente = User(
+        email="s-admin.starter@isiskeynes.it",
+        nome="admin",
+        cognome="starter",
+        nominativo="starter admin",
+        password=generate_password_hash("highsecureadminpassword", method="sha256"),
+        punti="0",
+        account_attivo=1,
+        admin_user=1,
+        classe_id=classe_da_nome("admin").id,
+    )
+    db.session.add(nuovo_utente)
     db.session.commit()
     error_file = path.join(Path.cwd(), "instance", "errore.txt")
     log_file = path.join(Path.cwd(), "instance", "log.txt")
@@ -43,33 +63,35 @@ def refactor_file():
     error_file = path.join(Path.cwd(), "instance", "errore.txt")
 
     for classe in lista_fogli:
-        if not classe_da_nome(classe):
-            nuova_classe = Classi(classe=classe)
-            db.session.add(nuova_classe)
-            db.session.commit()
+        nuova_classe = Classi(classe=classe)
+        db.session.add(nuova_classe)
+        db.session.commit()
 
-        for riga in file[classe].values.tolist():
+        for numero_riga, riga in enumerate(file[classe].values.tolist()):
             nominativo = " ".join(
-                [x.strip().capitalize() for x in riga[0].strip().split()]
+                [x.strip().capitalize() for x in riga[0].strip().split()][0:2]
             )
-            squadra = riga[1]
-            if not user_da_nominativo(nominativo):
-                nuovo_utente = User(
-                    email=nominativo,
-                    nome="",
-                    cognome="",
-                    nominativo=nominativo,
-                    squadra=squadra,
-                    password="",
-                    punti="0",
-                    account_attivo=0,
-                    admin_user=0,
-                    classe_id=classe_da_nome(classe).id,
-                )
-                db.session.add(nuovo_utente)
+            if len(riga) == 1:
+                with open(error_file, "a") as f:
+                    f.write(
+                        f"{datetime.datetime.now()} | errore alla linea {numero_riga} del foglio {classe} del edatabase : La cella della squadra per questo utente e' vuota.Gli verra' assegnata una squadra provvisoria chiamata \"Nessuna_squadra\"\n"
+                    )
+                squadra = "Nessuna_squadra"
             else:
-                user_da_nominativo(nominativo).squadra = squadra
-                user_da_nominativo(nominativo).classe = classe
+                squadra = riga[1]
+            nuovo_utente = User(
+                email=f"utente_non_registrato_{'_'.join(nominativo.split())}",
+                nome=nominativo.split()[1],
+                cognome=nominativo.split()[0],
+                nominativo=nominativo,
+                squadra=squadra,
+                password="",
+                punti="0",
+                account_attivo=0,
+                admin_user=0,
+                classe_id=classe_da_nome(classe).id,
+            )
+            db.session.add(nuovo_utente)
 
     db.session.commit()
     last_season = 0
@@ -81,10 +103,10 @@ def refactor_file():
         # 4 attivita'
         # 5 punti
         data = str(riga[0]).split()
+
         try:
             data = f"{data[1]}/{mesi[data[2]]}/{data[3]}"
         except:
-            print(data)
             data = data[0]
         stagione = riga[1]
         classe = riga[2]

@@ -391,7 +391,7 @@ body {
   display:flex;
   flex-direction:column;
   position:relative;
-  width: 21vw;
+  width: 30vw;
 }
 .circle{
   width: 20px;

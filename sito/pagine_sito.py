@@ -75,6 +75,13 @@ def elenco_classi():  # non si conta la classe degli admin
     ]
 
 
+def classifica_degli_studenti(stagione):
+    return sorted(
+        elenco_studenti(),
+        key=lambda studente: float(studente.punti.split(",")[stagione - 1]),
+    )[::-1]
+
+
 def elenco_di_tutte_le_classi():
     return Classi.query.filter_by().all()
 
@@ -100,7 +107,7 @@ def list_attivita(Cronologia, stagione):
 
 
 def calcola_valore_rgb(squadra):
-    somma_ascii = sum(ord(char) for char in squadra)
+    somma_ascii = sum(ord(char) ** 3 for char in squadra) + 70
 
     r = somma_ascii % 256
     g = (somma_ascii // 2) % 256
@@ -202,8 +209,12 @@ def admin_dashboard():
             numero_classi=numero_delle_classi,
             numero_admin=numero_degli_admin,
             numero_squadre=numero_delle_squadre,
-            novità=elenco_utenti()[::-1][:7],
+            novita=classifica_degli_studenti(
+                Info.query.filter_by().all()[0].last_season
+            )[0:8],
             errori=errori,
+            classe_da_id=classe_da_id,
+            calcola_valore_rgb=calcola_valore_rgb,
         )
 
 
@@ -246,6 +257,8 @@ def classi():
                         f.write(VUOTO)
                     refactor_file()
 
+                    classi = elenco_classi()
+
                 else:
                     with open(error_file, "w") as f:
                         f.write(VUOTO)
@@ -254,7 +267,7 @@ def classi():
                             f"Impossibile aprire questa estensione dei file, per adesso puoi caricare il database sono in questo/i formato/i : {ALLOWED_EXTENSIONS}"
                         )
         with open(error_file, LEGGI) as f:
-            if f == VUOTO:
+            if f.read() == VUOTO:
                 error = 1
 
         return render_template("menu_classi.html", classi=classi, error=error)

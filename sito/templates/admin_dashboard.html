@@ -103,78 +103,29 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Nome</th>
+                                <th>Posizione</th>
                                 <th>Cognome</th>
                                 <th>E-Mail</th>
                                 <th>Punti Totali</th>
-                                <th>Squadra</th>
+                                <th>Classe</th>
                             </tr>
                         </thead>
                         <tbody>
+                          {% for utente in novita %}
                             <tr>
-                                <td>
-                                    <img src="images/profile-1.png">
-                                    <p>Persona 1</p>
-                                </td>
-                                <td>Bth</td>
-                                <td>s-alunno1@isiskeynes.it</td>
-                                <td>2599</td>
-                                <td><span class="status completed">The Heaves</span></td>
+                              <td>{{loop.index}}</td>
+
+                              <td>{{utente.cognome}}</td>
+                              <td>{{utente.email}}</td>
+                              <td>{{utente.punti}}</td>
+                              <td><span class="status completed" style="background-color:rgb{{calcola_valore_rgb(classe_da_id(utente.classe_id).classe)}}">{{classe_da_id(utente.classe_id).classe}}</span></td>
                             </tr>
-                            <tr>
-                                <td>
-                                    <img src="images/profile-1.png">
-                                    <p>Persona 2</p>
-                                </td>
-                                <td>Bth</td>
-                                <td>s-alunno2@isiskeynes.it</td>
-                                <td>1045</td>
-                                <td><span class="status pending">Hexabros</span></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <img src="images/profile-1.png">
-                                    <p>Persona 3</p>
-                                </td>
-                                <td>Bth</td>
-                                <td>s-alunno3@isiskeynes.it</td>
-                                <td>68945</td>
-                                <td><span class="status process">Figli del Padre</span></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <img src="images/profile-1.png">
-                                    <p>Persona 3</p>
-                                </td>
-                                <td>Bth</td>
-                                <td>s-alunno3@isiskeynes.it</td>
-                                <td>68945</td>
-                                <td><span class="status process">Figli del Padre</span></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <img src="images/profile-1.png">
-                                    <p>Persona 3</p>
-                                </td>
-                                <td>Bth</td>
-                                <td>s-alunno3@isiskeynes.it</td>
-                                <td>68945</td>
-                                <td><span class="status process">Figli del Padre</span></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <img src="images/profile-1.png">
-                                    <p>Persona 3</p>
-                                </td>
-                                <td>Bth</td>
-                                <td>s-alunno3@isiskeynes.it</td>
-                                <td>68945</td>
-                                <td><span class="status process">Figli del Padre</span></td>
-                            </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
             </div>
+
         </main>
     </div>
     <script src="{{ url_for('static', filename='js/admin_dashboard.js')}}"></script>
