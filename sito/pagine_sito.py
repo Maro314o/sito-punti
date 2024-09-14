@@ -10,8 +10,8 @@ from pathlib import Path
 
 pagine_sito = Blueprint("pagine_sito", __name__)
 ALLOWED_EXTENSIONS = set(["xlsx"])
-FILE_ERRORE = path.join(Path.cwd(), "instance", "errore.txt")
-FILE_VERSIONI = path.join(Path.cwd(), "instance", "versioni.txt")
+FILE_ERRORE = path.join(Path.cwd(), "misc_data", "errore.txt")
+FILE_VERSIONI = path.join(Path.cwd(), "misc_data", "versioni.txt")
 LEGGI = "r"
 RETURN_VALUE = "bottone"
 ELIMINA_UTENTE = "elimina"
@@ -243,12 +243,15 @@ def regole():
 @login_required
 def admin_dashboard():
     admin_user = current_user.admin_user
-    errori = open(path.join(Path.cwd(), "instance", "errore.txt"), "r").read() == VUOTO
+    errori = open(path.join(Path.cwd(), "misc_data", "errore.txt"), "r").read() == VUOTO
     if admin_user:
         numero_degli_studenti = len(elenco_studenti())
         numero_delle_classi = len(elenco_classi())
         numero_degli_admin = len(elenco_admin())
         numero_delle_squadre = len(elenco_squadre())
+        if not Info.query.filter_by().all():
+            db.session.add(Info(last_season=0))
+            db.session.commit()
         return render_template(
             "admin_dashboard.html",
             numero_studenti=numero_degli_studenti,
@@ -270,7 +273,7 @@ def classi():
     if current_user.admin_user:
         error = 0
         classi = elenco_classi()
-        error_file = path.join(Path.cwd(), "instance", "errore.txt")
+        error_file = path.join(Path.cwd(), "misc_data", "errore.txt")
 
         if request.method == "POST":
             dati = request.form
@@ -295,10 +298,10 @@ def classi():
                     new_filename = "foglio.xlsx"
 
                     save_location = path.join(
-                        path.join(Path.cwd(), "instance"), new_filename
+                        path.join(Path.cwd(), "databases"), new_filename
                     )
                     file.save(save_location)
-                    error_file = path.join(Path.cwd(), "instance", "errore.txt")
+                    error_file = path.join(Path.cwd(), "misc_data", "errore.txt")
                     with open(error_file, "w") as f:
                         f.write(VUOTO)
                     refactor_file()

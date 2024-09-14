@@ -56,13 +56,13 @@ def refactor_file():
     )
     db.session.add(nuovo_utente)
     db.session.commit()
-    error_file = path.join(Path.cwd(), "instance", "errore.txt")
-    log_file = path.join(Path.cwd(), "instance", "log.txt")
-    name_file = path.join(Path.cwd(), "instance", "foglio.xlsx")
+    error_file = path.join(Path.cwd(), "misc_data", "errore.txt")
+    log_file = path.join(Path.cwd(), "misc_data", "log.txt")
+    name_file = path.join(Path.cwd(), "databases", "foglio.xlsx")
     file = pd.read_excel(name_file, sheet_name=None)
     dataset, *lista_fogli = file.keys()
 
-    error_file = path.join(Path.cwd(), "instance", "errore.txt")
+    error_file = path.join(Path.cwd(), "misc_data", "errore.txt")
 
     for classe in lista_fogli:
         nuova_classe = Classi(classe=classe)
