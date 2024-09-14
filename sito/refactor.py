@@ -30,6 +30,8 @@ def refactor_file():
         elenco_studenti,
         cronologia_da_user,
         user_da_nominativo,
+        aggiorna_punti,
+        aggiorna_punti_cumulativi,
     )
 
     from werkzeug.security import generate_password_hash
@@ -80,7 +82,7 @@ def refactor_file():
             else:
                 squadra = riga[1]
             nuovo_utente = User(
-                email=f"utente_non_registrato_{'_'.join(nominativo.split())}",
+                email=f"email_non_registrata_per_{'_'.join(nominativo.split())}",
                 nome=nominativo.split()[1],
                 cognome=nominativo.split()[0],
                 nominativo=nominativo,
@@ -142,32 +144,12 @@ def refactor_file():
             )
         )
     db.session.query(Info).delete()
-    db.session.commit()
     db.session.add(Info(last_season=last_season))
     db.session.commit()
+
     for utente in elenco_studenti():
-        nuovi_punti = [0]
+        aggiorna_punti(utente)
 
-        for riga in cronologia_da_user(utente):
-            while len(nuovi_punti) < riga.stagione:
-                nuovi_punti.append(0)
-
-            nuovi_punti[riga.stagione - 1] += riga.modifica_punti
-
-        utente.punti = ",".join(map(str, nuovi_punti))
-        utente.punti = utente.punti + ",0" * (
-            last_season - len(utente.punti.split(","))
-        )
-
-    db.session.commit()
     studenti = elenco_studenti()
     for studente in studenti:
-        punti_cumulativi = 0
-        season = 1
-        for evento in cronologia_da_user(studente):
-            if season != evento.stagione:
-                punti_cumulativi = 0
-                season = evento.stagione
-            punti_cumulativi += evento.modifica_punti
-            evento.punti_cumulativi = punti_cumulativi
-    db.session.commit()
+        aggiorna_punti_cumulativi(studente)

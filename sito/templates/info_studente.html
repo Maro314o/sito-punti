@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,89 +7,105 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Classifica</title>
 
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',
-                filename='css/classe.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/classe.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/reset.css') }}">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
-    <link rel="stylesheet"  type="text/css" href="{{ url_for('static', filename='css/reset.css')}}">
-  <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-
-
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
 
+    <div class="left-popup-bar">
+        <div style="display:flex;height:15px;">
+            <div style="background:rgb{{ calcola_valore_rgb(studente.squadra) }};" class="circle"></div>
+            <h1 style="flex-grow:1;height:15px;font-size:30px;text-align:left;">&#160;{{ studente.nominativo }}</h1>
+        </div>
+        <div>
+            <h2 style="width:100%;text-align:left;font-size: 20px;padding-top:1.5em">Email: {{ studente.email }}</h2>
+            <h2 style="width:100%;text-align:left;font-size: 20px;">Squadra: {{ studente.squadra }}</h2>
+        </div>
 
-     <div class="left-popup-bar">
-       <div style="display:flex;height:15px;">
-         <div style="background:rgb{{calcola_valore_rgb(studente.squadra)}};"class="circle"></div>
-         <h1 style="flex-grow:1;height:15px;font-size:30px;text-align:left;">&#160{{studente.nominativo}}</h1>
+        <table class="content-table">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Tipologia</th>
+                    <th>Punti</th>
+                    <th>Punteggio</th>
+                    {% if user.admin_user%}
+                    <th>Azioni</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for evento in cronologia_stagione(studente,stagione_corrente) %}
+                <tr>
+                    <td>{{ evento.data }}</td>
+                    <td>{{ evento.attivita }}</td>
+                    <td>{{ evento.modifica_punti }}</td>
+                    <td>{{ evento.punti_cumulativi }}</td>
+                    {% if user.admin_user%}
+                    <td>
+<form action="{{ url_for('pagine_sito.delete_event', classe_name=classe, studente_id=studente.id, stagione=stagione_corrente, event_id=evento.id) }}" method="POST" style="display:inline;">
+                            <button type="submit" class="btn-delete">Elimina</button>
+                        </form>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
-       </div>
-       <div>
-      <h2 style="width:100%;text-align:left;font-size: 20px;padding-top:1.5em">Email: {{studente.email}}</h2>
-      <h2 style="width:100%;text-align:left;font-size: 20px;">Squadra: {{studente.squadra}}</h2>
-       </div>
+        {% if user.admin_user%}
+        <h3>Aggiungi Nuovo Evento</h3>
+<form action="{{ url_for('pagine_sito.create_event', classe_name=classe, studente_id=studente.id, stagione=stagione_corrente) }}" method="POST" class="form-new-event">
+            <label for="data">Data:</label>
+            <input type="date" name="data" required>
+            <label for="attivita">Tipologia:</label>
+            <input type="text" name="attivita" required>
+            <label for="modifica_punti">Punti:</label>
+            <input type="number" name="modifica_punti" required>
+            <label for="stagione">Stagione:</label>
+            <input type="number" name="stagione" required>
+            <button type="submit">Aggiungi Evento</button>
+        </form>
+        {% endif %}
+    </div>
 
-      <table class="content-table">
-        <thead>
-          <tr>
-            <th>Data</th>
-            <th>Tipologia</th>
-            <th>Punti</th>
-            <th>Punteggio</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for evento in cronologia_da_user(studente) %}
-          <tr>
-            <td>{{evento.data}}</td>
-            <td>{{evento.attivita}}</td>
-            <td>{{evento.modifica_punti}}</td>
-            <td>{{evento.punti_cumulativi}}</td>
-          </tr>
-        {% endfor %} 
-        </tbody>
-      </table>
-
-     </div>
-     <div class="grafico">
-      <canvas id="lineChart-{{studente.id}}" width="650" height="400"></canvas>
-      <script>
-        var ctx = document.getElementById("lineChart-{{studente.id}}").getContext("2d");
-        var lineChart = new Chart(ctx, {
-            type: "line",
-            data: {
-               labels: {{ list_label(cronologia_da_user(studente),stagione_corrente) | safe }},
-               datasets: [
-                {
-                  label: "Punti di {{studente.nominativo}}",
-                  data:  {{ list_data(cronologia_da_user(studente),stagione_corrente) | safe }},
-                  fill: false,
-                  borderColor: "rgb{{calcola_valore_rgb(studente.squadra)}}",
-                  backgroundColor:"rgb{{calcola_valore_rgb(studente.squadra)}}",
-
-                  lineTension: 0.1
-                }
-              ]
-            },
-    options: {
-        responsive: false,
-        plugins: {
-            tooltip: {
-                callbacks: {
-
-                    label: function (context) {
-                        return context.formattedValue;
+    <div class="grafico">
+        <canvas id="lineChart-{{ studente.id }}" width="650" height="400"></canvas>
+        <script>
+            var ctx = document.getElementById("lineChart-{{ studente.id }}").getContext("2d");
+            var lineChart = new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: {{ list_label(cronologia_da_user(studente), stagione_corrente) | safe }},
+                    datasets: [{
+                        label: "Punti di {{ studente.nominativo | safe }}",
+                        data: {{ list_data(cronologia_da_user(studente), stagione_corrente) | safe }},
+                        fill: false,
+                        borderColor: "rgb{{ calcola_valore_rgb(studente.squadra) }}",
+                        backgroundColor: "rgb{{ calcola_valore_rgb(studente.squadra) }}",
+                        lineTension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.formattedValue;
+                                },
+                            },
+                        },
                     },
                 },
-            },
-        },
-    },
-});
-      </script>
-     </div>
+            });
+        </script>
+    </div>
+</body>
 
 </html>

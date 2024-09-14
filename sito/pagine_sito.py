@@ -1,12 +1,11 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 from . import db
 from flask_login import login_required, current_user
-from .modelli import User, Classi, Info
+from .modelli import User, Classi, Info, Cronologia
 from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
 from os import path, remove
 from .refactor import refactor_file
-
 from pathlib import Path
 
 pagine_sito = Blueprint("pagine_sito", __name__)
@@ -28,6 +27,10 @@ def allowed_file(filename):
 
 def cronologia_da_user(utente):
     return utente.cronologia_studente
+
+
+def cronologia_stagione(utente, stagione):
+    return [x for x in utente.cronologia_studente if x.stagione == stagione]
 
 
 def user_da_nominativo(nominativo):
@@ -75,6 +78,14 @@ def elenco_classi():  # non si conta la classe degli admin
     ]
 
 
+def elimina_evento_cronologia(evento):
+    db.session.delete(evento)
+
+
+def evento_da_id(id):
+    return Cronologia.query.filter_by(id=id).first()
+
+
 def classifica_degli_studenti(stagione):
     return sorted(
         elenco_studenti(),
@@ -107,13 +118,45 @@ def list_attivita(Cronologia, stagione):
 
 
 def calcola_valore_rgb(squadra):
-    somma_ascii = sum(ord(char) ** 3 for char in squadra) + 70
-
+    somma_ascii = sum(ord(char) ** len(squadra) for char in squadra) + 70
     r = somma_ascii % 256
     g = (somma_ascii // 2) % 256
     b = (somma_ascii // 3) % 256
 
     return r, g, b, 0.3
+
+
+def aggiorna_punti_cumulativi(studente):
+    punti_cumulativi = 0
+    season = 1
+    for evento in cronologia_da_user(studente):
+        if season != evento.stagione:
+            punti_cumulativi = 0
+            season = evento.stagione
+        punti_cumulativi += evento.modifica_punti
+        evento.punti_cumulativi = punti_cumulativi
+    db.session.commit()
+
+
+def aggiorna_punti(utente):
+    last_season = Info.query.filter_by().all()[0].last_season
+    nuovi_punti = [0]
+
+    for riga in cronologia_da_user(utente):
+        if riga.stagione > last_season:
+            last_season = riga.stagione
+            db.session.query(Info).delete()
+            db.session.add(Info(last_season=last_season))
+        while len(nuovi_punti) < riga.stagione:
+            nuovi_punti.append(0)
+
+        nuovi_punti[riga.stagione - 1] += riga.modifica_punti
+
+    utente.punti = ",".join(map(str, nuovi_punti))
+    utente.punti = utente.punti + ",0" * (last_season - len(utente.punti.split(",")))
+    print(utente.punti)
+
+    db.session.commit()
 
 
 @pagine_sito.route("/")
@@ -161,10 +204,11 @@ def pag_classe(classe_name):
     )
 
 
-@pagine_sito.route("/classe/<classe_name>/<studente_id>/<stagione>", methods=["GET"])
+@pagine_sito.route(
+    "/classe/<classe_name>/<studente_id>/<int:stagione>", methods=["GET"]
+)
 @login_required
 def info_studente(classe_name, studente_id, stagione):
-    stagione = int(stagione) - 1
     return render_template(
         "info_studente.html",
         user=current_user,
@@ -175,7 +219,9 @@ def info_studente(classe_name, studente_id, stagione):
         calcola_valore_rgb=calcola_valore_rgb,
         list_data=list_data,
         list_attivita=list_attivita,
+        cronologia_stagione=cronologia_stagione,
         zip=zip,
+        classe=classe_name,
     )
 
 
@@ -286,3 +332,70 @@ def db_errori():
 @pagine_sito.route("/versioni")
 def versioni():
     return "<br>".join(reversed(open(FILE_VERSIONI, LEGGI).read().splitlines()))
+
+
+@pagine_sito.route(
+    "/classe/<classe_name>/<studente_id>/<stagione>/create_event", methods=["POST"]
+)
+def create_event(classe_name, studente_id, stagione):
+    # Recupera i dati dal form di creazione evento
+    data = request.form["data"]
+    attivita = request.form["attivita"]
+    modifica_punti = request.form["modifica_punti"]
+    stagione = request.form["stagione"]
+
+    # Crea un nuovo evento
+    nuovo_evento = Cronologia(
+        utente_id=studente_id,
+        stagione=stagione,
+        data=data,
+        attivita=attivita,
+        modifica_punti=modifica_punti,
+        punti_cumulativi=0,
+    )
+
+    # Aggiungi l'evento al database
+    db.session.add(nuovo_evento)
+    db.session.commit()
+    aggiorna_punti_cumulativi(user_da_id(studente_id))
+    aggiorna_punti(user_da_id(studente_id))
+
+    flash("Nuovo evento aggiunto con successo", "success")
+
+    # Reindirizza alla pagina della classifica
+    return redirect(
+        url_for(
+            "pagine_sito.info_studente",
+            classe_name=classe_name,
+            studente_id=studente_id,
+            stagione=stagione,
+        )
+    )
+
+
+@pagine_sito.route(
+    "/classe/<classe_name>/<studente_id>/<stagione>/delete_event/<int:event_id>",
+    methods=["POST"],
+)
+def delete_event(classe_name, studente_id, stagione, event_id):
+    # Recupera l'evento da eliminare
+    evento = evento_da_id(event_id)
+
+    if evento:
+        elimina_evento_cronologia(evento)
+
+        aggiorna_punti_cumulativi(user_da_id(studente_id))
+        aggiorna_punti(user_da_id(studente_id))
+        flash("Evento eliminato con successo", "success")
+    else:
+        flash("Evento non trovato", "error")
+
+    # Reindirizza alla pagina della classifica
+    return redirect(
+        url_for(
+            "pagine_sito.info_studente",
+            classe_name=classe_name,
+            studente_id=studente_id,
+            stagione=stagione,
+        )
+    )

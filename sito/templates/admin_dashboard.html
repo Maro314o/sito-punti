@@ -98,7 +98,7 @@
                 <div class="orders">
                     <div class="header">
                         <i class='bx bx-receipt'></i>
-                        <h3>Ultime Novità</h3>
+                        <h3>Classifica punti globale</h3>
                     </div>
                     <table>
                         <thead>
@@ -118,7 +118,7 @@
                               <td>{{utente.cognome}}</td>
                               <td>{{utente.email}}</td>
                               <td>{{utente.punti}}</td>
-                              <td><span class="status completed" style="background-color:rgb{{calcola_valore_rgb(classe_da_id(utente.classe_id).classe)}}">{{classe_da_id(utente.classe_id).classe}}</span></td>
+                              <td><a href="/classe/{{classe_da_id(utente.classe_id).classe}}"span class="status completed" style="background-color:rgb{{calcola_valore_rgb(classe_da_id(utente.classe_id).classe)}}">{{classe_da_id(utente.classe_id).classe}}</span></td>
                             </tr>
                             {% endfor %}
                         </tbody>

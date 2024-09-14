@@ -1,0 +1,1 @@
+far si che i form ti portano in una pagina esterna e poi ti riportano alla pagina corretta cosi' da poter semplificare la logica delle altre pagine

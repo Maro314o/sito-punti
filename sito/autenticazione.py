@@ -156,6 +156,5 @@ def crea_admin():
 
                 db.session.commit()
                 flash("Account creato con successo!", category="success")
-                login_user(nuovo_utente, remember=True)
                 return redirect((url_for("pagine_sito.home")))
         return render_template("crea_admin.html", user=current_user)
