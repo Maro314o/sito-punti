@@ -40,21 +40,9 @@ def refactor_file():
 
     db.session.query(Info).delete()
 
-    db.session.query(User).delete()
+    User.query.filter_by(admin_user=0).delete()
     db.session.query(Classi).delete()
     db.session.add(Classi(classe="admin"))
-    nuovo_utente = User(
-        email="s-admin.starter@isiskeynes.it",
-        nome="admin",
-        cognome="starter",
-        nominativo="starter admin",
-        password=generate_password_hash("highsecureadminpassword", method="sha256"),
-        punti="0",
-        account_attivo=1,
-        admin_user=1,
-        classe_id=classe_da_nome("admin").id,
-    )
-    db.session.add(nuovo_utente)
     db.session.commit()
     error_file = path.join(Path.cwd(), "misc_data", "errore.txt")
     log_file = path.join(Path.cwd(), "misc_data", "log.txt")
@@ -113,7 +101,7 @@ def refactor_file():
         stagione = riga[1]
         classe = riga[2]
         nominativo = " ".join(
-            [x.strip().capitalize() for x in str(riga[3]).strip().split()]
+            [x.strip().capitalize() for x in str(riga[3]).strip().split()][0:2]
         )
 
         attivita = riga[4]

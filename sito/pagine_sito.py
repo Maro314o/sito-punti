@@ -154,7 +154,6 @@ def aggiorna_punti(utente):
 
     utente.punti = ",".join(map(str, nuovi_punti))
     utente.punti = utente.punti + ",0" * (last_season - len(utente.punti.split(",")))
-    print(utente.punti)
 
     db.session.commit()
 

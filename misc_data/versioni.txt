@@ -2,3 +2,4 @@
 24/11/2023 17:48 | Versione 0.0.2 | Cambiamenti sostanziali alla grafica delle pagine home e admin_dashboard
 28/01/2024 22:49 | Versione 0.0.3 | Aggiunto una scheda per visualizzare piu' informazioni sui punti,compresa di un grafico 
 14/09/2024 12:15 | Versione 0.0.4 | Spostamento del pop-up che conteneva grafici e tabelle in una pagina separta
+14/09/2024 15:53 | Versione 0.0.5 | Aggiunta la possibilità di inviare email a questo sito per suggerimenti/segnalazioni, cambio del display di informazioni della admin_dashboard e possibilità di aggiungere punti direttamente dal sito

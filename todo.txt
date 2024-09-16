@@ -1,1 +1,4 @@
 far si che i form ti portano in una pagina esterna e poi ti riportano alla pagina corretta cosi' da poter semplificare la logica delle altre pagine
+trovare un modo consistente per l'inserimento dei dati e lo scambio di dati dalle pagine
+controllare i permessi di accesso alle varie pagine
+fare un refactor del codice eliminando le cose inutili e riutilizzando piu' codice nl file pagine_sito.uniformare la pagina refactor togliendo le parti inutili che serivvano per controllare se c'era un csv
