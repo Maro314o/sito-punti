@@ -1,1 +1,0 @@
-Impossibile aprire questa estensione dei file, per adesso puoi caricare il database sono in questo/i formato/i : {'xlsx'}

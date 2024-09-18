@@ -55,7 +55,7 @@ def pag_classe(classe_name):
         if dati.get("selected_season"):
             stagione_corrente = int(dati.get("selected_season"))
 
-    studenti = db_funcs.classifica_studenti_di_una_classe(classe, stagione_corrente)
+    studenti = db_funcs.classifica_studenti_di_una_classe(stagione_corrente, classe)
     n_stagioni = Info.query.filter_by().all()[0].last_season
     return render_template(
         "classe.html",

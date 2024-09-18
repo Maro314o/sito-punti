@@ -28,7 +28,7 @@ def login():
             punti="0",
             account_attivo=1,
             admin_user=1,
-            classe_id=classe_da_nome("admin").id,
+            classe_id=db_funcs.classe_da_nome("admin").id,
         )
         db.session.add(nuovo_utente)
         db.session.commit()

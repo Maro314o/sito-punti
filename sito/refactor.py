@@ -101,7 +101,7 @@ def refactor_file(current_user):
                 )
             errori += 1
             continue
-        elif not user_da_nominativo(nominativo):
+        elif not db_funcs.user_da_nominativo(nominativo):
             with open(error_file, "a") as f:
                 f.write(
                     f"{datetime.datetime.now()} | errore alla linea {numero_riga} del database : non è stato possibile modificare i punti dell' utente {nominativo} della classe {classe}. Controlla se ci sono errori nella scrittura del suo nome o se non è stato aggiunto ad una classe nel corrispettivo foglio .xlsx\n"

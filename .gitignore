@@ -6,4 +6,5 @@ data/
 .idea/
 .mypy_chache/
 __pycache__/
-
+log.txt
+errore.txt

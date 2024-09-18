@@ -15,6 +15,7 @@ def crea_app():
     DB_NAME = "database.db"
     DATA_DIRECTORY = "data"
     ERRORS_FILE_PATH = os.path.join(DATA_DIRECTORY, "errore.txt")
+    LOG_FILE_PATH = os.path.join(DATA_DIRECTORY, "log.txt")
     app.config["SECRET_KEY"] = "Speppimawwosowwi"
     app.config["SQLALCHEMY_DATABASE_URI"] = (
         f'sqlite:///{os.path.join(Path.cwd(),"data",DB_NAME)}'
@@ -22,6 +23,7 @@ def crea_app():
     app.config["SOLALCHEMY_TRACK_MODIFICATIONS"] = False
     init_directory(DATA_DIRECTORY)
     init_file(ERRORS_FILE_PATH)
+    init_file(LOG_FILE_PATH)
     db.init_app(app)
 
     from .pagine_sito import pagine_sito
