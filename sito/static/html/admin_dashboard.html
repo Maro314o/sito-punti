@@ -59,7 +59,7 @@
 
             <!-- 4 bottoni centrali -->
             <ul class="insights">
-                <li>
+                <li style="cursor: default">
                     <i class='bx bx-user-pin'></i>
                     <span class="info">
                         <h3>
@@ -68,7 +68,7 @@
                         <p>Alunni Totali</p>
                     </span>
                 </li>
-                <li><i class='bx bx-show-alt'></i>
+                <li style="cursor: default"><i class='bx bx-show-alt'></i>
                     <span class="info">
                         <h3>
                           {{numero_classi}} 
@@ -76,7 +76,7 @@
                         <p>Classi Totali</p>
                     </span>
                 </li>
-                <li><i class='bx bx-group'></i>
+                <li style="cursor: default"><i class='bx bx-group'></i>
                     <span class="info">
                         <h3>
                           {{numero_squadre}}
@@ -84,7 +84,7 @@
                         <p>Squadre Totali</p>
                     </span>
                 </li>
-                <li><i class='bx bx-shield'></i>
+                <li style="cursor: default"><i class='bx bx-shield'></i>
                     <span class="info">
                         <h3>
                           {{numero_admin}}
@@ -112,7 +112,7 @@
                         </thead>
                         <tbody>
                           {% for utente in novita %}
-                            <tr>
+                            <tr style="cursor: default" >
                               <td>{{loop.index}}</td>
 
                               <td>{{utente.cognome}}</td>
@@ -120,6 +120,7 @@
                               <td>{{utente.punti}}</td>
                               <td><a href="/classe/{{classe_da_id(utente.classe_id).classe}}"span class="status completed" style="background-color:rgb{{calcola_valore_rgb(classe_da_id(utente.classe_id).classe)}}">{{classe_da_id(utente.classe_id).classe}}</span></td>
                             </tr>
+                            
                             {% endfor %}
                         </tbody>
                     </table>

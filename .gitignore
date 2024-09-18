@@ -3,3 +3,7 @@
 *.xlsx
 *.db
 databases/
+.idea/
+.mypy_chache/
+__pycache__/
+

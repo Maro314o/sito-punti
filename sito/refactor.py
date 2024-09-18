@@ -19,22 +19,11 @@ mesi = {
 }
 
 
-def refactor_file():
+def refactor_file(current_user):
     from . import db
 
     from .modelli import User, Classi, Cronologia, Info
-    from .pagine_sito import (
-        classe_da_nome,
-        user_da_email,
-        elenco_admin,
-        elenco_studenti,
-        cronologia_da_user,
-        user_da_nominativo,
-        aggiorna_punti,
-        aggiorna_punti_cumulativi,
-    )
-
-    from werkzeug.security import generate_password_hash
+    import sito.database_funcs as db_funcs
 
     db.session.query(Cronologia).delete()
 
@@ -44,14 +33,13 @@ def refactor_file():
     db.session.query(Classi).delete()
     db.session.add(Classi(classe="admin"))
     db.session.commit()
-    error_file = path.join(Path.cwd(), "misc_data", "errore.txt")
-    log_file = path.join(Path.cwd(), "misc_data", "log.txt")
-    name_file = path.join(Path.cwd(), "databases", "foglio.xlsx")
+    error_file = path.join(Path.cwd(), "data", "errore.txt")
+    log_file = path.join(Path.cwd(), "data", "log.txt")
+    name_file = path.join(Path.cwd(), "data", "foglio.xlsx")
     file = pd.read_excel(name_file, sheet_name=None)
     dataset, *lista_fogli = file.keys()
 
-    error_file = path.join(Path.cwd(), "misc_data", "errore.txt")
-
+    errori = 0
     for classe in lista_fogli:
         nuova_classe = Classi(classe=classe)
         db.session.add(nuova_classe)
@@ -79,7 +67,7 @@ def refactor_file():
                 punti="0",
                 account_attivo=0,
                 admin_user=0,
-                classe_id=classe_da_nome(classe).id,
+                classe_id=db_funcs.classe_da_nome(classe).id,
             )
             db.session.add(nuovo_utente)
 
@@ -111,12 +99,14 @@ def refactor_file():
                 f.write(
                     f"{datetime.datetime.now()} | errore alla linea {numero_riga} del database : La riga corrente e' vuota\n"
                 )
+            errori += 1
             continue
         elif not user_da_nominativo(nominativo):
             with open(error_file, "a") as f:
                 f.write(
                     f"{datetime.datetime.now()} | errore alla linea {numero_riga} del database : non è stato possibile modificare i punti dell' utente {nominativo} della classe {classe}. Controlla se ci sono errori nella scrittura del suo nome o se non è stato aggiunto ad una classe nel corrispettivo foglio .xlsx\n"
                 )
+            errori += 1
 
             continue
 
@@ -128,16 +118,20 @@ def refactor_file():
                 attivita=attivita,
                 modifica_punti=punti,
                 punti_cumulativi=0,
-                utente_id=user_da_nominativo(nominativo).id,
+                utente_id=db_funcs.user_da_nominativo(nominativo).id,
             )
         )
     db.session.query(Info).delete()
     db.session.add(Info(last_season=last_season))
     db.session.commit()
 
-    for utente in elenco_studenti():
-        aggiorna_punti(utente)
+    for utente in db_funcs.elenco_studenti():
+        db_funcs.aggiorna_punti(utente)
 
-    studenti = elenco_studenti()
+    studenti = db_funcs.elenco_studenti()
     for studente in studenti:
-        aggiorna_punti_cumulativi(studente)
+        db_funcs.aggiorna_punti_cumulativi(studente)
+    with open(log_file, "a") as f:
+        f.write(
+            f"{datetime.datetime.now()} | {current_user.nominativo} ha appena caricato un file excel con {errori} errori\n"
+        )

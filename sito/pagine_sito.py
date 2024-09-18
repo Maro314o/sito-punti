@@ -1,17 +1,21 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from . import db
+from sito.database_funcs.cronology_utils_funcs import cronologia_utente
+from . import db, app
+
+with app.app_context():
+    import sito.database_funcs as db_funcs
+import sito.misc_utils_funcs as mc_utils
+import sito.chart_funcs as ct_funcs
+
 from flask_login import login_required, current_user
-from .modelli import User, Classi, Info, Cronologia
-from werkzeug.security import generate_password_hash
-from werkzeug.utils import secure_filename
-from os import path, remove
+from .modelli import Classi, Info, Cronologia
+from os import path
 from .refactor import refactor_file
 from pathlib import Path
 
 pagine_sito = Blueprint("pagine_sito", __name__)
-ALLOWED_EXTENSIONS = set(["xlsx"])
-FILE_ERRORE = path.join(Path.cwd(), "misc_data", "errore.txt")
-FILE_VERSIONI = path.join(Path.cwd(), "misc_data", "versioni.txt")
+FILE_ERRORE = path.join(Path.cwd(), "data", "errore.txt")
+FILE_VERSIONI = path.join(Path.cwd(), "versioni.txt")
 LEGGI = "r"
 RETURN_VALUE = "bottone"
 ELIMINA_UTENTE = "elimina"
@@ -21,141 +25,7 @@ CONFERMA_CAMBIAMENTI_DATABASE = "datab"
 VUOTO = ""
 
 
-def allowed_file(filename):
-    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
-def cronologia_da_user(utente):
-    return utente.cronologia_studente
-
-
-def cronologia_stagione(utente, stagione):
-    return [x for x in utente.cronologia_studente if x.stagione == stagione]
-
-
-def user_da_nominativo(nominativo):
-    return User.query.filter_by(nominativo=nominativo).first()
-
-
-def user_da_id(id):
-    return User.query.filter_by(id=id).first()
-
-
-def user_da_email(email):
-    return User.query.filter_by(email=email).first()
-
-
-def classe_da_nome(classe_name):
-    return Classi.query.filter_by(classe=classe_name).first()
-
-
-def classe_da_id(classe_id):
-    return Classi.query.filter_by(id=classe_id).first()
-
-
-def ordina_studenti_in_modo_decrescente(classe, stagione):
-    return sorted(
-        classe.studenti,
-        key=lambda studente: float(studente.punti.split(",")[stagione - 1]),
-    )[::-1]
-
-
-def elenco_utenti():
-    return User.query.filter_by().all()
-
-
-def elenco_studenti():
-    return [utente for utente in User.query.filter_by().all() if not utente.admin_user]
-
-
-def elenco_admin():
-    return [utente for utente in User.query.filter_by().all() if utente.admin_user]
-
-
-def elenco_classi():  # non si conta la classe degli admin
-    return [
-        classe for classe in Classi.query.filter_by().all() if classe.classe != "admin"
-    ]
-
-
-def elimina_evento_cronologia(evento):
-    db.session.delete(evento)
-
-
-def evento_da_id(id):
-    return Cronologia.query.filter_by(id=id).first()
-
-
-def classifica_degli_studenti(stagione):
-    return sorted(
-        elenco_studenti(),
-        key=lambda studente: float(studente.punti.split(",")[stagione - 1]),
-    )[::-1]
-
-
-def elenco_di_tutte_le_classi():
-    return Classi.query.filter_by().all()
-
-
-def elenco_squadre():
-    return set([x.squadra for x in elenco_studenti()])
-
-
-def errore_accesso():
-    return redirect(url_for("pagine_sito.home"))
-
-
-def list_data(Cronologia, stagione):
-    return [x.punti_cumulativi for x in Cronologia if x.stagione == stagione]
-
-
-def list_label(Cronologia, stagione):
-    return [x.data for x in Cronologia if x.stagione == stagione]
-
-
-def list_attivita(Cronologia, stagione):
-    return [x.attivita for x in Cronologia if x.stagione == stagione]
-
-
-def calcola_valore_rgb(squadra):
-    somma_ascii = sum(ord(char) ** len(squadra) for char in squadra) + 70
-    r = somma_ascii % 256
-    g = (somma_ascii // 2) % 256
-    b = (somma_ascii // 3) % 256
-
-    return r, g, b, 0.3
-
-
-def aggiorna_punti_cumulativi(studente):
-    punti_cumulativi = 0
-    season = 1
-    for evento in cronologia_da_user(studente):
-        if season != evento.stagione:
-            punti_cumulativi = 0
-            season = evento.stagione
-        punti_cumulativi += evento.modifica_punti
-        evento.punti_cumulativi = punti_cumulativi
-    db.session.commit()
-
-
-def aggiorna_punti(utente):
-    last_season = Info.query.filter_by().all()[0].last_season
-    nuovi_punti = [0]
-
-    for riga in cronologia_da_user(utente):
-        if riga.stagione > last_season:
-            last_season = riga.stagione
-            db.session.query(Info).delete()
-            db.session.add(Info(last_season=last_season))
-        while len(nuovi_punti) < riga.stagione:
-            nuovi_punti.append(0)
-
-        nuovi_punti[riga.stagione - 1] += riga.modifica_punti
-
-    utente.punti = ",".join(map(str, nuovi_punti))
-    utente.punti = utente.punti + ",0" * (last_season - len(utente.punti.split(",")))
-
-    db.session.commit()
+ALLOWED_EXTENSIONS = set(["xlsx"])
 
 
 @pagine_sito.route("/")
@@ -164,7 +34,7 @@ def home():
         return render_template(
             "home.html",
             user=current_user,
-            classe_name=classe_da_id(current_user.classe_id).classe,
+            classe_name=db_funcs.classe_da_id(current_user.classe_id).classe,
         )
     except:
         return render_template(
@@ -177,15 +47,15 @@ def home():
 def pag_classe(classe_name):
     stagione_corrente = Info.query.filter_by().all()[0].last_season
     if current_user.admin_user:
-        classe = classe_da_nome(classe_name)
+        classe = db_funcs.classe_da_nome(classe_name)
     else:
-        classe = classe_da_id(current_user.classe_id)
+        classe = db_funcs.classe_da_id(current_user.classe_id)
     if request.method == "POST":
         dati = request.form
         if dati.get("selected_season"):
             stagione_corrente = int(dati.get("selected_season"))
 
-    studenti = ordina_studenti_in_modo_decrescente(classe, stagione_corrente)
+    studenti = db_funcs.classifica_studenti_di_una_classe(classe, stagione_corrente)
     n_stagioni = Info.query.filter_by().all()[0].last_season
     return render_template(
         "classe.html",
@@ -194,11 +64,11 @@ def pag_classe(classe_name):
         studenti=studenti,
         n_stagioni=n_stagioni,
         stagione_corrente=stagione_corrente,
-        cronologia_da_user=cronologia_da_user,
-        list_label=list_label,
-        list_data=list_data,
-        calcola_valore_rgb=calcola_valore_rgb,
-        list_attivita=list_attivita,
+        cronologia_da_user=db_funcs.cronologia_da_user,
+        list_label=ct_funcs.list_label,
+        list_data=ct_funcs.list_data,
+        calcola_valore_rgb=mc_utils.calcola_valore_rgb,
+        list_attivita=ct_funcs.list_attivita,
         zip=zip,
     )
 
@@ -212,13 +82,13 @@ def info_studente(classe_name, studente_id, stagione):
         "info_studente.html",
         user=current_user,
         stagione_corrente=stagione,
-        studente=user_da_id(studente_id),
-        cronologia_da_user=cronologia_da_user,
-        list_label=list_label,
-        calcola_valore_rgb=calcola_valore_rgb,
-        list_data=list_data,
-        list_attivita=list_attivita,
-        cronologia_stagione=cronologia_stagione,
+        studente=db_funcs.user_da_id(studente_id),
+        cronologia_da_user=db_funcs.cronologia_da_user,
+        list_label=ct_funcs.list_label,
+        calcola_valore_rgb=mc_utils.calcola_valore_rgb,
+        list_data=ct_funcs.list_data,
+        list_attivita=ct_funcs.list_attivita,
+        cronologia_stagione=cronologia_utente,
         zip=zip,
         classe=classe_name,
     )
@@ -230,7 +100,7 @@ def regole():
         return render_template(
             "regole.html",
             user=current_user,
-            classe_name=classe_da_id(current_user.classe_id).classe,
+            classe_name=db_funcs.classe_da_id(current_user.classe_id).classe,
         )
     except:
         return render_template(
@@ -242,12 +112,12 @@ def regole():
 @login_required
 def admin_dashboard():
     admin_user = current_user.admin_user
-    errori = open(path.join(Path.cwd(), "misc_data", "errore.txt"), "r").read() == VUOTO
+    errori = open(path.join(Path.cwd(), "data", "errore.txt"), "r").read() == VUOTO
     if admin_user:
-        numero_degli_studenti = len(elenco_studenti())
-        numero_delle_classi = len(elenco_classi())
-        numero_degli_admin = len(elenco_admin())
-        numero_delle_squadre = len(elenco_squadre())
+        numero_degli_studenti = len(db_funcs.elenco_studenti())
+        numero_delle_classi = len(db_funcs.elenco_classi_studenti())
+        numero_degli_admin = len(db_funcs.elenco_admin())
+        numero_delle_squadre = len(db_funcs.elenco_squadre())
         if not Info.query.filter_by().all():
             db.session.add(Info(last_season=0))
             db.session.commit()
@@ -257,12 +127,12 @@ def admin_dashboard():
             numero_classi=numero_delle_classi,
             numero_admin=numero_degli_admin,
             numero_squadre=numero_delle_squadre,
-            novita=classifica_degli_studenti(
+            novita=db_funcs.classifica_studenti(
                 Info.query.filter_by().all()[0].last_season
             )[0:8],
             errori=errori,
-            classe_da_id=classe_da_id,
-            calcola_valore_rgb=calcola_valore_rgb,
+            classe_da_id=db_funcs.classe_da_id,
+            calcola_valore_rgb=mc_utils.calcola_valore_rgb,
         )
 
 
@@ -271,14 +141,14 @@ def admin_dashboard():
 def classi():
     if current_user.admin_user:
         error = 0
-        classi = elenco_classi()
-        error_file = path.join(Path.cwd(), "misc_data", "errore.txt")
+        classi = db_funcs.elenco_classi_studenti()
+        error_file = path.join(Path.cwd(), "data", "errore.txt")
 
         if request.method == "POST":
             dati = request.form
             if dati[RETURN_VALUE] == ENTRA_NELLA_CLASSE:
                 classe_name = dati.get("classe")
-                classe = classe_da_nome(classe_name)
+                classe = db_funcs.classe_da_nome(classe_name)
                 return redirect(
                     url_for("pagine_sito.classe", classe_name=classe.classe)
                 )
@@ -286,26 +156,26 @@ def classi():
             if dati[RETURN_VALUE] == AGGIUNGI_CLASSE:
                 classe_name = dati.get("classe")
                 if classe_name != VUOTO and classe_name not in [
-                    x.classe for x in elenco_di_tutte_le_classi()
+                    x.classe for x in db_funcs.elenco_tutte_le_classi()
                 ]:
                     db.session.add(Classi(classe=classe_name))
                     db.session.commit()
 
             if dati[RETURN_VALUE] == CONFERMA_CAMBIAMENTI_DATABASE:
                 file = request.files["filen"]
-                if allowed_file(file.filename):
+                if mc_utils.allowed_files(file.filename):
                     new_filename = "foglio.xlsx"
 
                     save_location = path.join(
-                        path.join(Path.cwd(), "databases"), new_filename
+                        path.join(Path.cwd(), "data"), new_filename
                     )
                     file.save(save_location)
-                    error_file = path.join(Path.cwd(), "misc_data", "errore.txt")
+                    error_file = path.join(Path.cwd(), "data", "errore.txt")
                     with open(error_file, "w") as f:
                         f.write(VUOTO)
-                    refactor_file()
+                    refactor_file(current_user)
 
-                    classi = elenco_classi()
+                    classi = db_funcs.elenco_classi_studenti()
 
                 else:
                     with open(error_file, "w") as f:
@@ -359,8 +229,8 @@ def create_event(classe_name, studente_id, stagione):
     # Aggiungi l'evento al database
     db.session.add(nuovo_evento)
     db.session.commit()
-    aggiorna_punti_cumulativi(user_da_id(studente_id))
-    aggiorna_punti(user_da_id(studente_id))
+    db_funcs.aggiorna_punti_cumulativi(db_funcs.user_da_id(studente_id))
+    db_funcs.aggiorna_punti(db_funcs.user_da_id(studente_id))
 
     flash("Nuovo evento aggiunto con successo", "success")
 
@@ -381,13 +251,13 @@ def create_event(classe_name, studente_id, stagione):
 )
 def delete_event(classe_name, studente_id, stagione, event_id):
     # Recupera l'evento da eliminare
-    evento = evento_da_id(event_id)
+    evento = db_funcs.evento_da_id(event_id)
 
     if evento:
-        elimina_evento_cronologia(evento)
+        db_funcs.elimina_evento_cronologia(evento)
 
-        aggiorna_punti_cumulativi(user_da_id(studente_id))
-        aggiorna_punti(user_da_id(studente_id))
+        db_funcs.aggiorna_punti_cumulativi(db_funcs.user_da_id(studente_id))
+        db_funcs.aggiorna_punti(db_funcs.user_da_id(studente_id))
         flash("Evento eliminato con successo", "success")
     else:
         flash("Evento non trovato", "error")

@@ -48,10 +48,10 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Posizione</th>
-                        <th style="text-align:center">Nome e Cognome</th>
-                        <th style="text-align:center">Squadra</th>
-                        <th style="text-align:center;z-index:1;">Punti Totali</th>
+                        <th style="cursor: default;">Posizione</th>
+                        <th style="text-align:center;cursor: default;color: #000000">Nome e Cognome</th>
+                        <th style="text-align:center;cursor: default">Squadra</th>
+                        <th style="text-align:center;z-index:1;cursor: default;color: #000000">Punti Totali</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -75,10 +75,11 @@
                       <td style="text-align:center" >{{ studente.squadra }}</td>
 
                               <td style="text-align:center" >{{ studente.punti.split(',')[stagione_corrente-1] }}
-
+                            {% if user.admin_user or user.nominativo==studente.nominativo %}
 
  </div> <a href="/classe/{{classe}}/{{studente.id}}/{{stagione_corrente}}">
-    <button  class="material-symbols--info-outline" onclick="openPopup('{{ studente.id }}')"></button></a></td>
+    <button  class="material-symbols--info-outline" ></button></a></td>
+                              {% endif %}
 
 
 

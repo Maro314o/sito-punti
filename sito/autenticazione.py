@@ -1,34 +1,23 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from .modelli import User, Classi
-from . import db
-from .pagine_sito import (
-    elenco_classi,
-    elenco_di_tutte_le_classi,
-    classe_da_nome,
-    user_da_email,
-    elenco_admin,
-    user_da_nominativo,
-)
+from . import db, app
+
+with app.app_context():
+    import sito.database_funcs as db_funcs
+import sito.misc_utils_funcs as mc_utils
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
 
 autenticazione = Blueprint("autenticazione", __name__)
 
 
-def campi_vuoti(dati):
-    for campo in dati.values():
-        if campo == "":
-            return True
-    return False
-
-
 def crea_classe():
-    return [classe.classe for classe in elenco_classi()]
+    return [classe.classe for classe in db_funcs.elenco_classi_studenti()]
 
 
 @autenticazione.route("/login", methods=["GET", "POST"])
 def login():
-    if len(elenco_di_tutte_le_classi()) == 0:
+    if len(db_funcs.elenco_tutte_le_classi()) == 0:
         db.session.add(Classi(classe="admin"))
         nuovo_utente = User(
             email="s-admin.starter@isiskeynes.it",
@@ -47,7 +36,7 @@ def login():
         email = request.form.get("email")
         password = request.form.get("password")
 
-        user = user_da_email(email)
+        user = db_funcs.user_da_email(email)
         if not user:
             flash("L'email non esiste", category="error")
         elif not check_password_hash(user.password, password):
@@ -81,9 +70,9 @@ def sign_up():
             [x.strip().capitalize() for x in f"{cognome} {nome}".strip().split()]
         )
 
-        user = user_da_nominativo(nominativo)
+        user = db_funcs.user_da_nominativo(nominativo)
 
-        if campi_vuoti(dati) is True:
+        if mc_utils.campi_vuoti(dati) is True:
             flash("Devi compilare tutti i campi", category="error")
         elif "@isiskeynes.it" not in email:
             flash("Il dominio dell' email é sbagliato", category="error")
@@ -91,8 +80,8 @@ def sign_up():
             flash("hai dimenticato di mettere 's-' nell' email", category="error")
         elif not user:
             flash(
-                "Non esiste uno studente con questo nome e cognome, se ne hai piu' di uno inseriscili entrambi e "
-                "separali da uno spazio",
+                "Non esiste uno studente con questo nome e cognome, se ne hai piu' di uno inserisci il primo."
+                "Se il problema persiste chiedi al tuo insegnante",
                 category="error",
             )
         elif user.account_attivo:
