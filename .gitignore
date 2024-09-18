@@ -2,7 +2,7 @@
 *.pyc
 *.xlsx
 *.db
-databases/
+data/
 .idea/
 .mypy_chache/
 __pycache__/
