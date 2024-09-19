@@ -19,6 +19,16 @@
 </head>
 
 <body>
+    <div class="sidebar-button-container">
+      {% if  user.admin_user %}
+      <button class="custom-button" onclick="location.href='/classi'">
+      {% else %}
+      <button class="custom-button" onclick="location.href='/'">
+        {% endif %}
+            <i class="fas fa-arrow-left"></i>
+          </a>
+        </button>               
+    </div>
     <main class="table" id="customers_table">
         <section class="table__header">
           <div class="nomeclasse">

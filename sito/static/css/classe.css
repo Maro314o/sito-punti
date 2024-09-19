@@ -443,3 +443,37 @@ body {
 .grafico {
     margin-left: 8em;
 }
+.sidebar-button-container {
+    position: absolute; /* Or relative, depending on your sidebar structure */
+    background-color: transparent;
+    top: 20px; /* Adjust the vertical position as needed */
+    left: 20px; /* Adjust the horizontal position as needed */
+}
+
+.custom-button {
+    color: black; /* Button icon color */
+    padding: 8px 18px; /* Padding for a good clickable area */
+    border: none;
+    cursor: pointer;
+    border-radius: 10px; /* Optional rounded corners */
+    font-size: 16px;
+    display: flex; /* Align the icon nicely */
+    align-items: center; /* Vertically center the icon */
+    justify-content: center; /* Center the content */
+}
+
+.custom-button i, /* For Font Awesome icons */
+.custom-button svg { /* For SVG icons */
+    margin-right: 2px; /* Space between icon and text (if any) */
+    font-size: 1.2em; /* Slightly larger icon */
+}
+
+.custom-button:hover {
+    color: #757575;
+    transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
+.custom-button:active {
+    color: #5f5f5f;
+    transform: scale(0.98); /* Slight shrink when clicked */
+}

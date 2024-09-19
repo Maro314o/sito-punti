@@ -22,7 +22,7 @@ RETURN_VALUE = "bottone"
 ELIMINA_UTENTE = "elimina"
 AGGIUNGI_CLASSE = "nuova"
 ENTRA_NELLA_CLASSE = "raggiunti"
-CONFERMA_CAMBIAMENTI_DATABASE = "datab"
+CONFERMA_CAMBIAMENTI_DATABASE = "load_database"
 VUOTO = ""
 
 
@@ -137,22 +137,8 @@ def classi():
 
     if request.method == "POST":
         dati = request.form
-        if dati[RETURN_VALUE] == ENTRA_NELLA_CLASSE:
-            print("wtf")
-            classe_name = dati.get("classe")
-            classe = db_funcs.classe_da_nome(classe_name)
-            return redirect(url_for("pagine_sito.classe", classe_name=classe.classe))
-
-        if dati[RETURN_VALUE] == AGGIUNGI_CLASSE:
-            classe_name = dati.get("classe")
-            if classe_name != VUOTO and classe_name not in [
-                x.classe for x in db_funcs.elenco_tutte_le_classi()
-            ]:
-                db.session.add(Classi(classe=classe_name))
-                db.session.commit()
-
         if dati[RETURN_VALUE] == CONFERMA_CAMBIAMENTI_DATABASE:
-            file = request.files["filen"]
+            file = request.files["file_db"]
             if mc_utils.allowed_files(file.filename):
                 new_filename = "foglio.xlsx"
 
