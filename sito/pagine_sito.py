@@ -79,7 +79,7 @@ def pag_classe(classe_name):
 )
 @login_required
 def info_studente(classe_name, studente_id, stagione):
-    if current_user.id != studente_id or current_user.admin_user is False:
+    if current_user.id != studente_id or not current_user.admin_user:
         return errore_accesso()
     return render_template(
         "info_studente.html",
@@ -114,7 +114,7 @@ def regole():
 @pagine_sito.route("/admin_dashboard")
 @login_required
 def admin_dashboard():
-    if current_user.admin_user is False:
+    if not current_user.admin_user:
         return errore_accesso()
     errori = open(path.join(Path.cwd(), "data", "errore.txt"), "r").read() == VUOTO
     numero_degli_studenti = len(db_funcs.elenco_studenti())
@@ -142,7 +142,7 @@ def admin_dashboard():
 @pagine_sito.route("/classi", methods=["GET", "POST"])
 @login_required
 def classi():
-    if current_user.admin_user is False:
+    if not current_user.admin_user:
         return errore_accesso()
     error = 0
     classi = db_funcs.elenco_classi_studenti()
@@ -194,7 +194,7 @@ def classi():
 @pagine_sito.route("/db_errori")
 @login_required
 def db_errori():
-    if current_user.admin_user is False:
+    if not current_user.admin_user:
         return errore_accesso()
     with open(FILE_ERRORE, LEGGI) as file_errore:
         content_error = file_errore.read().splitlines()
@@ -203,7 +203,7 @@ def db_errori():
 
 @pagine_sito.route("/versioni")
 def versioni():
-    if current_user.admin_user is False:
+    if not current_user.admin_user:
         return errore_accesso()
     return "<br>".join(reversed(open(FILE_VERSIONI, LEGGI).read().splitlines()))
 
@@ -212,7 +212,7 @@ def versioni():
     "/classe/<classe_name>/<studente_id>/<stagione>/create_event", methods=["POST"]
 )
 def create_event(classe_name, studente_id, stagione):
-    if current_user.admin_user is False:
+    if not current_user.admin_user:
         return errore_accesso()
     # Recupera i dati dal form di creazione evento
     data = request.form["data"]
@@ -254,7 +254,7 @@ def create_event(classe_name, studente_id, stagione):
     methods=["POST"],
 )
 def delete_event(classe_name, studente_id, stagione, event_id):
-    if current_user.admin_user is False:
+    if not current_user.admin_user:
         return errore_accesso()
     # Recupera l'evento da eliminare
     evento = db_funcs.evento_da_id(event_id)

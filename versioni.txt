@@ -4,3 +4,4 @@
 14/09/2024 12:15 | Versione 0.0.4 | Spostamento del pop-up che conteneva grafici e tabelle in una pagina separta
 14/09/2024 15:53 | Versione 0.0.5 | Aggiunta la possibilità di inviare email a questo sito per suggerimenti/segnalazioni, cambio del display di informazioni della admin_dashboard e possibilità di aggiungere punti direttamente dal sito
 16/09/2024 14:48 | Versione 0.0.6 | Fix riguardo alla cancellazione degli admin al caricamento dei dati + fix di un problema con le persone che hanno 2 nomi
+19/09/2024 18:42 | Versione 0.0.7 | Aggiornamento permessi e accesso alle pagine

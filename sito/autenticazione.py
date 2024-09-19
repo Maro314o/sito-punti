@@ -112,7 +112,7 @@ def sign_up():
 @autenticazione.route("/crea_admin", methods=["GET", "POST"])
 @login_required
 def crea_admin():
-    if current_user.admin_user is False:
+    if not current_user.admin_user:
         return errore_accesso()
 
     if request.method == "POST":
