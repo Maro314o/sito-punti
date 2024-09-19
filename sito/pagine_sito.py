@@ -138,6 +138,7 @@ def classi():
     if request.method == "POST":
         dati = request.form
         if dati[RETURN_VALUE] == ENTRA_NELLA_CLASSE:
+            print("wtf")
             classe_name = dati.get("classe")
             classe = db_funcs.classe_da_nome(classe_name)
             return redirect(url_for("pagine_sito.classe", classe_name=classe.classe))

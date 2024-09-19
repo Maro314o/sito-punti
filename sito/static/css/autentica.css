@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
 *,
@@ -12,16 +13,17 @@ body {
   padding: 0;
   color: transparent;
   background-color: transparent;
-  background-color: transparent;
-
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   background-attachment: fixed;
   padding: 20px;
   overflow-x: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
-
 body,
 input,
 button {
@@ -46,7 +48,11 @@ a:hover {
 
 .form-container {
   max-width: 450px;
+  width: 100%;
   margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .form-body {
@@ -55,7 +61,7 @@ a:hover {
   padding: 50px;
   color: #000000;
   border-radius: 3px;
-  box-shadow: 0 0 1000px 50px #00a018;
+  box-shadow: 0 0 500px 25px #00a018;
 }
 
 @media only screen and (max-width: 500px) {
@@ -79,6 +85,7 @@ a:hover {
 .form-body .title {
   margin: 0;
   text-align: center;
+  font-size: 20px;
   font-weight: normal;
 }
 
@@ -176,7 +183,7 @@ li.fb a::before {
   font-size: 16px;
   background: rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
+  border-radius: 15px;
   margin-bottom: 15px;
   transition: background .3s;
   color: #000000;
@@ -212,13 +219,29 @@ li.fb a::before {
 .the-form [type="submit"] {
   background: #00a018;
   border: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 18px;
+  padding: 15px;
   font-size: 20px;
-  border-radius: 3px;
+  border-radius: 20px;
   cursor: pointer;
   margin-top: 20px;
   color: black;
+  text-align: center;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+#submit-btn {
+  position: relative;
+  padding-left: 40px; /* Adjust this based on icon size */
+}
+
+#submit-btn:before {
+  content: "\f090"; /* Font Awesome icon code for 'sign-in' */
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  position: absolute;
+  left: 10px; /* Adjust icon position */
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .the-form [type="submit"]:hover {
@@ -531,3 +554,4 @@ footer .column > a:hover{
         grid-template-columns: 1fr 150px;
     }
 }
+

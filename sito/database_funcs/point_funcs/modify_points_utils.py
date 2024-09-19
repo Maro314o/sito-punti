@@ -16,14 +16,14 @@ def aggiorna_punti_cumulativi(studente):
 
 
 def aggiorna_punti(utente):
-    last_season = Info.query.filter_by().all()[0].last_season
+    last_season_obj = Info.query.filter_by().all()[0]
+    last_season = last_season_obj.last_season
     nuovi_punti = [0]
 
     for riga in cronologia_da_user(utente):
         if riga.stagione > last_season:
             last_season = riga.stagione
-            db.session.query(Info).delete()
-            db.session.add(Info(last_season=last_season))
+            last_season_obj.last_season = last_season
         while len(nuovi_punti) < riga.stagione:
             nuovi_punti.append(0)
 

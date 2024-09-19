@@ -16,6 +16,7 @@
   <div class="button-list">
 {%for classe in classi%}
 <form method="POST" action="/classe/{{classe.classe}}"> 
+  
   <div class="container">
     <button type='submit' class="button" name='bottone' value="raggiungi">
      {% if loop.index%5==1%}
