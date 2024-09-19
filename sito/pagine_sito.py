@@ -31,16 +31,10 @@ ALLOWED_EXTENSIONS = set(["xlsx"])
 
 @pagine_sito.route("/")
 def home():
-    try:
-        return render_template(
-            "home.html",
-            user=current_user,
-            classe_name=db_funcs.classe_da_id(current_user.classe_id).classe,
-        )
-    except:
-        return render_template(
-            "home.html", user=current_user, classe_name="Login_error"
-        )
+    classe_name = None
+    if current_user.is_authenticated:
+        classe_name = db_funcs.classe_da_id(current_user.classe_id).classe
+    return render_template("home.html", user=current_user, classe_name=classe_name)
 
 
 @pagine_sito.route("/classe/<classe_name>", methods=["GET", "POST"])
@@ -74,18 +68,17 @@ def pag_classe(classe_name):
     )
 
 
-@pagine_sito.route(
-    "/classe/<classe_name>/<int:studente_id>/<int:stagione>", methods=["GET"]
-)
+@pagine_sito.route("/classe/<classe_name>/<nominativo>/<int:stagione>", methods=["GET"])
 @login_required
-def info_studente(classe_name, studente_id, stagione):
-    if current_user.id != studente_id or not current_user.admin_user:
+def info_studente(classe_name, nominativo, stagione):
+    nominativo = " ".join(nominativo.split("_"))
+    if current_user.nominativo != nominativo and not current_user.admin_user:
         return errore_accesso()
     return render_template(
         "info_studente.html",
         user=current_user,
         stagione_corrente=stagione,
-        studente=db_funcs.user_da_id(studente_id),
+        studente=db_funcs.user_da_nominativo(nominativo),
         cronologia_da_user=db_funcs.cronologia_da_user,
         list_label=ct_funcs.list_label,
         calcola_valore_rgb=mc_utils.calcola_valore_rgb,
@@ -99,16 +92,10 @@ def info_studente(classe_name, studente_id, stagione):
 
 @pagine_sito.route("/regole")
 def regole():
-    try:
-        return render_template(
-            "regole.html",
-            user=current_user,
-            classe_name=db_funcs.classe_da_id(current_user.classe_id).classe,
-        )
-    except:
-        return render_template(
-            "regole.html", user=current_user, classe_name="Login_error"
-        )
+    classe_name = None
+    if current_user.is_authenticated:
+        classe_name = db_funcs.classe_da_id(current_user.classe_id).classe
+    return render_template("regole.html", user=current_user, classe_name=classe_name)
 
 
 @pagine_sito.route("/admin_dashboard")
