@@ -2,6 +2,8 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 from .modelli import User, Classi
 from . import db, app
 
+from sito.misc_utils_funcs.permission_utils import errore_accesso
+
 with app.app_context():
     import sito.database_funcs as db_funcs
 import sito.misc_utils_funcs as mc_utils
@@ -56,7 +58,6 @@ def logout():
 
 @autenticazione.route("/sign_up", methods=["GET", "POST"])
 def sign_up():
-    lista_classi = crea_classe()
     if request.method == "POST":
         dati = request.form
 
@@ -78,6 +79,9 @@ def sign_up():
             flash("Il dominio dell' email é sbagliato", category="error")
         elif "s-" not in email:
             flash("hai dimenticato di mettere 's-' nell' email", category="error")
+        elif email.lower() != f"s-{cognome.lower()}.{nome.lower()}@isiskeynes.it":
+            flash("L' email non corrisponde al tuo nome e cognome", category="error")
+
         elif not user:
             flash(
                 "Non esiste uno studente con questo nome e cognome, se ne hai piu' di uno inserisci il primo."
@@ -102,48 +106,50 @@ def sign_up():
             login_user(user, remember=True)
             return redirect((url_for("pagine_sito.home")))
 
-    return render_template("sign_up.html", user=current_user, lista_classi=lista_classi)
+    return render_template("sign_up.html", user=current_user)
 
 
 @autenticazione.route("/crea_admin", methods=["GET", "POST"])
 @login_required
 def crea_admin():
-    if current_user.admin_user:
-        if request.method == "POST":
-            dati = request.form
+    if current_user.admin_user is False:
+        return errore_accesso()
 
-            email = dati.get("email").lower()
-            nome = dati.get("nome").capitalize()
-            cognome = dati.get("cognome").capitalize()
-            password = dati.get("password")
-            password_di_conferma = dati.get("password_di_conferma")
-            nominativo = f"{cognome.lower()} {nome.lower()}"
+    if request.method == "POST":
+        dati = request.form
 
-            user = user_da_email(email)
+        email = dati.get("email").lower()
+        nome = dati.get("nome").capitalize()
+        cognome = dati.get("cognome").capitalize()
+        password = dati.get("password")
+        password_di_conferma = dati.get("password_di_conferma")
+        nominativo = f"{cognome.lower()} {nome.lower()}"
 
-            if campi_vuoti(dati) is True:
-                flash("Devi compilare tutti i campi", category="error")
-            elif user:
-                flash("Esiste gia' un account con questa email", category="error")
-            elif len(password) < 5:
-                flash("La password deve essere almeno di 5 caratteri", category="error")
-            elif password != password_di_conferma:
-                flash("La password di conferma non e' corretta", category="error")
-            else:
-                nuovo_utente = User(
-                    email=email,
-                    nome=nome,
-                    cognome=cognome,
-                    nominativo=nominativo,
-                    password=generate_password_hash(password, method="sha256"),
-                    punti="0",
-                    account_attivo=1,
-                    admin_user=1,
-                    classe_id=Classi.query.filter_by(classe="admin").first().id,
-                )
-                db.session.add(nuovo_utente)
+        user = user_da_email(email)
 
-                db.session.commit()
-                flash("Account creato con successo!", category="success")
-                return redirect((url_for("pagine_sito.home")))
-        return render_template("crea_admin.html", user=current_user)
+        if campi_vuoti(dati) is True:
+            flash("Devi compilare tutti i campi", category="error")
+        elif user:
+            flash("Esiste gia' un account con questa email", category="error")
+        elif len(password) < 5:
+            flash("La password deve essere almeno di 5 caratteri", category="error")
+        elif password != password_di_conferma:
+            flash("La password di conferma non e' corretta", category="error")
+        else:
+            nuovo_utente = User(
+                email=email,
+                nome=nome,
+                cognome=cognome,
+                nominativo=nominativo,
+                password=generate_password_hash(password, method="sha256"),
+                punti="0",
+                account_attivo=1,
+                admin_user=1,
+                classe_id=Classi.query.filter_by(classe="admin").first().id,
+            )
+            db.session.add(nuovo_utente)
+
+            db.session.commit()
+            flash("Account creato con successo!", category="success")
+            return redirect((url_for("pagine_sito.home")))
+    return render_template("crea_admin.html", user=current_user)

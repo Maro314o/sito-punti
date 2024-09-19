@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from sito.database_funcs.cronology_utils_funcs import cronologia_utente
+from sito.misc_utils_funcs.permission_utils import errore_accesso
 from . import db, app
 
 with app.app_context():
@@ -74,10 +75,12 @@ def pag_classe(classe_name):
 
 
 @pagine_sito.route(
-    "/classe/<classe_name>/<studente_id>/<int:stagione>", methods=["GET"]
+    "/classe/<classe_name>/<int:studente_id>/<int:stagione>", methods=["GET"]
 )
 @login_required
 def info_studente(classe_name, studente_id, stagione):
+    if current_user.id != studente_id or current_user.admin_user is False:
+        return errore_accesso()
     return render_template(
         "info_studente.html",
         user=current_user,
@@ -111,84 +114,81 @@ def regole():
 @pagine_sito.route("/admin_dashboard")
 @login_required
 def admin_dashboard():
-    admin_user = current_user.admin_user
+    if current_user.admin_user is False:
+        return errore_accesso()
     errori = open(path.join(Path.cwd(), "data", "errore.txt"), "r").read() == VUOTO
-    if admin_user:
-        numero_degli_studenti = len(db_funcs.elenco_studenti())
-        numero_delle_classi = len(db_funcs.elenco_classi_studenti())
-        numero_degli_admin = len(db_funcs.elenco_admin())
-        numero_delle_squadre = len(db_funcs.elenco_squadre())
-        if not Info.query.filter_by().all():
-            db.session.add(Info(last_season=0))
-            db.session.commit()
-        return render_template(
-            "admin_dashboard.html",
-            numero_studenti=numero_degli_studenti,
-            numero_classi=numero_delle_classi,
-            numero_admin=numero_degli_admin,
-            numero_squadre=numero_delle_squadre,
-            novita=db_funcs.classifica_studenti(
-                Info.query.filter_by().all()[0].last_season
-            )[0:8],
-            errori=errori,
-            classe_da_id=db_funcs.classe_da_id,
-            calcola_valore_rgb=mc_utils.calcola_valore_rgb,
-        )
+    numero_degli_studenti = len(db_funcs.elenco_studenti())
+    numero_delle_classi = len(db_funcs.elenco_classi_studenti())
+    numero_degli_admin = len(db_funcs.elenco_admin())
+    numero_delle_squadre = len(db_funcs.elenco_squadre())
+    if not Info.query.filter_by().all():
+        db.session.add(Info(last_season=0))
+        db.session.commit()
+    return render_template(
+        "admin_dashboard.html",
+        numero_studenti=numero_degli_studenti,
+        numero_classi=numero_delle_classi,
+        numero_admin=numero_degli_admin,
+        numero_squadre=numero_delle_squadre,
+        novita=db_funcs.classifica_studenti(
+            Info.query.filter_by().all()[0].last_season
+        )[0:8],
+        errori=errori,
+        classe_da_id=db_funcs.classe_da_id,
+        calcola_valore_rgb=mc_utils.calcola_valore_rgb,
+    )
 
 
 @pagine_sito.route("/classi", methods=["GET", "POST"])
 @login_required
 def classi():
-    if current_user.admin_user:
-        error = 0
-        classi = db_funcs.elenco_classi_studenti()
-        error_file = path.join(Path.cwd(), "data", "errore.txt")
+    if current_user.admin_user is False:
+        return errore_accesso()
+    error = 0
+    classi = db_funcs.elenco_classi_studenti()
+    error_file = path.join(Path.cwd(), "data", "errore.txt")
 
-        if request.method == "POST":
-            dati = request.form
-            if dati[RETURN_VALUE] == ENTRA_NELLA_CLASSE:
-                classe_name = dati.get("classe")
-                classe = db_funcs.classe_da_nome(classe_name)
-                return redirect(
-                    url_for("pagine_sito.classe", classe_name=classe.classe)
-                )
+    if request.method == "POST":
+        dati = request.form
+        if dati[RETURN_VALUE] == ENTRA_NELLA_CLASSE:
+            classe_name = dati.get("classe")
+            classe = db_funcs.classe_da_nome(classe_name)
+            return redirect(url_for("pagine_sito.classe", classe_name=classe.classe))
 
-            if dati[RETURN_VALUE] == AGGIUNGI_CLASSE:
-                classe_name = dati.get("classe")
-                if classe_name != VUOTO and classe_name not in [
-                    x.classe for x in db_funcs.elenco_tutte_le_classi()
-                ]:
-                    db.session.add(Classi(classe=classe_name))
-                    db.session.commit()
+        if dati[RETURN_VALUE] == AGGIUNGI_CLASSE:
+            classe_name = dati.get("classe")
+            if classe_name != VUOTO and classe_name not in [
+                x.classe for x in db_funcs.elenco_tutte_le_classi()
+            ]:
+                db.session.add(Classi(classe=classe_name))
+                db.session.commit()
 
-            if dati[RETURN_VALUE] == CONFERMA_CAMBIAMENTI_DATABASE:
-                file = request.files["filen"]
-                if mc_utils.allowed_files(file.filename):
-                    new_filename = "foglio.xlsx"
+        if dati[RETURN_VALUE] == CONFERMA_CAMBIAMENTI_DATABASE:
+            file = request.files["filen"]
+            if mc_utils.allowed_files(file.filename):
+                new_filename = "foglio.xlsx"
 
-                    save_location = path.join(
-                        path.join(Path.cwd(), "data"), new_filename
+                save_location = path.join(path.join(Path.cwd(), "data"), new_filename)
+                file.save(save_location)
+                error_file = path.join(Path.cwd(), "data", "errore.txt")
+                with open(error_file, "w") as f:
+                    f.write(VUOTO)
+                refactor_file(current_user)
+
+                classi = db_funcs.elenco_classi_studenti()
+
+            else:
+                with open(error_file, "w") as f:
+                    f.write(VUOTO)
+                with open(error_file, "w") as f:
+                    f.write(
+                        f"Impossibile aprire questa estensione dei file, per adesso puoi caricare il database sono in questo/i formato/i : {ALLOWED_EXTENSIONS}"
                     )
-                    file.save(save_location)
-                    error_file = path.join(Path.cwd(), "data", "errore.txt")
-                    with open(error_file, "w") as f:
-                        f.write(VUOTO)
-                    refactor_file(current_user)
+    with open(error_file, LEGGI) as f:
+        if f.read() == VUOTO:
+            error = 1
 
-                    classi = db_funcs.elenco_classi_studenti()
-
-                else:
-                    with open(error_file, "w") as f:
-                        f.write(VUOTO)
-                    with open(error_file, "w") as f:
-                        f.write(
-                            f"Impossibile aprire questa estensione dei file, per adesso puoi caricare il database sono in questo/i formato/i : {ALLOWED_EXTENSIONS}"
-                        )
-        with open(error_file, LEGGI) as f:
-            if f.read() == VUOTO:
-                error = 1
-
-        return render_template("menu_classi.html", classi=classi, error=error)
+    return render_template("menu_classi.html", classi=classi, error=error)
 
 
 @pagine_sito.route("/db_errori")
@@ -203,6 +203,8 @@ def db_errori():
 
 @pagine_sito.route("/versioni")
 def versioni():
+    if current_user.admin_user is False:
+        return errore_accesso()
     return "<br>".join(reversed(open(FILE_VERSIONI, LEGGI).read().splitlines()))
 
 
@@ -210,6 +212,8 @@ def versioni():
     "/classe/<classe_name>/<studente_id>/<stagione>/create_event", methods=["POST"]
 )
 def create_event(classe_name, studente_id, stagione):
+    if current_user.admin_user is False:
+        return errore_accesso()
     # Recupera i dati dal form di creazione evento
     data = request.form["data"]
     attivita = request.form["attivita"]
@@ -250,6 +254,8 @@ def create_event(classe_name, studente_id, stagione):
     methods=["POST"],
 )
 def delete_event(classe_name, studente_id, stagione, event_id):
+    if current_user.admin_user is False:
+        return errore_accesso()
     # Recupera l'evento da eliminare
     evento = db_funcs.evento_da_id(event_id)
 
