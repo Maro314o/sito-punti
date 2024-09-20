@@ -217,7 +217,7 @@ def create_event(classe_name, studente_id, stagione):
         url_for(
             "pagine_sito.info_studente",
             classe_name=classe_name,
-            studente_id=studente_id,
+            nominativo="_".join(db_funcs.user_da_id(studente_id).nominativo.split()),
             stagione=stagione,
         )
     )
@@ -247,7 +247,7 @@ def delete_event(classe_name, studente_id, stagione, event_id):
         url_for(
             "pagine_sito.info_studente",
             classe_name=classe_name,
-            studente_id=studente_id,
+            nominativo="_".join(db_funcs.user_da_id(studente_id).nominativo.split()),
             stagione=stagione,
         )
     )

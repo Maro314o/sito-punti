@@ -3,6 +3,9 @@ from pathlib import Path
 from os import path
 import datetime
 
+from sito.database_funcs.database_queries import user_da_nominativo
+from sito.database_funcs.list_database_elements import elenco_classi_studenti
+
 mesi = {
     "gennaio": 1,
     "febbraio": 2,
@@ -29,7 +32,7 @@ def refactor_file(current_user):
 
     db.session.query(Info).delete()
 
-    User.query.filter_by(admin_user=0).delete()
+    User.query.filter_by(account_attivo=0).delete()
     db.session.query(Classi).delete()
     db.session.add(Classi(classe="admin"))
     db.session.commit()
@@ -57,19 +60,25 @@ def refactor_file(current_user):
                 squadra = "Nessuna_squadra"
             else:
                 squadra = riga[1]
-            nuovo_utente = User(
-                email=f"email_non_registrata_per_{'_'.join(nominativo.split())}",
-                nome=nominativo.split()[1],
-                cognome=nominativo.split()[0],
-                nominativo=nominativo,
-                squadra=squadra,
-                password="",
-                punti="0",
-                account_attivo=0,
-                admin_user=0,
-                classe_id=db_funcs.classe_da_nome(classe).id,
-            )
-            db.session.add(nuovo_utente)
+            utente = user_da_nominativo(nominativo)
+            if not utente:
+                utente = User(
+                    email=f"email_non_registrata_per_{'_'.join(nominativo.split())}",
+                    nome=nominativo.split()[1],
+                    cognome=nominativo.split()[0],
+                    nominativo=nominativo,
+                    squadra=squadra,
+                    password="",
+                    punti="0",
+                    account_attivo=0,
+                    admin_user=0,
+                    classe_id=db_funcs.classe_da_nome(classe).id,
+                )
+                db.session.add(utente)
+            else:
+                utente.squadra = squadra
+                utente.punti = "0"
+                utente.classe_id = db_funcs.classe_da_nome(classe).id
 
     db.session.commit()
     last_season = 0
@@ -124,7 +133,10 @@ def refactor_file(current_user):
     db.session.query(Info).delete()
     db.session.add(Info(last_season=last_season))
     db.session.commit()
-
+    for utente in db_funcs.elenco_studenti():
+        if not (db_funcs.classe_da_id(utente.classe_id) in elenco_classi_studenti()):
+            db.session.delete(utente)
+    db.session.commit()
     for utente in db_funcs.elenco_studenti():
         db_funcs.aggiorna_punti(utente)
 
