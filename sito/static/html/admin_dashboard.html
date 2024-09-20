@@ -19,7 +19,8 @@
             <div class="logo-name"><span>ADMIN</span>MENU</div>
         </a>
         <ul class="side-menu">
-            <li class="active"><a href="#"><i class='bx bxs-dashboard'></i>Dashboard</a></li>
+            <li ><a href="/"><i class='bx bx-home-alt-2'></i>Home</a></li>
+            <li class="active"><a href="/admin_dashboard"><i class='bx bxs-dashboard'></i>Dashboard</a></li>
             <li><a href="/classi"><i class='bx bx-show-alt'></i>Classi</a></li>
             <li><a href="/crea_admin"><i class='bx bx-shield'></i>Crea admin</a></li>
 
@@ -59,7 +60,8 @@
 
             <!-- 4 bottoni centrali -->
             <ul class="insights">
-                <li style="cursor: default">
+                  <a href="/elenco_user/tutti_gli_studenti">
+                <li >
                     <i class='bx bx-user-pin'></i>
                     <span class="info">
                         <h3>
@@ -68,7 +70,19 @@
                         <p>Alunni Totali</p>
                     </span>
                 </li>
-                <li style="cursor: default"><i class='bx bx-show-alt'></i>
+              </a>
+              <a href="/elenco_user/tutti_gli_studenti_registrati">
+                <li ><i class='bx bx-group'></i>
+                    <span class="info">
+                        <h3>
+                          {{numero_studenti_registrati}}
+                        </h3>
+                        <p>Studenti Registrati</p>
+                    </span>
+                </li>
+              </a>
+                <a href="/classi">
+                <li><i class='bx bx-show-alt'></i>
                     <span class="info">
                         <h3>
                           {{numero_classi}} 
@@ -76,15 +90,9 @@
                         <p>Classi Totali</p>
                     </span>
                 </li>
-                <li style="cursor: default"><i class='bx bx-group'></i>
-                    <span class="info">
-                        <h3>
-                          {{numero_squadre}}
-                        </h3>
-                        <p>Squadre Totali</p>
-                    </span>
-                </li>
-                <li style="cursor: default"><i class='bx bx-shield'></i>
+                </a>
+                  <a href="/elenco_user/tutti_gli_admin">
+                <li><i class='bx bx-shield'></i>
                     <span class="info">
                         <h3>
                           {{numero_admin}}
@@ -92,6 +100,7 @@
                         <p>Admins</p>
                     </span>
                 </li>
+                </a>
             </ul>
             <!-- Quando un utente si iscrive -->
             <div class="bottom-data">

@@ -35,6 +35,7 @@ header {
 .content ul li {
     list-style: disc;
     margin-left: 2.5em;
+    margin-bottom: 0.5em;
 }
 
 h2 {
@@ -44,6 +45,20 @@ h2 {
     color: black;
     margin-bottom: 25px;
 }
+
+h3 {
+    font-size: 30px;
+    line-height: 1;
+    font-weight: 600;
+    color: black;
+    margin-bottom: 0.5em;
+}
+
+p {
+    font-size: 17px;
+    margin-bottom: 2.5em;
+}
+
 
 section {
     padding: 0 0;

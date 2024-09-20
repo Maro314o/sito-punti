@@ -24,3 +24,7 @@ def elenco_classi_studenti():
 
 def elenco_squadre():
     return set([x.squadra for x in elenco_studenti()])
+
+
+def elenco_studenti_registrati():
+    return [x for x in elenco_studenti() if x.account_attivo]

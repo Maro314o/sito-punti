@@ -107,7 +107,7 @@ def admin_dashboard():
     numero_degli_studenti = len(db_funcs.elenco_studenti())
     numero_delle_classi = len(db_funcs.elenco_classi_studenti())
     numero_degli_admin = len(db_funcs.elenco_admin())
-    numero_delle_squadre = len(db_funcs.elenco_squadre())
+    numero_studenti_registrati = len(db_funcs.elenco_studenti_registrati())
     if not Info.query.filter_by().all():
         db.session.add(Info(last_season=0))
         db.session.commit()
@@ -116,7 +116,7 @@ def admin_dashboard():
         numero_studenti=numero_degli_studenti,
         numero_classi=numero_delle_classi,
         numero_admin=numero_degli_admin,
-        numero_squadre=numero_delle_squadre,
+        numero_studenti_registrati=numero_studenti_registrati,
         novita=db_funcs.classifica_studenti(
             Info.query.filter_by().all()[0].last_season
         )[0:8],
@@ -153,14 +153,12 @@ def classi():
 
             else:
                 with open(error_file, "w") as f:
-                    f.write(VUOTO)
-                with open(error_file, "w") as f:
                     f.write(
                         f"Impossibile aprire questa estensione dei file, per adesso puoi caricare il database sono in questo/i formato/i : {ALLOWED_EXTENSIONS}"
                     )
     with open(error_file, LEGGI) as f:
         if f.read() == VUOTO:
-            error = 1
+            error = 0
 
     return render_template("menu_classi.html", classi=classi, error=error)
 
@@ -176,6 +174,7 @@ def db_errori():
 
 
 @pagine_sito.route("/versioni")
+@login_required
 def versioni():
     if not current_user.admin_user:
         return errore_accesso()
@@ -185,6 +184,7 @@ def versioni():
 @pagine_sito.route(
     "/classe/<classe_name>/<studente_id>/<stagione>/create_event", methods=["POST"]
 )
+@login_required
 def create_event(classe_name, studente_id, stagione):
     if not current_user.admin_user:
         return errore_accesso()
@@ -210,8 +210,6 @@ def create_event(classe_name, studente_id, stagione):
     db_funcs.aggiorna_punti_cumulativi(db_funcs.user_da_id(studente_id))
     db_funcs.aggiorna_punti(db_funcs.user_da_id(studente_id))
 
-    flash("Nuovo evento aggiunto con successo", "success")
-
     # Reindirizza alla pagina della classifica
     return redirect(
         url_for(
@@ -227,6 +225,7 @@ def create_event(classe_name, studente_id, stagione):
     "/classe/<classe_name>/<studente_id>/<stagione>/delete_event/<int:event_id>",
     methods=["POST"],
 )
+@login_required
 def delete_event(classe_name, studente_id, stagione, event_id):
     if not current_user.admin_user:
         return errore_accesso()
@@ -250,4 +249,22 @@ def delete_event(classe_name, studente_id, stagione, event_id):
             nominativo="_".join(db_funcs.user_da_id(studente_id).nominativo.split()),
             stagione=stagione,
         )
+    )
+
+
+@pagine_sito.route("/elenco_user/<elenco_type>", methods=["GET"])
+@login_required
+def elenco_user_display(elenco_type):
+    if not current_user.admin_user:
+        return errore_accesso()
+    if elenco_type == "tutti_gli_studenti_registrati":
+
+        utenti = db_funcs.elenco_studenti_registrati()
+    elif elenco_type == "tutti_gli_admin":
+        utenti = db_funcs.elenco_admin()
+    else:
+
+        utenti = db_funcs.elenco_studenti()
+    return render_template(
+        "elenco_user.html", utenti=utenti, classe_da_id=db_funcs.classe_da_id
     )
