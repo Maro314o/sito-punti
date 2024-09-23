@@ -1,4 +1,4 @@
-from ..modelli import User, Classi
+from ..modelli import User, Classi, Info
 
 
 def elenco_utenti():
@@ -28,3 +28,7 @@ def elenco_squadre():
 
 def elenco_studenti_registrati():
     return [x for x in elenco_studenti() if x.account_attivo]
+
+
+def get_last_season():
+    return Info.query.filter_by().first().last_season

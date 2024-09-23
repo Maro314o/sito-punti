@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Classifica</title>
+    <link rel="icon" href="{{ url_for('static',filename='images/logo.png')}}" type="image/icon">
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',
@@ -29,7 +30,7 @@
           </a>
         </button>               
     </div>
-    <main class="table" id="customers_table">
+    <main  class="table" id="customers_table">
         <section class="table__header">
           <div class="nomeclasse">
             <h1>Classe {{classe}}</h1>  
@@ -102,6 +103,8 @@
             </table>
         </section>
     </main>
+
+
 </body>
 
 </html>

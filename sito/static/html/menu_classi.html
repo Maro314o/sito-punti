@@ -4,11 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static',filename='images/logo.png')}}" type="image/icon">
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="icon" href="{{ url_for('static',filename='images/logo.png')}}" type="image/icon type">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/menu_classi_styles.css') }}">
     <title>Menu' classi</title>
 </head>
 <body>
@@ -167,11 +168,10 @@ h3.custom-heading {
                   <button class="upload-btn" name="bottone" value="load_database" type="submit">Conferma</button>
               </form>
       
-              {% if error != 1 %}
-              <br>
-              <li><a href="/db_errori"></a>
+              {% if error %}
+                  <button  class="upload-btn"onclick="location.href='/db_errori'" style="border-radius:15px;background-color:red;">Errori nel dataset,clicca per vederli</button>
+
                 
-              </a></li>
               {% endif %}
           </div>
           

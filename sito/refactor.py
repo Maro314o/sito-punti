@@ -52,6 +52,9 @@ def refactor_file(current_user):
             nominativo = " ".join(
                 [x.strip().capitalize() for x in riga[0].strip().split()][0:2]
             )
+            print(nominativo)
+            nominativo = nominativo.replace("'", "")
+            print(nominativo)
             if len(riga) == 1:
                 with open(error_file, "a") as f:
                     f.write(
@@ -100,6 +103,7 @@ def refactor_file(current_user):
         nominativo = " ".join(
             [x.strip().capitalize() for x in str(riga[3]).strip().split()][0:2]
         )
+        nominativo = nominativo.replace("'", "")
 
         attivita = riga[4]
         punti = riga[5]

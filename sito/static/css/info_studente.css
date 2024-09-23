@@ -377,7 +377,7 @@ button {
     border-collapse: collapse;
     margin-top: 2em;
     font-size: 0.9em;
-    min-width: 400px;
+    min-width: 500px;
     border-radius: 5px 5px 0 0;
     overflow: hidden;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
@@ -502,6 +502,7 @@ button {
 }
 
 label {
+    
     font-size: 16px;
     margin-bottom: 8px;
     display: block;
@@ -530,7 +531,7 @@ input[type="number"]:focus {
 }
 
 button[type="submit"] {
-    width: 80%;
+    width: 100%;
     padding: 9px;
     background-color: #00932c;
     color: white;
@@ -544,18 +545,20 @@ button[type="submit"] {
 button[type="submit"]:hover {
     background-color: #00bd23;
 }
-
-.boxcrocealta {
-    position: relative;
-}
-
 .top-right-cross {
     position: absolute;
-    top: -460px;
-    right: 210px;
+    top: -360px;
+    right: 0px;
     padding: 10px;
     cursor: pointer;
 }
+
+.boxcrocealta {
+    position: absolute;
+    top: 400px;
+    left:  50px;
+}
+
 
 .boxcrocealta a {
     color: inherit;

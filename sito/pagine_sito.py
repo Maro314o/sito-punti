@@ -28,6 +28,19 @@ VUOTO = ""
 
 ALLOWED_EXTENSIONS = set(["xlsx"])
 
+from functools import wraps
+
+
+def admin_permission_required(func):
+    @wraps(func)
+    def decorated_function(*args, **kwargs):
+        # Check if the current_user has account_attivo == 1
+        if not current_user.admin_user:
+            return errore_accesso()
+        return func(*args, **kwargs)
+
+    return decorated_function
+
 
 @pagine_sito.route("/")
 def home():
@@ -39,8 +52,8 @@ def home():
 
 @pagine_sito.route("/classe/<classe_name>", methods=["GET", "POST"])
 @login_required
-def pag_classe(classe_name):
-    stagione_corrente = Info.query.filter_by().all()[0].last_season
+def classe(classe_name):
+    stagione_corrente = db_funcs.get_last_season()
     if current_user.admin_user:
         classe = db_funcs.classe_da_nome(classe_name)
     else:
@@ -51,7 +64,7 @@ def pag_classe(classe_name):
             stagione_corrente = int(dati.get("selected_season"))
 
     studenti = db_funcs.classifica_studenti_di_una_classe(stagione_corrente, classe)
-    n_stagioni = Info.query.filter_by().all()[0].last_season
+    n_stagioni = db_funcs.get_last_season()
     return render_template(
         "classe.html",
         user=current_user,
@@ -100,15 +113,14 @@ def regole():
 
 @pagine_sito.route("/admin_dashboard")
 @login_required
+@admin_permission_required
 def admin_dashboard():
-    if not current_user.admin_user:
-        return errore_accesso()
     errori = open(path.join(Path.cwd(), "data", "errore.txt"), "r").read() == VUOTO
     numero_degli_studenti = len(db_funcs.elenco_studenti())
     numero_delle_classi = len(db_funcs.elenco_classi_studenti())
     numero_degli_admin = len(db_funcs.elenco_admin())
     numero_studenti_registrati = len(db_funcs.elenco_studenti_registrati())
-    if not Info.query.filter_by().all():
+    if not db_funcs.get_last_season():
         db.session.add(Info(last_season=0))
         db.session.commit()
     return render_template(
@@ -117,9 +129,7 @@ def admin_dashboard():
         numero_classi=numero_delle_classi,
         numero_admin=numero_degli_admin,
         numero_studenti_registrati=numero_studenti_registrati,
-        novita=db_funcs.classifica_studenti(
-            Info.query.filter_by().all()[0].last_season
-        )[0:8],
+        novita=db_funcs.classifica_studenti(db_funcs.get_last_season())[0:8],
         errori=errori,
         classe_da_id=db_funcs.classe_da_id,
         calcola_valore_rgb=mc_utils.calcola_valore_rgb,
@@ -128,10 +138,8 @@ def admin_dashboard():
 
 @pagine_sito.route("/classi", methods=["GET", "POST"])
 @login_required
-def classi():
-    if not current_user.admin_user:
-        return errore_accesso()
-    error = 0
+@admin_permission_required
+def menu_classi():
     classi = db_funcs.elenco_classi_studenti()
     error_file = path.join(Path.cwd(), "data", "errore.txt")
 
@@ -157,17 +165,15 @@ def classi():
                         f"Impossibile aprire questa estensione dei file, per adesso puoi caricare il database sono in questo/i formato/i : {ALLOWED_EXTENSIONS}"
                     )
     with open(error_file, LEGGI) as f:
-        if f.read() == VUOTO:
-            error = 0
+        error = f.read() != VUOTO
 
     return render_template("menu_classi.html", classi=classi, error=error)
 
 
 @pagine_sito.route("/db_errori")
 @login_required
+@admin_permission_required
 def db_errori():
-    if not current_user.admin_user:
-        return errore_accesso()
     with open(FILE_ERRORE, LEGGI) as file_errore:
         content_error = file_errore.read().splitlines()
     return "<br><br>".join(content_error)
@@ -175,9 +181,8 @@ def db_errori():
 
 @pagine_sito.route("/versioni")
 @login_required
+@admin_permission_required
 def versioni():
-    if not current_user.admin_user:
-        return errore_accesso()
     return "<br>".join(reversed(open(FILE_VERSIONI, LEGGI).read().splitlines()))
 
 
@@ -185,9 +190,8 @@ def versioni():
     "/classe/<classe_name>/<studente_id>/<stagione>/create_event", methods=["POST"]
 )
 @login_required
+@admin_permission_required
 def create_event(classe_name, studente_id, stagione):
-    if not current_user.admin_user:
-        return errore_accesso()
     # Recupera i dati dal form di creazione evento
     data = request.form["data"]
     attivita = request.form["attivita"]
@@ -226,9 +230,8 @@ def create_event(classe_name, studente_id, stagione):
     methods=["POST"],
 )
 @login_required
+@admin_permission_required
 def delete_event(classe_name, studente_id, stagione, event_id):
-    if not current_user.admin_user:
-        return errore_accesso()
     # Recupera l'evento da eliminare
     evento = db_funcs.evento_da_id(event_id)
 
@@ -254,9 +257,8 @@ def delete_event(classe_name, studente_id, stagione, event_id):
 
 @pagine_sito.route("/elenco_user/<elenco_type>", methods=["GET"])
 @login_required
+@admin_permission_required
 def elenco_user_display(elenco_type):
-    if not current_user.admin_user:
-        return errore_accesso()
     if elenco_type == "tutti_gli_studenti_registrati":
 
         utenti = db_funcs.elenco_studenti_registrati()

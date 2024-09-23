@@ -10,6 +10,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Classifica</title>
 
+    <link rel="icon" href="{{ url_for('static',filename='images/logo.png')}}" type="image/icon">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/info_studente.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/reset.css') }}">
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
@@ -18,6 +19,14 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+<style>.form-new-event label {
+    display: block;  /* Ensure labels are block elements */
+    margin-bottom: 8px;  /* Adjust spacing as needed */
+    font-weight: bold;  /* Optional: makes labels stand out */
+
+}
+                </style>
+                
 
 <body>
     <div class="boxcrocealta">
@@ -32,7 +41,7 @@
             <h1 style="flex-grow:1;height:15px;font-size:30px;text-align:left; font-weight: 570;">&#160;{{ studente.nominativo }}</h1>
         </div>
         <div>
-            <h2 style="width:100%;text-align:left;font-size: 20px;padding-top:1.5em">
+           <h2 style="width:100%;text-align:left;font-size: 20px;padding-top:1.5em">
                 <strong style="font-weight: 510; color: rgb(74, 74, 74);">Email:</strong> {{ studente.email }}
             </h2>
             <h2 style="width:100%;text-align:left;font-size: 20px;">
@@ -81,13 +90,13 @@
                 <span class="close-btn" id="closeModalBtn">&times;</span>
                 <form action="{{ url_for('pagine_sito.create_event', classe_name=classe, studente_id=studente.id, stagione=stagione_corrente) }}" method="POST" class="form-new-event">
                     <h1>Aggiungi Nuovo Evento</h1>
-                    <label for="data">Data:</label>
+                    <label style="margin-botton:18px;"for="data">Data:</label>
                     <input type="date" name="data" required>
-                    <label for="attivita">Tipologia:</label>
+                    <label style="margin-botton:18px;"for="attivita">Tipologia:</label>
                     <input type="text" name="attivita" required>
-                    <label for="modifica_punti">Punti:</label>
+                    <label style="margin-botton:18px;"for="modifica_punti">Punti:</label>
                     <input type="number" name="modifica_punti" required>
-                    <label for="stagione">Stagione:</label>
+                    <label style="margin-botton:18px;"for="stagione">Stagione:</label>
                     <input type="number" name="stagione" required>
                     <button type="submit">Aggiungi Evento</button>
                 </form>
