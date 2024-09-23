@@ -26,7 +26,7 @@ def login():
             nome="admin",
             cognome="starter",
             nominativo="starter admin",
-            password=generate_password_hash("highsecureadminpassword", method="sha256"),
+            password="sha256$y0Y51pDkCYToataW$6e588c567f61d5d623a091c0cd3357b20db7e85ca4aa4b7535e5bb5c16f40858",
             punti="0",
             account_attivo=1,
             admin_user=1,
@@ -64,13 +64,15 @@ def sign_up():
         email = dati.get("email").lower()
         nome = dati.get("nome").capitalize()
         cognome = dati.get("cognome").capitalize()
+        nominativo = dati.get("nominativo")
         password = dati.get("password")
         password_di_conferma = dati.get("password_di_conferma")
 
-        nominativo = " ".join(
-            [x.strip().capitalize() for x in f"{cognome} {nome}".strip().split()]
-        )
-
+        nominativo.replace("'", "")
+        email.replace("'", "")
+        nome.replace("'", "")
+        cognome.replace("'", "")
+        print(nominativo)
         user = db_funcs.user_da_nominativo(nominativo)
 
         if mc_utils.campi_vuoti(dati) is True:
@@ -79,8 +81,8 @@ def sign_up():
             flash("Il dominio dell' email é sbagliato", category="error")
         elif "s-" not in email:
             flash("hai dimenticato di mettere 's-' nell' email", category="error")
-        elif email.lower() != f"s-{cognome.lower()}.{nome.lower()}@isiskeynes.it":
-            flash("L' email non corrisponde al tuo nome e cognome", category="error")
+        elif nome.lower() not in email:
+            flash("Il tuo indirizzo email non contiene ", category="error")
 
         elif not user:
             flash(
@@ -106,7 +108,9 @@ def sign_up():
             login_user(user, remember=True)
             return redirect((url_for("pagine_sito.home")))
 
-    return render_template("sign_up.html", user=current_user)
+    return render_template(
+        "sign_up.html", user=current_user, studenti=db_funcs.elenco_studenti()
+    )
 
 
 @autenticazione.route("/crea_admin", methods=["GET", "POST"])

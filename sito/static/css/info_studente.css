@@ -502,7 +502,6 @@ button {
 }
 
 label {
-    
     font-size: 16px;
     margin-bottom: 8px;
     display: block;
@@ -597,5 +596,42 @@ button[type="submit"]:hover {
     }
 }
 
+.table-container {
+    max-height: 250px; /* Adjust this height as needed */
+    width:500px;
+    overflow-x:hidden;
+    overflow-y: auto;
+}
 
 
+.table-container::-webkit-scrollbar {
+    width: 12px; 
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: #f3f3f3; 
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background-color: #26be00; 
+    border-radius: 10px; 
+    border: 2px solid #f3f3f3; 
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background-color: #328f00; /
+}
+
+
+.content-table {
+    cursor: normal;
+    border-collapse: collapse;
+    margin-top: 2em;
+    font-size: 0.9em;
+    min-width: 40px;
+    border-radius: 5px 5px 0 0;
+    z-index: 1;
+    position: sticky;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}

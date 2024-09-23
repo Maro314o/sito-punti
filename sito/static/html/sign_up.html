@@ -34,6 +34,18 @@
                     <form method="POST" class="the-form">
                         <label for="email">Email</label>
                         <input type="email" name="email" id="email" placeholder="Inserisci la tua e-mail">
+
+{% if not user.admin_user %}
+<label for="name">Cognome e Nome:</label>
+<input type="text" list="names" id="nominativo" name="nominativo" placeholder="Seleziona cognome e nome" required oninput="validateName()">
+
+<!-- Datalist of predefined names -->
+<datalist id="names">
+  {% for studente in studenti%}
+  <option value="{{studente.nominativo}}"></option>
+    {% endfor %}
+</datalist><br><br>
+{% endif %}
                         <label for="nome">Nome</label>
                         <input type="text" name="nome" id="nome" placeholder="Inserisci il tuo nome">
 
@@ -77,6 +89,18 @@
             </div>
         </div>
     </body>
+<script>
+function validateName() {
+    const input = document.getElementById('name');
+    const options = Array.from(document.querySelectorAll('#names option')).map(option => option.value);
+    
+    if (!options.includes(input.value)) {
+        input.setCustomValidity("Seleziona il tuo nome e cognome dalla lista");
+    } else {
+        input.setCustomValidity("");
+    }
+}
+</script>
 </html>
 
 

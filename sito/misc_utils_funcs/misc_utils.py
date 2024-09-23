@@ -1,6 +1,3 @@
-import random
-
-
 def campi_vuoti(dati):
     for campo in dati.values():
         if campo == "":

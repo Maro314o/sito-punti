@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
+from sqlalchemy import CursorResult
 from sito.database_funcs.cronology_utils_funcs import cronologia_utente
 from sito.misc_utils_funcs.permission_utils import errore_accesso
 from . import db, app
@@ -29,6 +30,14 @@ VUOTO = ""
 ALLOWED_EXTENSIONS = set(["xlsx"])
 
 from functools import wraps
+
+
+def inser_underscore_name(nominativo):
+    return "_".join(nominativo.split())
+
+
+def remove_underscore_name(nominativo):
+    return " ".join(nominativo.split("_"))
 
 
 def admin_permission_required(func):
@@ -78,15 +87,19 @@ def classe(classe_name):
         calcola_valore_rgb=mc_utils.calcola_valore_rgb,
         list_attivita=ct_funcs.list_attivita,
         zip=zip,
+        url_name=inser_underscore_name,
     )
 
 
 @pagine_sito.route("/classe/<classe_name>/<nominativo>/<int:stagione>", methods=["GET"])
 @login_required
 def info_studente(classe_name, nominativo, stagione):
-    nominativo = " ".join(nominativo.split("_"))
-    if current_user.nominativo != nominativo and not current_user.admin_user:
+    if (
+        inser_underscore_name(current_user.nominativo) != nominativo
+        and not current_user.admin_user
+    ):
         return errore_accesso()
+    nominativo = remove_underscore_name(nominativo)
     return render_template(
         "info_studente.html",
         user=current_user,
@@ -120,7 +133,7 @@ def admin_dashboard():
     numero_delle_classi = len(db_funcs.elenco_classi_studenti())
     numero_degli_admin = len(db_funcs.elenco_admin())
     numero_studenti_registrati = len(db_funcs.elenco_studenti_registrati())
-    if not db_funcs.get_last_season():
+    if not Info.query.filter_by().first():
         db.session.add(Info(last_season=0))
         db.session.commit()
     return render_template(
