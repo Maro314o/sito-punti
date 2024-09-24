@@ -1,4 +1,6 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
+
+from sito.database_funcs.database_queries import user_da_email
 from .modelli import User, Classi
 from . import db, app
 
@@ -13,6 +15,13 @@ from flask_login import login_user, login_required, logout_user, current_user
 autenticazione = Blueprint("autenticazione", __name__)
 
 
+def capitalize_all(nominativo):
+    nominativo = nominativo.split()
+    nominativo = [parola.capitalize() for parola in nominativo]
+    nominativo = " ".join(nominativo)
+    return nominativo
+
+
 def crea_classe():
     return [classe.classe for classe in db_funcs.elenco_classi_studenti()]
 
@@ -23,8 +32,6 @@ def login():
         db.session.add(Classi(classe="admin"))
         nuovo_utente = User(
             email="s-admin.starter@isiskeynes.it",
-            nome="admin",
-            cognome="starter",
             nominativo="starter admin",
             password="sha256$y0Y51pDkCYToataW$6e588c567f61d5d623a091c0cd3357b20db7e85ca4aa4b7535e5bb5c16f40858",
             punti="0",
@@ -39,8 +46,18 @@ def login():
         password = request.form.get("password")
 
         user = db_funcs.user_da_email(email)
+
         if not user:
-            flash("L'email non esiste", category="error")
+            flash(
+                "L'email non esiste,se hai un email con questo account considera riprovare a crearlo (ci sono stati cambiamenti ad alcuni account) ",
+                category="error",
+            )
+        elif user.account_attivo == 0:
+
+            flash(
+                "Non puoi loggarti all'interno di questo account perche' non e' ancora stato attivato.Attivalo registrandoti con questa email",
+                category="error",
+            )
         elif not check_password_hash(user.password, password):
             flash("La password non e' corretta", category="error")
         else:
@@ -61,33 +78,27 @@ def sign_up():
     if request.method == "POST":
         dati = request.form
 
-        email = dati.get("email").lower()
-        nome = dati.get("nome").capitalize()
-        cognome = dati.get("cognome").capitalize()
-        nominativo = dati.get("nominativo")
+        email = dati.get("email").strip().lower()
+        nominativo = dati.get("nominativo").strip()
         password = dati.get("password")
         password_di_conferma = dati.get("password_di_conferma")
-
-        nominativo.replace("'", "")
-        email.replace("'", "")
-        nome.replace("'", "")
-        cognome.replace("'", "")
-        print(nominativo)
+        nominativo = capitalize_all(nominativo)
         user = db_funcs.user_da_nominativo(nominativo)
-
-        if mc_utils.campi_vuoti(dati) is True:
+        if user_da_email(email):
+            flash(
+                "Esiste già un altro account con questa email in uso", category="error"
+            )
+        elif "'" in email:
+            flash("L'email non può contenere apici", category="error")
+        elif mc_utils.campi_vuoti(dati):
             flash("Devi compilare tutti i campi", category="error")
-        elif "@isiskeynes.it" not in email:
+        elif "@isiskeynes.it" != email[-14:]:
             flash("Il dominio dell' email é sbagliato", category="error")
-        elif "s-" not in email:
+        elif "s-" != email[:2]:
             flash("hai dimenticato di mettere 's-' nell' email", category="error")
-        elif nome.lower() not in email:
-            flash("Il tuo indirizzo email non contiene ", category="error")
-
         elif not user:
             flash(
-                "Non esiste uno studente con questo nome e cognome, se ne hai piu' di uno inserisci il primo."
-                "Se il problema persiste chiedi al tuo insegnante",
+                "Non hai selezionato l'opzione Cognome e Nome correttamente. Assicurati di selezionarne uno solo tra quelli proposti e di non inserire altre lettere/caratteri",
                 category="error",
             )
         elif user.account_attivo:
@@ -98,8 +109,6 @@ def sign_up():
             flash("La password di conferma non e' corretta", category="error")
         else:
             user.password = generate_password_hash(password, method="sha256")
-            user.nome = nome
-            user.cognome = cognome
             user.email = email
             user.account_attivo = 1
             db.session.commit()
@@ -127,11 +136,10 @@ def crea_admin():
         cognome = dati.get("cognome").capitalize()
         password = dati.get("password")
         password_di_conferma = dati.get("password_di_conferma")
-        nominativo = f"{cognome.lower()} {nome.lower()}"
 
-        user = user_da_email(email)
-
-        if campi_vuoti(dati) is True:
+        user = db_funcs.user_da_email(email)
+        nominativo = f"{cognome} {nome}"
+        if mc_utils.campi_vuoti(dati) is True:
             flash("Devi compilare tutti i campi", category="error")
         elif user:
             flash("Esiste gia' un account con questa email", category="error")
@@ -142,8 +150,6 @@ def crea_admin():
         else:
             nuovo_utente = User(
                 email=email,
-                nome=nome,
-                cognome=cognome,
                 nominativo=nominativo,
                 password=generate_password_hash(password, method="sha256"),
                 punti="0",

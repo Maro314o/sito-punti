@@ -6,9 +6,9 @@ def campi_vuoti(dati):
 
 
 def calcola_valore_rgb(squadra):
-    somma_ascii = hash(squadra)
-    r = somma_ascii % 209
-    g = (somma_ascii // 2) % 209
-    b = (somma_ascii // 3) % 209
+    somma_ascii = hash(squadra) * len(squadra)
+    r = somma_ascii % 201
+    g = (somma_ascii // 2) % 201
+    b = (somma_ascii // 3) % 201
 
     return r, g, b, 0.3

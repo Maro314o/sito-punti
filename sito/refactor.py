@@ -50,7 +50,7 @@ def refactor_file(current_user):
     name_file = path.join(Path.cwd(), "data", "foglio.xlsx")
     file = pd.read_excel(name_file, sheet_name=None)
     dataset, *lista_fogli = file.keys()
-
+    nominativi_trovati = set()
     errori = 0
     for classe in lista_fogli:
         nuova_classe = Classi(classe=classe)
@@ -70,11 +70,10 @@ def refactor_file(current_user):
             else:
                 squadra = riga[1]
             utente = user_da_nominativo(nominativo)
+            nominativi_trovati.add(nominativo)
             if not utente:
                 utente = User(
                     email=f"email_non_registrata_per_{'_'.join(nominativo.split())}",
-                    nome="",
-                    cognome="",
                     nominativo=nominativo,
                     squadra=squadra,
                     password="",
@@ -85,6 +84,7 @@ def refactor_file(current_user):
                 )
                 db.session.add(utente)
             else:
+                utente.nominativo = nominativo
                 utente.squadra = squadra
                 utente.punti = "0"
                 utente.classe_id = db_funcs.classe_da_nome(classe).id
@@ -141,7 +141,7 @@ def refactor_file(current_user):
     db.session.add(Info(last_season=last_season))
     db.session.commit()
     for utente in db_funcs.elenco_studenti():
-        if not (db_funcs.classe_da_id(utente.classe_id) in elenco_classi_studenti()):
+        if utente.nominativo not in nominativi_trovati:
             db.session.delete(utente)
     db.session.commit()
     for utente in db_funcs.elenco_studenti():

@@ -32,7 +32,7 @@ ALLOWED_EXTENSIONS = set(["xlsx"])
 from functools import wraps
 
 
-def inser_underscore_name(nominativo):
+def insert_underscore_name(nominativo):
     return "_".join(nominativo.split())
 
 
@@ -87,7 +87,7 @@ def classe(classe_name):
         calcola_valore_rgb=mc_utils.calcola_valore_rgb,
         list_attivita=ct_funcs.list_attivita,
         zip=zip,
-        url_name=inser_underscore_name,
+        url_name=insert_underscore_name,
     )
 
 
@@ -95,7 +95,7 @@ def classe(classe_name):
 @login_required
 def info_studente(classe_name, nominativo, stagione):
     if (
-        inser_underscore_name(current_user.nominativo) != nominativo
+        insert_underscore_name(current_user.nominativo) != nominativo
         and not current_user.admin_user
     ):
         return errore_accesso()

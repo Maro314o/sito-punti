@@ -6,4 +6,5 @@ aggiungere clasiffica squadre
 aggiungere pagina/tasto per i log
 aggiungere altri log
 ordinare le date degli eventi per la data
+aggiungere una pagina account dove poterlo eliminare e magari fare altre cose
 
