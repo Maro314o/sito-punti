@@ -17,6 +17,8 @@ from .refactor import refactor_file
 from pathlib import Path
 from itertools import chain
 
+from functools import wraps
+
 pagine_sito = Blueprint("pagine_sito", __name__)
 FILE_ERRORE = path.join(Path.cwd(), "data", "errore.txt")
 FILE_VERSIONI = path.join(Path.cwd(), "versioni.txt")
@@ -30,35 +32,6 @@ VUOTO = ""
 
 
 ALLOWED_EXTENSIONS = set(["xlsx"])
-
-from functools import wraps
-
-
-def get_single_points(Cronologia, stagione_corrente):
-    return [x.modifica_punti for x in Cronologia if x.stagione == stagione_corrente]
-
-
-def list_label_squadra():
-
-    pass
-
-
-def list_data_squadra(classe, nome_squadra, stagione_corrente):
-
-    print(nome_squadra)
-    studenti = db_funcs.elenco_user_da_classe_id_e_nome_squadra(classe.id, nome_squadra)
-    x = [
-        get_single_points(db_funcs.cronologia_da_user(studente), stagione_corrente)
-        for studente in studenti
-    ]
-    flattened = list(chain.from_iterable(x))
-    changes = []
-    last = 0
-    for i in flattened:
-        last += i
-        changes.append(last)
-    print(changes)
-    return changes
 
 
 def somma_punti_squadra(classe, nome_squadra, stagione_corrente):
@@ -77,14 +50,6 @@ def classifica_squadre(classe, stagione_corrente):
     }
 
     return dict(sorted(punti_squadre.items(), key=lambda item: item[1], reverse=True))
-
-
-def insert_underscore_name(nominativo):
-    return "_".join(nominativo.split())
-
-
-def remove_underscore_name(nominativo):
-    return " ".join(nominativo.split("_"))
 
 
 def admin_permission_required(func):
@@ -121,7 +86,6 @@ def classe(classe_name):
 
     studenti = db_funcs.classifica_studenti_di_una_classe(stagione_corrente, classe)
     n_stagioni = db_funcs.get_last_season()
-    list_data_squadra(classe, "Pentabros", stagione_corrente)
 
     return render_template(
         "classe.html",
@@ -136,9 +100,8 @@ def classe(classe_name):
         calcola_valore_rgb=mc_utils.calcola_valore_rgb,
         list_attivita=ct_funcs.list_attivita,
         zip=zip,
-        url_name=insert_underscore_name,
+        url_name=mc_utils.insert_underscore_name,
         classifica_squadre=classifica_squadre,
-        list_data_squadra=list_data_squadra,
     )
 
 
@@ -146,11 +109,11 @@ def classe(classe_name):
 @login_required
 def info_studente(classe_name, nominativo, stagione):
     if (
-        insert_underscore_name(current_user.nominativo) != nominativo
+        mc_utils.insert_underscore_name(current_user.nominativo) != nominativo
         and not current_user.admin_user
     ):
         return errore_accesso()
-    nominativo = remove_underscore_name(nominativo)
+    nominativo = mc_utils.remove_underscore_name(nominativo)
     return render_template(
         "info_studente.html",
         user=current_user,
