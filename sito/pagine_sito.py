@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from sqlalchemy import CursorResult
 from sito.database_funcs.cronology_utils_funcs import cronologia_utente
+from sito.database_funcs.list_database_elements import elenco_squadre_da_classe
 from sito.misc_utils_funcs.permission_utils import errore_accesso
 from . import db, app
 
@@ -14,6 +15,7 @@ from .modelli import Classi, Info, Cronologia
 from os import path
 from .refactor import refactor_file
 from pathlib import Path
+from itertools import chain
 
 pagine_sito = Blueprint("pagine_sito", __name__)
 FILE_ERRORE = path.join(Path.cwd(), "data", "errore.txt")
@@ -30,6 +32,51 @@ VUOTO = ""
 ALLOWED_EXTENSIONS = set(["xlsx"])
 
 from functools import wraps
+
+
+def get_single_points(Cronologia, stagione_corrente):
+    return [x.modifica_punti for x in Cronologia if x.stagione == stagione_corrente]
+
+
+def list_label_squadra():
+
+    pass
+
+
+def list_data_squadra(classe, nome_squadra, stagione_corrente):
+
+    print(nome_squadra)
+    studenti = db_funcs.elenco_user_da_classe_id_e_nome_squadra(classe.id, nome_squadra)
+    x = [
+        get_single_points(db_funcs.cronologia_da_user(studente), stagione_corrente)
+        for studente in studenti
+    ]
+    flattened = list(chain.from_iterable(x))
+    changes = []
+    last = 0
+    for i in flattened:
+        last += i
+        changes.append(last)
+    print(changes)
+    return changes
+
+
+def somma_punti_squadra(classe, nome_squadra, stagione_corrente):
+    studenti = db_funcs.elenco_user_da_classe_id_e_nome_squadra(classe.id, nome_squadra)
+    punti_squadra = 0
+    for studente in studenti:
+        punti_squadra += float(studente.punti.split(",")[stagione_corrente - 1])
+    return punti_squadra
+
+
+def classifica_squadre(classe, stagione_corrente):
+    elenco_squadre = db_funcs.elenco_squadre_da_classe(classe)
+    punti_squadre = {
+        nome_squadra: somma_punti_squadra(classe, nome_squadra, stagione_corrente)
+        for nome_squadra in elenco_squadre
+    }
+
+    return dict(sorted(punti_squadre.items(), key=lambda item: item[1], reverse=True))
 
 
 def insert_underscore_name(nominativo):
@@ -74,10 +121,12 @@ def classe(classe_name):
 
     studenti = db_funcs.classifica_studenti_di_una_classe(stagione_corrente, classe)
     n_stagioni = db_funcs.get_last_season()
+    list_data_squadra(classe, "Pentabros", stagione_corrente)
+
     return render_template(
         "classe.html",
         user=current_user,
-        classe=classe.classe,
+        classe=classe,
         studenti=studenti,
         n_stagioni=n_stagioni,
         stagione_corrente=stagione_corrente,
@@ -88,6 +137,8 @@ def classe(classe_name):
         list_attivita=ct_funcs.list_attivita,
         zip=zip,
         url_name=insert_underscore_name,
+        classifica_squadre=classifica_squadre,
+        list_data_squadra=list_data_squadra,
     )
 
 

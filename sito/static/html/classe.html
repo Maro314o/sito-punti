@@ -1,18 +1,17 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Classifica</title>
-    <link rel="icon" href="{{ url_for('static',filename='images/logo.png')}}" type="image/icon">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Classifica</title>
+  <link rel="icon" href="{{ url_for('static',filename='images/logo.png')}}" type="image/icon">
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css')}}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',
-                filename='css/classe.css')}}">
-  <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css')}}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',
+              filename='css/classe.css')}}">
+<link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
 
@@ -20,54 +19,102 @@
 </head>
 
 <body>
-    <div class="sidebar-button-container">
-      {% if  user.admin_user %}
-      <button class="custom-button" onclick="location.href='/classi'">
-      {% else %}
-      <button class="custom-button" onclick="location.href='/'">
-        {% endif %}
-            <i class="fas fa-arrow-left"></i>
-          </a>
-        </button>               
-    </div>
-    <main  class="table" id="customers_table">
-        <section class="table__header">
-          <div class="nomeclasse">
-            <h1>Classe {{classe}}</h1>  
-          </div>
-          <form method="POST" class="the-form">
+  <div class="sidebar-button-container">
+    {% if  user.admin_user %}
+    <button class="custom-button" onclick="location.href='/classi'">
+    {% else %}
+    <button class="custom-button" onclick="location.href='/'">
+      {% endif %}
+          <i class="fas fa-arrow-left"></i>
+        </a>
+      </button>               
+  </div>
+  <main  class="table" id="customers_table">
+      <section class="table__header">
+        <div class="nomeclasse">
+          <h1>Classe {{classe.classe}}</h1>  
+        </div>
+        <form method="POST" class="the-form">
 
-          <div class="season_btn">
-            <label for="export-file" class="season_btn-btn" title="Season Menu">Season</label>  
-              <input type="checkbox" id="export-file">
-              <div class="season_btn-options">
-                  {% for i in range(n_stagioni)%}
-                  <label for="{{i}}">Season {{i+1}}</label>
-                  <input type="submit" id="{{i}}" name="selected_season" value={{i+1}}>
-                  {% endfor%}
+        <div class="season_btn">
+          <label for="export-file" class="season_btn-btn" title="Season Menu">Season</label>  
+            <input type="checkbox" id="export-file">
+            <div class="season_btn-options">
+                {% for i in range(n_stagioni)%}
+                <label for="{{i}}">Season {{i+1}}</label>
+                <input type="submit" id="{{i}}" name="selected_season" value={{i+1}}>
+                {% endfor%}
 
-
-              </div>
-
-                <input type="submit" value="Submit">
 
             </div>
-          </form>
-        </section>
-        
-        <section class="table__body">
-            <table>
-                <thead>
-                    <tr>
-                        <th style="cursor: default;">Posizione</th>
-                        <th style="text-align:center;cursor: default;color: #000000">Nome e Cognome</th>
-                        <th style="text-align:center;cursor: default">Squadra</th>
-                        <th style="text-align:center;z-index:1;cursor: default;color: #000000">Punti Totali</th>
-                    </tr>
-                </thead>
-                <tbody>
-                                       {% for studente in studenti %}
-                        <tr style="background :rgb{{calcola_valore_rgb(studente.squadra)}};">
+
+              <input type="submit" value="Submit">
+
+          </div>
+        </form>
+      </section>
+      
+      <section class="table__body">
+          <table>
+              <thead>
+                  <tr>
+                      <th style="cursor: default;">Posizione</th>
+                      <th style="text-align:center;cursor: default;color: #000000">Nome e Cognome</th>
+                      <th style="text-align:center;cursor: default">Squadra</th>
+                      <th style="text-align:center;z-index:1;cursor: default;color: #000000">Punti Totali</th>
+                  </tr>
+              </thead>
+              <tbody>
+                                     {% for studente in studenti %}
+                      <tr style="background :rgb{{calcola_valore_rgb(studente.squadra)}};">
+
+
+                          {% if loop.index==1 %}
+                              <td><img src="{{ url_for('static',
+              filename='images/primo.png')}}"></td>
+                          {% elif loop.index==2%}
+                              <td><img src="{{ url_for('static',
+              filename='images/secondo.png')}}"></td>
+                          {% elif loop.index==3%}
+                              <td><img src="{{ url_for('static',
+              filename='images/terzo.png')}}"></td>
+                          {% else %}
+                              <td>&#160&#160 {{loop.index}} </td>
+                          {%endif%}
+                          <td style="text-align:center;">{{ studente.nominativo}}</td>
+                    <td style="text-align:center" >{{ studente.squadra }}</td>
+
+                            <td style="text-align:center" >{{ studente.punti.split(',')[stagione_corrente-1] }}
+                          {% if user.admin_user or user.nominativo==studente.nominativo %}
+
+                      </div> <a href="/classe/{{classe.classe}}/{{studente.nominativo}}/{{stagione_corrente}}">
+  <button  class="material-symbols--info-outline" ></button></a></td>
+                            {% endif %}
+
+
+
+
+
+                   {% endfor %}
+
+                  </tr>
+              </tbody>
+          </table>
+      </section>
+
+
+      <section style="margin-top: 50px; width: 40%; float: left; margin-left: 50px;" class="table__body">
+          <table>
+              <thead>
+                  <tr>
+                      <th style="cursor: default;">Posizione</th>
+                      <th style="text-align:center;cursor: default">Squadra</th>
+                      <th style="text-align:center;z-index:1;cursor: default;color: #000000">Punti Totali</th>
+                  </tr>
+              </thead>
+              <tbody>
+                   {% for squadra,punti in classifica_squadre(classe,stagione_corrente).items()%}
+                        <tr style="background :rgb{{calcola_valore_rgb(squadra)}};">
 
 
                             {% if loop.index==1 %}
@@ -82,30 +129,75 @@
                             {% else %}
                                 <td>&#160&#160 {{loop.index}} </td>
                             {%endif%}
-                            <td style="text-align:center;">{{ studente.nominativo}}</td>
-                      <td style="text-align:center" >{{ studente.squadra }}</td>
-
-                              <td style="text-align:center" >{{ studente.punti.split(',')[stagione_corrente-1] }}
-                            {% if user.admin_user or user.nominativo==studente.nominativo %}
-
-                        </div> <a href="/classe/{{classe}}/{{url_name(studente.nominativo)}}/{{stagione_corrente}}">
-    <button  class="material-symbols--info-outline" ></button></a></td>
-                              {% endif %}
-
-
-
-
+                      <td style="text-align:center" >{{ squadra}}</td>
+                      <td style="text-align:center" >{{ punti}}</td>
 
                      {% endfor %}
-
                     </tr>
                 </tbody>
             </table>
         </section>
+
+        <section style="margin-top: 50px; width: 50%; float: left; margin-left: 40px;">
+          <canvas id="myChart" width="900" height="400"></canvas>
+      </section>
+
     </main>
+  
+<script>
+    // Declare arrays for labels and data
+    var labels = [
+        {% for squadra,punti in classifica_squadre(classe, stagione_corrente).items() %}
+            "{{ squadra }}"{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    var data = [
+        {% for squadra,punti in classifica_squadre(classe, stagione_corrente).items() %}
+            {{ punti }}{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ];
+    var colors = [
+
+        {% for squadra,punti in classifica_squadre(classe, stagione_corrente).items() %}
+        'rgba{{calcola_valore_rgb(squadra)}}',
+      {% endfor %}
+    ];
+    // Configuring the chart
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Punti Totali',
+                data: data,
+                backgroundColor:colors// Use the colors array here
+            }]
+        },
+        options: {
+           plugins: {
+                legend: {
+                    labels: {
+                        color: 'green',  // Legend label color (this changes the 'Punti Totali' label color)
+                        font: {
+                            size: 16     // Adjust the size if you want
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+</script>
+  
 
 
 </body>
 
 </html>
-

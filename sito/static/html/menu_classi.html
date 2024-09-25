@@ -169,7 +169,7 @@ h3.custom-heading {
               </form>
       
               {% if error %}
-                  <button  class="upload-btn"onclick="location.href='/db_errori'" style="border-radius:15px;background-color:red;">Errori nel dataset,clicca per vederli</button>
+<button id="upload-btn" class="upload-btn" onclick="location.href='/db_errori'" style="border-radius:15px;background-color:red;">Errori nel dataset, clicca per vederli</button>
 
                 
               {% endif %}
@@ -209,6 +209,9 @@ h3.custom-heading {
         function closePopup() {
             document.getElementById('popup-container').style.display = 'none';
         }
+        setTimeout(function() {
+        document.getElementById('upload-btn').style.display = 'none';
+         }, 15000);
     </script>
         <script src="{{ url_for('static', filename='js/admin_dashboard.js')}}"></script>
 

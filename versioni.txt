@@ -10,3 +10,4 @@
 22/09/2024 12:53 | Versione 0.0.10 | Aggiornamento logica permessi e accesso alle pagine ora per mezzo di un decoratore
 23/09/2024 22:21 | Versione 0.0.11 | Aggiornamento metodo creazione dell'account per personalizzare di piu' email,nome,cognome
 24/09/2024 20:20 | Versione 0.0.12 | Aggiornamento metodo della creazione dell'account rimuovendo nome e cognome per facilitare la creazione degli account alle persone con più di un nome e/o cognome
+25/09/2024 16:23 | Versione 0.0.13 | Aggiunta classifica delle squadre 
