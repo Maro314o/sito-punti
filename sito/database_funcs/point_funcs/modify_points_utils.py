@@ -1,4 +1,5 @@
 from ..database_queries import cronologia_da_user
+from ..list_database_elements import get_last_season
 from ... import db
 from ...modelli import Info
 
@@ -16,7 +17,7 @@ def aggiorna_punti_cumulativi(studente):
 
 
 def aggiorna_punti(utente):
-    last_season_obj = Info.query.filter_by().all()[0]
+    last_season_obj = Info.query.first()
     last_season = last_season_obj.last_season
     nuovi_punti = [0]
 

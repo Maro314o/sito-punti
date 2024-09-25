@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
     <!---link dello stylesheet di reset--->
+    <link rel="icon" href="{{ url_for('static',filename='images/logo.png')}}" type="image/icon">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css')}}">
     <!---link del css--->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}" >
@@ -68,7 +69,7 @@
 
     <div class="icone"> <!---icone laterali--->
         <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"><i class="ri-map-pin-line"></i></a>
-        <a href="mailto:puntikeynes@gmail.com"><i class="ri-mail-send-line"></i></a>
+        <a href="mailto:puntikeynes@gmail.com?subject=&body=Scrivi%20pure%20un%20consiglio%20su%20come%20migliorare%20il%20sito%20oppure%20se%20stai%20riscontrando%20un%20problema%20cerca%20di%20descrivercelo%20in%20dettaglio%20cos%C3%AC%20da%20poter%20aiutarti%20al%20meglio"><i class="ri-mail-send-line"></i></a>
     </div>
     {% if user.admin_user %}
     <div class="scroll-down"> <!---icona scrolldown--->

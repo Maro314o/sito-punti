@@ -3,6 +3,8 @@ from pathlib import Path
 from os import path
 import datetime
 
+from pandas._libs.tslibs.dtypes import NpyDatetimeUnit
+
 from sito.database_funcs.database_queries import user_da_nominativo
 from sito.database_funcs.list_database_elements import elenco_classi_studenti
 
@@ -20,6 +22,13 @@ mesi = {
     "novembre": 11,
     "dicembre": 12,
 }
+
+
+def capitalize_all(nominativo):
+    nominativo = nominativo.split()
+    nominativo = [parola.capitalize() for parola in nominativo]
+    nominativo = " ".join(nominativo)
+    return nominativo
 
 
 def refactor_file(current_user):
@@ -41,7 +50,7 @@ def refactor_file(current_user):
     name_file = path.join(Path.cwd(), "data", "foglio.xlsx")
     file = pd.read_excel(name_file, sheet_name=None)
     dataset, *lista_fogli = file.keys()
-
+    nominativi_trovati = set()
     errori = 0
     for classe in lista_fogli:
         nuova_classe = Classi(classe=classe)
@@ -49,10 +58,10 @@ def refactor_file(current_user):
         db.session.commit()
 
         for numero_riga, riga in enumerate(file[classe].values.tolist()):
-            nominativo = " ".join(
-                [x.strip().capitalize() for x in riga[0].strip().split()][0:2]
-            )
+            nominativo = riga[0]
+            nominativo = capitalize_all(nominativo)
             if len(riga) == 1:
+
                 with open(error_file, "a") as f:
                     f.write(
                         f"{datetime.datetime.now()} | errore alla linea {numero_riga} del foglio {classe} del edatabase : La cella della squadra per questo utente e' vuota.Gli verra' assegnata una squadra provvisoria chiamata \"Nessuna_squadra\"\n"
@@ -61,11 +70,10 @@ def refactor_file(current_user):
             else:
                 squadra = riga[1]
             utente = user_da_nominativo(nominativo)
+            nominativi_trovati.add(nominativo)
             if not utente:
                 utente = User(
                     email=f"email_non_registrata_per_{'_'.join(nominativo.split())}",
-                    nome=nominativo.split()[1],
-                    cognome=nominativo.split()[0],
                     nominativo=nominativo,
                     squadra=squadra,
                     password="",
@@ -76,6 +84,7 @@ def refactor_file(current_user):
                 )
                 db.session.add(utente)
             else:
+                utente.nominativo = nominativo
                 utente.squadra = squadra
                 utente.punti = "0"
                 utente.classe_id = db_funcs.classe_da_nome(classe).id
@@ -97,9 +106,7 @@ def refactor_file(current_user):
             data = data[0]
         stagione = riga[1]
         classe = riga[2]
-        nominativo = " ".join(
-            [x.strip().capitalize() for x in str(riga[3]).strip().split()][0:2]
-        )
+        nominativo = capitalize_all(riga[3])
 
         attivita = riga[4]
         punti = riga[5]
@@ -134,7 +141,7 @@ def refactor_file(current_user):
     db.session.add(Info(last_season=last_season))
     db.session.commit()
     for utente in db_funcs.elenco_studenti():
-        if not (db_funcs.classe_da_id(utente.classe_id) in elenco_classi_studenti()):
+        if utente.nominativo not in nominativi_trovati:
             db.session.delete(utente)
     db.session.commit()
     for utente in db_funcs.elenco_studenti():

@@ -5,6 +5,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Crea un account</title>
+        <link rel="icon" href="{{ url_for('static',filename='images/logo.png')}}" type="image/icon">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css')}}">
         <link href="https://fonts.googleapis.com/css2?family=Muli:wght@400;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="{{ url_for('static',
@@ -33,13 +34,18 @@
                     <form method="POST" class="the-form">
                         <label for="email">Email</label>
                         <input type="email" name="email" id="email" placeholder="Inserisci la tua e-mail">
-                        <label for="nome">Nome</label>
-                        <input type="text" name="nome" id="nome" placeholder="Inserisci il tuo nome">
 
-                        <label for="cognome">Cognome</label>
+{% if not user.admin_user %}
+<label for="name">Cognome e Nome:</label>
+<input type="text" list="names" id="nominativo" name="nominativo" placeholder="Seleziona cognome e nome" required oninput="validateName()">
 
-                        <input type="text" name="cognome" id="cognome" placeholder="Inserisci il tuo cognome">
- 
+<!-- Datalist of predefined names -->
+<datalist id="names">
+  {% for studente in studenti%}
+  <option value="{{studente.nominativo}}"></option>
+    {% endfor %}
+</datalist><br><br>
+{% endif %}
 
 
                         <label for="password">Password</label>
@@ -76,6 +82,18 @@
             </div>
         </div>
     </body>
+<script>
+function validateName() {
+    const input = document.getElementById('name');
+    const options = Array.from(document.querySelectorAll('#names option')).map(option => option.value);
+    
+    if (!options.includes(input.value)) {
+        input.setCustomValidity("Seleziona il tuo nome e cognome dalla lista");
+    } else {
+        input.setCustomValidity("");
+    }
+}
+</script>
 </html>
 
 

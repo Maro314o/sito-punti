@@ -1,143 +1,220 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{{ url_for('static',
-                filename='css/menu_classi_styles.css')}}">
-  <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Menu' classi</title>
-</head>
-<body>
 
-  <div class="button-list">
-{%for classe in classi%}
-<form method="POST" action="/classe/{{classe.classe}}"> 
-  
-  <div class="container">
-    <button type='submit' class="button" name='bottone' value="raggiungi">
-     {% if loop.index%5==1%}
-      <img src="{{ url_for('static',
-              filename='images/logo_classe_4.png')}}" >
-      {%elif loop.index%5==2%}
-      <img src="{{ url_for('static',
-              filename='images/logo_classe_3.png')}}" >
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static',filename='images/logo.png')}}" type="image/icon">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="icon" href="{{ url_for('static',filename='images/logo.png')}}" type="image/icon type">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/menu_classi_styles.css') }}">
+    <title>Menu' classi</title>
+</head>
+<body>
+  <style>
+    .boxelementiadd {
+    padding: 0px;
+    margin: 20px;
+    border-radius: 5px;
+}
+.button-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    border-radius: 50px;
+    margin: 40px 40px 50px calc(40px - 65px); /* Adjusted to move it more left */
+    transition: margin-left 0.3s ease; /* Smooth transition when sidebar changes */
+}
+
+.container {
+    margin: 5px;
+    flex: 0 1 calc(35% - 30px); 
+    box-sizing: border-box;
+}
+
+
+.button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: none;
+    background: none;
+    cursor: pointer;
+    text-align: center;
+    padding: 10px;
+}
+
+.button img {
+    max-width: 150%;
+    border-radius: 15px;
+    height: auto;
+}
+
+h1 {
+    margin: 10px 0 0;
+    font-size: 18px;
+    color: black;
+}
+
+input[type="file"] {
+    display: none; 
+}
+
+/* Optional: Add a scrollbar if the content overflows */
+.button-list {
+    max-height: 80vh; /* Limit height for scrolling */
+    overflow-y: auto; /* Enable vertical scroll */
+}
+
+h3.custom-heading {
+            font-size: 24px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .file-upload-label {
+            display: block;
+            margin: 0 auto;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            width: 100%;
+            text-align: center;
+            cursor: pointer;
+            color: #666;
+            transition: border-color 0.3s;
+        }
+        .file-upload-label:hover {
+            border-color: #28a745;
+        }
+        button.upload-btn {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+        button.upload-btn:hover {
+            background-color: #218838;
+        }
+        .error-btn {
+            background-color: #dc3545;
+            color: #fff;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background-color 0.3s ease;
+        }
+        .error-btn:hover {
+            background-color: #c82333;
+        }
+  </style>
+
+    <div class="sidebar">
+        <a href="/admin_dashboard" class="logo">
+            <i class='bx bx-code-alt'></i>
+            <div class="logo-name"><span>ADMIN</span>MENU</div>
+        </a>
+        <ul class="side-menu">
+          <li ><a href="/"><i class='bx bx-home-alt-2'></i>Home</a></li>
+            <li><a href="/admin_dashboard"><i class='bx bxs-dashboard'></i>Dashboard</a></li>
+            <li class="active"><a href="/classi"><i class='bx bx-show-alt'></i>Classi</a></li>
+            <li><a href="/crea_admin"><i class='bx bx-shield'></i>Crea admin</a></li>
+        </ul>
+        <ul class="side-menu">
+            <li>
+                <a href="/logout" class="logout">
+                    <i class='bx bx-log-out-circle'></i>
+                    Esci dall' account
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="content">
+        <nav>
+            <i class='bx bx-menu'></i>
+            <form action="#"></form>
+        </nav>
+
+        <main>
+            <div class="header">
+                <div class="left">
+                    <h1>Dashboard</h1>
+                    <ul class="breadcrumb">
+                        <li><a href="#">Admin Menu</a></li> /
+                        <li><a href="#" class="active">Classi</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="boxelementiadd">
+              <h3 class="custom-heading">Carica Database</h3>
+              <form method="POST" enctype="multipart/form-data">
+                  <label for="customFileInput" class="file-upload-label" id="fileUploadLabel">
+                      Premi qui per caricare il tuo file
+                  </label>
+                  <input type="file" id="customFileInput" name="file_db">
+                  <button class="upload-btn" name="bottone" value="load_database" type="submit">Conferma</button>
+              </form>
+      
+              {% if error %}
+<button id="upload-btn" class="upload-btn" onclick="location.href='/db_errori'" style="border-radius:15px;background-color:red;">Errori nel dataset, clicca per vederli</button>
 
-     {% elif loop.index%5==3%}
-      <img src="{{ url_for('static',
-              filename='images/logo_classe_2.png')}}" >
-       {% elif loop.index%5==4%}
-      <img src="{{ url_for('static',
-              filename='images/logo_classe_1.png')}}" >
-      {%else%}
-      <img src="{{ url_for('static',
+                
+              {% endif %}
+          </div>
+          
+
+            <div class="button-list">
+              <hr style="border: none; border-top: 2px solid black;" />
+                {% for classe in classi %}
+                <form method="POST" action="/classe/{{ classe.classe }}">
+                    <div class="container">
+                        <button type='submit' class="button" name='bottone' value="raggiungi">
+                            {% if loop.index % 5 == 1 %}
+                                <img src="{{ url_for('static', filename='images/logo_classe_4.png') }}">
+                            {% elif loop.index % 5 == 2 %}
+                                <img src="{{ url_for('static', filename='images/logo_classe_3.png') }}">
+                            {% elif loop.index % 5 == 3 %}
+                                <img src="{{ url_for('static', filename='images/logo_classe_2.png') }}">
+                            {% elif loop.index % 5 == 4 %}
+                                <img src="{{ url_for('static', filename='images/logo_classe_1.png') }}">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='images/logo_classe_5.png') }}">
+                            {% endif %}
+                            <h1 style="color: black;">{{ classe.classe }}</h1>
+                        </button>
+                    </div>
+                </form>
+                {% endfor %}
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function openPopup() {
+            document.getElementById('popup-container').style.display = 'flex';
+        }
+        function closePopup() {
+            document.getElementById('popup-container').style.display = 'none';
+        }
+        setTimeout(function() {
+        document.getElementById('upload-btn').style.display = 'none';
+         }, 15000);
+    </script>
+        <script src="{{ url_for('static', filename='js/admin_dashboard.js')}}"></script>
+
+</body>
+</html>
 
-              filename='images/logo_classe_5.png')}}" >
-      {%endif%}
-      <h1 style="color :black;">{{classe.classe}}</h1>
-  </div>
-
-
-</form>
-
-{%endfor%}
-
-<nav> 
-    <div class="logo-name">
-        <div class="logo-image">
-            <img src="{{ url_for('static',
-                filename='images/logo.png')}}" alt="">
-        </div>
-
-        <span class="logo_name">J.M Keynes</span>
-
-    </div>
-
-    <div class="menu-items">
-        <ul class="nav-links">
-            <li><a href="/">
-                <i class="uil uil-estate"></i>
-                <span class="link-name">Torna alla Home</span>
-            </a></li>
-            <li><a href="/admin_dashboard">
-                <i class="uil uil-estate"></i>
-                <span class="link-name">Torna alla dashboard</span>
-            </a></li>            
-     
-            <br>
-
-                
-<br></li>
- </li>
-      <ul class="logout-mode">
-      </ul>
-<h3 >  Carica un database</h3>
-
-<li>
-<form method="POST" enctype="multipart/form-data">
-<label for="db" class="drop-container" id="dropcontainer"></label>
-  <input type="file" id="db" name='file_db'>
-  <button name='bottone' value='load_database' type="submit">Conferma i cambiamenti</button>
-
-</li></form>
-
-{% if error!=1%}
-            <br>
-       <li><a href="/db_errori">
-
-       
-                <button  style="background-color:red;">Errori nel dataset,clicca per vederli</button>
-            </a></li>
-            {%endif%}
-
-
-
-
-        </ul>
-
-        
-        <ul class="logout-mode">
-            <li><a href="/logout">
-                <i class="uil uil-signout"></i>
-                <span class="link-name">Esci dall' Account</span>
-            </a></li>
-
-        </li>
-        </ul>
-    </div>
-</nav> 
-</div>
-
-
-
-
-</div>
-
- <script>
-    function openPopup() {
-      document.getElementById('popup-container').style.display = 'flex';
-    }
-    function closePopup() {
-      document.getElementById('popup-container').style.display = 'none';
-    }
-  </script>
-
-</body>
-</html>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-
-  <title>Pop-up Form</title>
- </head>
-<body>
-
-
-
- 
-</body>
-</html>

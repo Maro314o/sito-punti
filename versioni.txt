@@ -1,7 +1,13 @@
-24/11/2023 17:26 | Versione 0.0.1 | Aggiunta del file delle versioni
-24/11/2023 17:48 | Versione 0.0.2 | Cambiamenti sostanziali alla grafica delle pagine home e admin_dashboard
-28/01/2024 22:49 | Versione 0.0.3 | Aggiunto una scheda per visualizzare piu' informazioni sui punti,compresa di un grafico 
-14/09/2024 12:15 | Versione 0.0.4 | Spostamento del pop-up che conteneva grafici e tabelle in una pagina separta
-14/09/2024 15:53 | Versione 0.0.5 | Aggiunta la possibilità di inviare email a questo sito per suggerimenti/segnalazioni, cambio del display di informazioni della admin_dashboard e possibilità di aggiungere punti direttamente dal sito
-16/09/2024 14:48 | Versione 0.0.6 | Fix riguardo alla cancellazione degli admin al caricamento dei dati + fix di un problema con le persone che hanno 2 nomi
-19/09/2024 18:42 | Versione 0.0.7 | Aggiornamento permessi e accesso alle pagine
+24/11/2023 17:26 | Versione 0.0.01 | Aggiunta del file delle versioni
+24/11/2023 17:48 | Versione 0.0.02 | Cambiamenti sostanziali alla grafica delle pagine home e admin_dashboard
+28/01/2024 22:49 | Versione 0.0.03 | Aggiunto una scheda per visualizzare piu' informazioni sui punti,compresa di un grafico 
+14/09/2024 12:15 | Versione 0.0.04 | Spostamento del pop-up che conteneva grafici e tabelle in una pagina separta
+14/09/2024 15:53 | Versione 0.0.05 | Aggiunta la possibilità di inviare email a questo sito per suggerimenti/segnalazioni, cambio del display di informazioni della admin_dashboard e possibilità di aggiungere punti direttamente dal sito
+16/09/2024 14:48 | Versione 0.0.06 | Fix riguardo alla cancellazione degli admin al caricamento dei dati + fix di un problema con le persone che hanno 2 nomi
+19/09/2024 18:42 | Versione 0.0.07 | Aggiornamento permessi e accesso alle pagine
+20/09/2024 16:37 | Versione 0.0.08 | Aggiornamento logica di caricamento database per evitare di eliminare gli account gia' registrati ed eliminare quelli che non appartengono a nessuna classe
+22/09/2024 11:52 | Versione 0.0.09 | Modifica sostanziale della grafica della pagina admin_dashboard + piccole modifiche in altre pagine.Aggiunta tasti back in alcune pagine
+22/09/2024 12:53 | Versione 0.0.10 | Aggiornamento logica permessi e accesso alle pagine ora per mezzo di un decoratore
+23/09/2024 22:21 | Versione 0.0.11 | Aggiornamento metodo creazione dell'account per personalizzare di piu' email,nome,cognome
+24/09/2024 20:20 | Versione 0.0.12 | Aggiornamento metodo della creazione dell'account rimuovendo nome e cognome per facilitare la creazione degli account alle persone con più di un nome e/o cognome
+25/09/2024 16:23 | Versione 0.0.13 | Aggiunta classifica delle squadre 
