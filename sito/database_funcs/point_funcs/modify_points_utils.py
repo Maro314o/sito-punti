@@ -1,10 +1,9 @@
 from ..database_queries import cronologia_da_user
-from ..list_database_elements import get_last_season
 from ... import db
-from ...modelli import Info
+from ...modelli import Info, User
 
 
-def aggiorna_punti_cumulativi(studente):
+def aggiorna_punti_cumulativi(studente: User) -> None:
     punti_cumulativi = 0
     season = 1
     for evento in cronologia_da_user(studente):
@@ -16,7 +15,7 @@ def aggiorna_punti_cumulativi(studente):
     db.session.commit()
 
 
-def aggiorna_punti(utente):
+def aggiorna_punti(utente: User):
     last_season_obj = Info.query.first()
     last_season = last_season_obj.last_season
     nuovi_punti = [0]
