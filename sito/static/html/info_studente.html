@@ -133,10 +133,10 @@
             var lineChart = new Chart(ctx, {
                 type: "line",
                 data: {
-                    labels: {{ list_label(cronologia_da_user(studente), stagione_corrente) | safe }},
+                    labels: {{ elenco_date(cronologia_da_user(studente), stagione_corrente) | safe }},
                     datasets: [{
                         label: "Punti di {{ studente.nominativo | safe }}",
-                        data: {{ list_data(cronologia_da_user(studente), stagione_corrente) | safe }},
+                        data: {{ elenco_punti_cumulativi(cronologia_da_user(studente), stagione_corrente) | safe }},
                         fill: false,
                         borderColor: "rgb{{ calcola_valore_rgb(studente.squadra) }}",
                         backgroundColor: "rgb{{ calcola_valore_rgb(studente.squadra) }}",
