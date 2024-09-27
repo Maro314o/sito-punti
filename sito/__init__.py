@@ -16,7 +16,10 @@ def crea_app():
     DATA_DIRECTORY = "data"
     ERRORS_FILE_PATH = os.path.join(DATA_DIRECTORY, "errore.txt")
     LOG_FILE_PATH = os.path.join(DATA_DIRECTORY, "log.txt")
-    app.config["SECRET_KEY"] = "Speppimawwosowwi"
+    SECRET_KEY_PATH = os.path.join(Path.cwd(), "secrets", "secret_token.txt")
+    with open(SECRET_KEY_PATH, "r") as file:
+        secret_key = file.read().strip()
+    app.config["SECRET_KEY"] = secret_key
     app.config["SQLALCHEMY_DATABASE_URI"] = (
         f'sqlite:///{os.path.join(Path.cwd(),"data",DB_NAME)}'
     )

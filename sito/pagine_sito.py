@@ -1,7 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from sqlalchemy import CursorResult
 from sito.database_funcs.cronology_utils_funcs import cronologia_utente
-from sito.database_funcs.list_database_elements import elenco_squadre_da_classe
 from sito.misc_utils_funcs.permission_utils import errore_accesso
 from . import db, app
 
@@ -15,13 +13,14 @@ from .modelli import Classi, Info, Cronologia
 from os import path
 from .refactor import refactor_file
 from pathlib import Path
-from itertools import chain
-
+from math import sqrt, ceil
 from functools import wraps
+import os
 
 pagine_sito = Blueprint("pagine_sito", __name__)
 FILE_ERRORE = path.join(Path.cwd(), "data", "errore.txt")
 FILE_VERSIONI = path.join(Path.cwd(), "versioni.txt")
+PATH_CARTELLA_LOGHI = path.join(Path.cwd(), "sito", "static", "images", "loghi")
 LEGGI = "r"
 RETURN_VALUE = "bottone"
 ELIMINA_UTENTE = "elimina"
@@ -68,7 +67,11 @@ def home():
     classe_name = None
     if current_user.is_authenticated:
         classe_name = db_funcs.classe_da_id(current_user.classe_id).classe
-    return render_template("home.html", user=current_user, classe_name=classe_name)
+    return render_template(
+        "home.html",
+        user=current_user,
+        classe_name=classe_name,
+    )
 
 
 @pagine_sito.route("/classe/<classe_name>", methods=["GET", "POST"])

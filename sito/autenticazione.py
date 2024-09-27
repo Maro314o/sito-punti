@@ -1,16 +1,20 @@
+from pathlib import Path
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 
 from sito.database_funcs.database_queries import user_da_email
+from sito.database_funcs.list_database_elements import elenco_tutte_le_classi
 from .modelli import User, Classi
 from . import db, app
 
 from sito.misc_utils_funcs.permission_utils import errore_accesso
+
 
 with app.app_context():
     import sito.database_funcs as db_funcs
 import sito.misc_utils_funcs as mc_utils
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
+import os
 
 autenticazione = Blueprint("autenticazione", __name__)
 
@@ -28,12 +32,17 @@ def crea_classe():
 
 @autenticazione.route("/login", methods=["GET", "POST"])
 def login():
-    if len(db_funcs.elenco_tutte_le_classi()) == 0:
-        db.session.add(Classi(classe="admin"))
+    if len(db_funcs.elenco_admin()) == 0:
+        with open(
+            os.path.join(Path.cwd(), "secrets", "secret_starter_admin_password.txt")
+        ) as f:
+            starter_admin_password = f.read().strip()
+        if len(db_funcs.elenco_tutte_le_classi()) == 0:
+            db.session.add(Classi(classe="admin"))
         nuovo_utente = User(
             email="s-admin.starter@isiskeynes.it",
             nominativo="starter admin",
-            password="sha256$y0Y51pDkCYToataW$6e588c567f61d5d623a091c0cd3357b20db7e85ca4aa4b7535e5bb5c16f40858",
+            password=generate_password_hash(starter_admin_password, method="sha256"),
             punti="0",
             account_attivo=1,
             admin_user=1,

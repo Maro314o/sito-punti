@@ -3,7 +3,6 @@ from pathlib import Path
 from os import path
 import datetime
 
-from pandas._libs.tslibs.dtypes import NpyDatetimeUnit
 
 from sito.database_funcs.database_queries import user_da_nominativo
 from sito.database_funcs.list_database_elements import elenco_classi_studenti
