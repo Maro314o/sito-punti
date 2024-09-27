@@ -1,4 +1,4 @@
-from ..modelli import User, Classe
+from ..modelli import User, Classi
 from .database_queries import studenti_da_classe
 from .. import app
 
@@ -11,7 +11,7 @@ with app.app_context():
             key=lambda user: float(user.punti.split(",")[stagione - 1]),
         )[::-1]
 
-    def classifica_studenti_di_una_classe(stagione: int, classe: Classe) -> list[User]:
+    def classifica_studenti_di_una_classe(stagione: int, classe: Classi) -> list[User]:
         studenti = studenti_da_classe(classe)
         return classifica_user(stagione, studenti)
 
