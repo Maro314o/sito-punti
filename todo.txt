@@ -7,4 +7,4 @@ aggiungere pagina/tasto per i log
 aggiungere altri log
 ordinare le date degli eventi per la data
 aggiungere una pagina account dove poterlo eliminare e magari fare altre cose
-
+aggiornare werkzeug all'ultima versione facendo reinserire a tutti la password
