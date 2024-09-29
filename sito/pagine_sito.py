@@ -173,7 +173,7 @@ def menu_classi() -> str:
         dati = request.form
         if dati[RETURN_VALUE] == CONFERMA_CAMBIAMENTI_DATABASE:
             file = request.files["file_db"]
-            if e_utils.allowed_files(file.filename):
+            if mc_utils.allowed_files(file.filename):
                 new_filename = "foglio.xlsx"
 
                 save_location = path.join(path.join(Path.cwd(), "data"), new_filename)

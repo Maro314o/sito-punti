@@ -20,9 +20,10 @@ def crea_user(**kwargs) -> None:
         nuovo_utente = User(
             email=kwargs["email"],
             nominativo=kwargs["nominativo"],
+            squadra=kwargs["squadra"],
             password=generate_password_hash(kwargs["password"], method="sha256"),
             punti="0",
-            account_attivo=1,
+            account_attivo=kwargs.get("account_attivo", 0),
             admin_user=kwargs.get("admin_user", 0),
             classe_id=db_funcs.classe_da_nome(kwargs["classe_name"]).id,
         )
@@ -36,5 +37,7 @@ def crea_user(**kwargs) -> None:
 
 def crea_admin_user(**kwargs) -> None:
     kwargs["admin_user"] = 1
-    kwargs["classe_nome"] = "admin"
+    kwargs["classe_name"] = "admin"
+    kwargs["squadra"] = "admin"
+    kwargs["account_attivo"] = 1
     crea_user(**kwargs)

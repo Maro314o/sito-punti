@@ -35,7 +35,7 @@ def refactor_file(current_user: User) -> None:
 
     User.query.filter_by(account_attivo=0).delete()
     db.session.query(Classi).delete()
-    db.session.add(Classi(classe="admin"))
+    db_funcs.crea_classe("admin")
     db.session.commit()
     error_file = path.join(Path.cwd(), "data", "errore.txt")
     log_file = path.join(Path.cwd(), "data", "log.txt")
@@ -44,19 +44,16 @@ def refactor_file(current_user: User) -> None:
     dataset, *lista_fogli = file.keys()
     nominativi_trovati = set()
     errori = 0
-    for classe in lista_fogli:
-        nuova_classe = Classi(classe=classe)
-        db.session.add(nuova_classe)
-        db.session.commit()
-
-        for numero_riga, riga in enumerate(file[classe].values.tolist()):
+    for classe_name in lista_fogli:
+        db_funcs.crea_classe(classe_name)
+        for numero_riga, riga in enumerate(file[classe_name].values.tolist()):
             nominativo = riga[0]
             nominativo = mc_utils.capitalize_all(nominativo)
             if len(riga) == 1:
 
                 with open(error_file, "a") as f:
                     f.write(
-                        f"{datetime.datetime.now()} | errore alla linea {numero_riga} del foglio {classe} del edatabase : La cella della squadra per questo utente e' vuota.Gli verra' assegnata una squadra provvisoria chiamata \"Nessuna_squadra\"\n"
+                        f"{datetime.datetime.now()} | errore alla linea {numero_riga} del foglio {classe_name} del edatabase : La cella della squadra per questo utente e' vuota.Gli verra' assegnata una squadra provvisoria chiamata \"Nessuna_squadra\"\n"
                     )
                 squadra = "Nessuna_squadra"
             else:
@@ -64,22 +61,19 @@ def refactor_file(current_user: User) -> None:
             utente = user_da_nominativo(nominativo)
             nominativi_trovati.add(nominativo)
             if not utente:
-                utente = User(
+                db_funcs.crea_user(
                     email=f"email_non_registrata_per_{'_'.join(nominativo.split())}",
                     nominativo=nominativo,
                     squadra=squadra,
                     password="",
-                    punti="0",
                     account_attivo=0,
-                    admin_user=0,
-                    classe_id=db_funcs.classe_da_nome(classe).id,
+                    classe_name=classe_name,
                 )
-                db.session.add(utente)
             else:
                 utente.nominativo = nominativo
                 utente.squadra = squadra
                 utente.punti = "0"
-                utente.classe_id = db_funcs.classe_da_nome(classe).id
+                utente.classe_id = db_funcs.classe_da_nome(classe_name).id
 
     db.session.commit()
     last_season = 0
@@ -97,7 +91,7 @@ def refactor_file(current_user: User) -> None:
         except:
             data = data[0]
         stagione = riga[1]
-        classe = riga[2]
+        classe_name = riga[2]
         nominativo = mc_utils.capitalize_all(riga[3])
 
         attivita = riga[4]
@@ -112,7 +106,7 @@ def refactor_file(current_user: User) -> None:
         elif not db_funcs.user_da_nominativo(nominativo):
             with open(error_file, "a") as f:
                 f.write(
-                    f"{datetime.datetime.now()} | errore alla linea {numero_riga} del database : non è stato possibile modificare i punti dell' utente {nominativo} della classe {classe}. Controlla se ci sono errori nella scrittura del suo nome o se non è stato aggiunto ad una classe nel corrispettivo foglio .xlsx\n"
+                    f"{datetime.datetime.now()} | errore alla linea {numero_riga} del database : non è stato possibile modificare i punti dell' utente {nominativo} della classe {classe_name}. Controlla se ci sono errori nella scrittura del suo nome o se non è stato aggiunto ad una classe nel corrispettivo foglio .xlsx\n"
                 )
             errori += 1
 

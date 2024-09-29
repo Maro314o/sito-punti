@@ -10,6 +10,7 @@ from flask import (
 )
 
 from sito.errors_utils import admin_permission_required
+from sito.errors_utils.errors_classes.users_error_classes import UserAlreadyExists
 from sito.pagine_sito import VUOTO
 from .modelli import User, Classi
 from . import db, app
@@ -39,13 +40,13 @@ def init_admin_starter() -> Response:
             "Non hai cambiato la passoword vuota di default di admin starter"
         )
     try:
-
         db_funcs.crea_admin_user(
             email="s-admin.starter@isiskeynes.it",
+            account_attivo=1,
             nominativo="starter admin",
             password=starter_admin_password,
         )
-    except:
+    except UserAlreadyExists:
         pass
     return e_utils.redirect_home()
 
@@ -81,7 +82,7 @@ def login() -> str:
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for("pagine_sito.home"))
+    return e_utils.redirect_home()
 
 
 @autenticazione.route("/sign_up", methods=["GET", "POST"])
@@ -95,7 +96,7 @@ def sign_up():
         password_di_conferma = dati.get("password_di_conferma")
         nominativo = mc_utils.capitalize_all(nominativo)
         user = db_funcs.user_da_nominativo(nominativo)
-        if user_da_email(email):
+        if db_funcs.user_da_email(email):
             flash(
                 "Esiste già un altro account con questa email in uso", category="error"
             )
@@ -147,29 +148,26 @@ def crea_admin():
         password = dati.get("password")
         password_di_conferma = dati.get("password_di_conferma")
 
-        user = db_funcs.user_da_email(email)
         nominativo = f"{cognome} {nome}"
-        if mc_utils.campi_vuoti(dati) is True:
+        user = db_funcs.user_da_email(email) or db_funcs.user_da_nominativo(nominativo)
+        if mc_utils.campi_vuoti(dati):
             flash("Devi compilare tutti i campi", category="error")
         elif user:
-            flash("Esiste gia' un account con questa email", category="error")
+            flash(
+                "Esiste gia' un account con questa email e/o combinazione di cognome + nome",
+                category="error",
+            )
         elif len(password) < 5:
             flash("La password deve essere almeno di 5 caratteri", category="error")
         elif password != password_di_conferma:
             flash("La password di conferma non e' corretta", category="error")
         else:
-            nuovo_utente = User(
+            db_funcs.crea_admin_user(
                 email=email,
                 nominativo=nominativo,
-                password=generate_password_hash(password, method="sha256"),
-                punti="0",
+                password=password,
                 account_attivo=1,
-                admin_user=1,
-                classe_id=Classi.query.filter_by(classe="admin").first().id,
             )
-            db.session.add(nuovo_utente)
-
-            db.session.commit()
             flash("Account creato con successo!", category="success")
-            return redirect((url_for("pagine_sito.home")))
+            return e_utils.redirect_home()
     return render_template("crea_admin.html", user=current_user)
