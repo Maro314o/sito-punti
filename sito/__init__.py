@@ -16,7 +16,14 @@ def crea_app():
     DATA_DIRECTORY = "data"
     ERRORS_FILE_PATH = os.path.join(DATA_DIRECTORY, "errore.txt")
     LOG_FILE_PATH = os.path.join(DATA_DIRECTORY, "log.txt")
-    SECRET_KEY_PATH = os.path.join(Path.cwd(), "secrets", "secret_token.txt")
+    SECRETS_DIRECTORY_PATH = os.path.join(Path.cwd(), "secrets")
+    SECRET_KEY_PATH = os.path.join(SECRETS_DIRECTORY_PATH, "secret_token.txt")
+    SECRET_PASSWORD_PATH = os.path.join(
+        SECRETS_DIRECTORY_PATH, "secret_starter_admin_password.txt"
+    )
+    init_directory(SECRETS_DIRECTORY_PATH)
+    init_file(SECRET_KEY_PATH)
+    init_file(SECRET_PASSWORD_PATH)
     with open(SECRET_KEY_PATH, "r") as file:
         secret_key = file.read().strip()
     app.config["SECRET_KEY"] = secret_key
