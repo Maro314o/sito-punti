@@ -19,19 +19,8 @@ import os
 autenticazione = Blueprint("autenticazione", __name__)
 
 
-def capitalize_all(nominativo):
-    nominativo = nominativo.split()
-    nominativo = [parola.capitalize() for parola in nominativo]
-    nominativo = " ".join(nominativo)
-    return nominativo
-
-
-def crea_classe():
-    return [classe.classe for classe in db_funcs.elenco_classi_studenti()]
-
-
 @autenticazione.route("/login", methods=["GET", "POST"])
-def login():
+def login() -> str:
     if len(db_funcs.elenco_admin()) == 0:
         with open(
             os.path.join(Path.cwd(), "secrets", "secret_starter_admin_password.txt")
@@ -91,7 +80,7 @@ def sign_up():
         nominativo = dati.get("nominativo").strip()
         password = dati.get("password")
         password_di_conferma = dati.get("password_di_conferma")
-        nominativo = capitalize_all(nominativo)
+        nominativo = mc_utils.capitalize_all(nominativo)
         user = db_funcs.user_da_nominativo(nominativo)
         if user_da_email(email):
             flash(

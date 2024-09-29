@@ -3,9 +3,9 @@ from pathlib import Path
 from os import path
 import datetime
 
-
+from .modelli import User
 from sito.database_funcs.database_queries import user_da_nominativo
-from sito.database_funcs.list_database_elements import elenco_classi_studenti
+import sito.misc_utils_funcs as mc_utils
 
 mesi = {
     "gennaio": 1,
@@ -23,14 +23,7 @@ mesi = {
 }
 
 
-def capitalize_all(nominativo):
-    nominativo = nominativo.split()
-    nominativo = [parola.capitalize() for parola in nominativo]
-    nominativo = " ".join(nominativo)
-    return nominativo
-
-
-def refactor_file(current_user):
+def refactor_file(current_user: User) -> None:
     from . import db
 
     from .modelli import User, Classi, Cronologia, Info
@@ -58,7 +51,7 @@ def refactor_file(current_user):
 
         for numero_riga, riga in enumerate(file[classe].values.tolist()):
             nominativo = riga[0]
-            nominativo = capitalize_all(nominativo)
+            nominativo = mc_utils.capitalize_all(nominativo)
             if len(riga) == 1:
 
                 with open(error_file, "a") as f:
@@ -105,7 +98,7 @@ def refactor_file(current_user):
             data = data[0]
         stagione = riga[1]
         classe = riga[2]
-        nominativo = capitalize_all(riga[3])
+        nominativo = mc_utils.capitalize_all(riga[3])
 
         attivita = riga[4]
         punti = riga[5]
