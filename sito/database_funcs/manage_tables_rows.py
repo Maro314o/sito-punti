@@ -9,6 +9,9 @@ with app.app_context():
 
 
 def crea_classe(classe_name):
+    """
+    dato un nome crea una classe
+    """
     try:
         db.session.add(Classi(classe=classe_name))
     except sqlalchemy.exc.IntegrityError:
@@ -16,6 +19,14 @@ def crea_classe(classe_name):
 
 
 def crea_user(**kwargs) -> None:
+    """
+    dato i parametri:
+    -email
+    -nominativo
+    -squadra
+    -password
+    -account_attivo (facoltativo)
+    """
     try:
         nuovo_utente = User(
             email=kwargs["email"],

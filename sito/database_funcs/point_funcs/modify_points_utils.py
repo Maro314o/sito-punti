@@ -4,6 +4,10 @@ from ...modelli import Info, User
 
 
 def aggiorna_punti_cumulativi(studente: User) -> None:
+    """
+    dato un utente,si itera sulla sua cronologia degli eventi e in base ai singoli punteggi di ogni evento
+    si modificano i punti cumulativi di tutta la cronolgia di quell'utente
+    """
     punti_cumulativi = 0
     season = 1
     for evento in cronologia_da_user(studente):
@@ -15,7 +19,11 @@ def aggiorna_punti_cumulativi(studente: User) -> None:
     db.session.commit()
 
 
-def aggiorna_punti(utente: User):
+def aggiorna_punti(utente: User) -> None:
+    """
+    data un utente,si itera sulla sua cronolgia degli eventi e si sommano i punti di ogni evento
+    per ottenere il totale dei punti di ogni stagione
+    """
     last_season_obj = Info.query.first()
     last_season = last_season_obj.last_season
     nuovi_punti = [0]

@@ -1,4 +1,3 @@
-from typing import Callable, Any
 from flask import (
     Blueprint,
     Response,
@@ -8,8 +7,6 @@ from flask import (
     url_for,
     flash,
 )
-from sito.errors_utils import admin_permission_required
-from sito.database_funcs.cronology_utils_funcs import cronologia_utente
 import sito.errors_utils as e_utils
 from . import db, app
 
@@ -38,26 +35,6 @@ VUOTO = ""
 
 
 ALLOWED_EXTENSIONS = set(["xlsx"])
-
-
-def somma_punti_squadra(
-    classe: Classi, nome_squadra: str, stagione_corrente: int
-) -> float:
-    studenti = db_funcs.elenco_user_da_classe_id_e_nome_squadra(classe.id, nome_squadra)
-    punti_squadra = 0
-    for studente in studenti:
-        punti_squadra += float(studente.punti.split(",")[stagione_corrente - 1])
-    return punti_squadra
-
-
-def classifica_squadre(classe: Classi, stagione_corrente: int) -> dict[str, float]:
-    elenco_squadre = db_funcs.elenco_squadre_da_classe(classe)
-    punti_squadre = {
-        nome_squadra: somma_punti_squadra(classe, nome_squadra, stagione_corrente)
-        for nome_squadra in elenco_squadre
-    }
-
-    return dict(sorted(punti_squadre.items(), key=lambda item: item[1], reverse=True))
 
 
 @pagine_sito.route("/")
@@ -95,7 +72,7 @@ def classe(classe_name) -> str:
         studenti=studenti,
         n_stagioni=n_stagioni,
         stagione_corrente=stagione_corrente,
-        cronologia_da_user=db_funcs.cronologia_da_user,
+        cronologia_da_user=db_funcs.cronologia_user,
         elenco_date=ct_funcs.elenco_date,
         elenco_punti_cumulativi=ct_funcs.elenco_punti_cumulativi,
         calcola_valore_rgb=mc_utils.calcola_valore_rgb,
@@ -119,11 +96,11 @@ def info_studente(classe_name: str, nominativo: str, stagione: int) -> str:
         user=current_user,
         stagione_corrente=stagione,
         studente=db_funcs.user_da_nominativo(nominativo),
-        cronologia_da_user=db_funcs.cronologia_da_user,
+        cronologia_da_user=db_funcs.cronologia_user,
         elenco_date=ct_funcs.elenco_date,
         calcola_valore_rgb=mc_utils.calcola_valore_rgb,
         elenco_punti_cumulativi=ct_funcs.elenco_punti_cumulativi,
-        cronologia_stagione=cronologia_utente,
+        cronologia_stagione=db_funcs.cronologia_user_di_una_stagione,
         zip=zip,
         classe=classe_name,
     )
