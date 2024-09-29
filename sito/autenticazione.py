@@ -9,19 +9,20 @@ from flask import (
     url_for,
 )
 
-from sito.database_funcs.database_queries import user_da_email
-from sito.database_funcs.list_database_elements import elenco_tutte_le_classi
+from sito.errors_utils import admin_permission_required
+from sito.pagine_sito import VUOTO
 from .modelli import User, Classi
 from . import db, app
-from sito.misc_utils_funcs.permission_utils import errore_accesso
+import sito.misc_utils_funcs as mc_utils
 
+import sito.errors_utils as e_utils
+from sito.errors_utils import InitPasswordNotSet
 
 with app.app_context():
     import sito.database_funcs as db_funcs
 import sito.misc_utils_funcs as mc_utils
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
-import sqlalchemy
 import os
 
 autenticazione = Blueprint("autenticazione", __name__)
@@ -29,32 +30,24 @@ autenticazione = Blueprint("autenticazione", __name__)
 
 @autenticazione.route("/init_starter_admin")
 def init_admin_starter() -> Response:
+    with open(
+        os.path.join(Path.cwd(), "secrets", "secret_starter_admin_password.txt")
+    ) as f:
+        starter_admin_password = f.read().strip()
+    if starter_admin_password == VUOTO:
+        raise InitPasswordNotSet(
+            "Non hai cambiato la passoword vuota di default di admin starter"
+        )
     try:
-        if len(db_funcs.elenco_tutte_le_classi()) == 0:
-            db.session.add(Classi(classe="admin"))
 
-        if not user_da_email("s-admin.starter@isiskynes.it"):
-            with open(
-                os.path.join(Path.cwd(), "secrets", "secret_starter_admin_password.txt")
-            ) as f:
-                starter_admin_password = f.read().strip()
-            nuovo_utente = User(
-                email="s-admin.starter@isiskeynes.it",
-                nominativo="starter admin",
-                password=generate_password_hash(
-                    starter_admin_password, method="sha256"
-                ),
-                punti="0",
-                account_attivo=1,
-                admin_user=1,
-                classe_id=db_funcs.classe_da_nome("admin").id,
-            )
-            db.session.add(nuovo_utente)
-            db.session.commit()
-    except sqlalchemy.exc.IntegrityError:
+        db_funcs.crea_admin_user(
+            email="s-admin.starter@isiskeynes.it",
+            nominativo="starter admin",
+            password=starter_admin_password,
+        )
+    except:
         pass
-
-    return errore_accesso()
+    return e_utils.redirect_home()
 
 
 @autenticazione.route("/login", methods=["GET", "POST"])
@@ -142,9 +135,8 @@ def sign_up():
 
 @autenticazione.route("/crea_admin", methods=["GET", "POST"])
 @login_required
+@admin_permission_required
 def crea_admin():
-    if not current_user.admin_user:
-        return errore_accesso()
 
     if request.method == "POST":
         dati = request.form

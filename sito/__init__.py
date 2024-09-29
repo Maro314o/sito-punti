@@ -3,6 +3,7 @@ import os
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from pathlib import Path
+
 from .misc_utils_funcs import init_directory, init_file
 
 db = SQLAlchemy()
@@ -38,13 +39,16 @@ def crea_app():
 
     from .pagine_sito import pagine_sito
     from .autenticazione import autenticazione
+    import sito.database_funcs as db_funcs
 
     app.register_blueprint(pagine_sito, url_prefix="/")
     app.register_blueprint(autenticazione, url_prefix="/")
-    from .modelli import User
+    from .modelli import User, Classi
 
     with app.app_context():
         db.create_all()
+        if not db_funcs.classe_da_nome("admin"):
+            db.session.add(Classi(classe="admin"))
     login_manager = LoginManager()
     login_manager.login_view = "autenticazione.login"
     login_manager.init_app(app)

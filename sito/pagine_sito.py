@@ -8,8 +8,9 @@ from flask import (
     url_for,
     flash,
 )
+from sito.errors_utils import admin_permission_required
 from sito.database_funcs.cronology_utils_funcs import cronologia_utente
-from sito.misc_utils_funcs.permission_utils import errore_accesso
+import sito.errors_utils as e_utils
 from . import db, app
 
 with app.app_context():
@@ -22,7 +23,6 @@ from .modelli import Classi, Info, Cronologia
 from os import path
 from .refactor import refactor_file
 from pathlib import Path
-from functools import wraps
 
 pagine_sito = Blueprint("pagine_sito", __name__)
 FILE_ERRORE = path.join(Path.cwd(), "data", "errore.txt")
@@ -58,17 +58,6 @@ def classifica_squadre(classe: Classi, stagione_corrente: int) -> dict[str, floa
     }
 
     return dict(sorted(punti_squadre.items(), key=lambda item: item[1], reverse=True))
-
-
-def admin_permission_required(func: Callable[..., Any]) -> Callable[..., Any]:
-    @wraps(func)
-    def decorated_function(*args, **kwargs):
-        # Check if the current_user has account_attivo == 1
-        if not current_user.admin_user:
-            return errore_accesso()
-        return func(*args, **kwargs)
-
-    return decorated_function
 
 
 @pagine_sito.route("/")
@@ -184,7 +173,7 @@ def menu_classi() -> str:
         dati = request.form
         if dati[RETURN_VALUE] == CONFERMA_CAMBIAMENTI_DATABASE:
             file = request.files["file_db"]
-            if mc_utils.allowed_files(file.filename):
+            if e_utils.allowed_files(file.filename):
                 new_filename = "foglio.xlsx"
 
                 save_location = path.join(path.join(Path.cwd(), "data"), new_filename)
