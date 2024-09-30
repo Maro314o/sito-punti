@@ -1,10 +1,17 @@
-def list_data(Cronologia, stagione):
-    return [x.punti_cumulativi for x in Cronologia if x.stagione == stagione]
+from sito.modelli import Cronologia
 
 
-def list_label(Cronologia, stagione):
-    return [x.data for x in Cronologia if x.stagione == stagione]
+def elenco_punti_cumulativi(eventi: list[Cronologia], stagione: int) -> list[int]:
+    """
+    data la cronologia degli eventi di uno studente
+    restituisce i punti cumulativi degli eventi di una stagione
+    """
+    return [evento.punti_cumulativi for evento in eventi if evento.stagione == stagione]
 
 
-def list_attivita(Cronologia, stagione):
-    return [x.attivita for x in Cronologia if x.stagione == stagione]
+def elenco_date(eventi: list[Cronologia], stagione: int) -> list[str]:
+    """
+    data la cronologia degli eventi di uno studente
+    restituisce le date degli eventi di una stagione
+    """
+    return [evento.data for evento in eventi if evento.stagione == stagione]

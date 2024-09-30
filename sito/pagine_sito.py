@@ -1,27 +1,31 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
-from sqlalchemy import CursorResult
-from sito.database_funcs.cronology_utils_funcs import cronologia_utente
-from sito.database_funcs.list_database_elements import elenco_squadre_da_classe
-from sito.misc_utils_funcs.permission_utils import errore_accesso
+from flask import (
+    Blueprint,
+    Response,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    flash,
+)
+import sito.errors_utils as e_utils
 from . import db, app
 
 with app.app_context():
     import sito.database_funcs as db_funcs
 import sito.misc_utils_funcs as mc_utils
 import sito.chart_funcs as ct_funcs
+from sito.errors_utils import admin_permission_required
 
 from flask_login import login_required, current_user
 from .modelli import Classi, Info, Cronologia
 from os import path
 from .refactor import refactor_file
 from pathlib import Path
-from itertools import chain
-
-from functools import wraps
 
 pagine_sito = Blueprint("pagine_sito", __name__)
 FILE_ERRORE = path.join(Path.cwd(), "data", "errore.txt")
 FILE_VERSIONI = path.join(Path.cwd(), "versioni.txt")
+PATH_CARTELLA_LOGHI = path.join(Path.cwd(), "sito", "static", "images", "loghi")
 LEGGI = "r"
 RETURN_VALUE = "bottone"
 ELIMINA_UTENTE = "elimina"
@@ -34,46 +38,21 @@ VUOTO = ""
 ALLOWED_EXTENSIONS = set(["xlsx"])
 
 
-def somma_punti_squadra(classe, nome_squadra, stagione_corrente):
-    studenti = db_funcs.elenco_user_da_classe_id_e_nome_squadra(classe.id, nome_squadra)
-    punti_squadra = 0
-    for studente in studenti:
-        punti_squadra += float(studente.punti.split(",")[stagione_corrente - 1])
-    return punti_squadra
-
-
-def classifica_squadre(classe, stagione_corrente):
-    elenco_squadre = db_funcs.elenco_squadre_da_classe(classe)
-    punti_squadre = {
-        nome_squadra: somma_punti_squadra(classe, nome_squadra, stagione_corrente)
-        for nome_squadra in elenco_squadre
-    }
-
-    return dict(sorted(punti_squadre.items(), key=lambda item: item[1], reverse=True))
-
-
-def admin_permission_required(func):
-    @wraps(func)
-    def decorated_function(*args, **kwargs):
-        # Check if the current_user has account_attivo == 1
-        if not current_user.admin_user:
-            return errore_accesso()
-        return func(*args, **kwargs)
-
-    return decorated_function
-
-
 @pagine_sito.route("/")
-def home():
+def home() -> str:
     classe_name = None
     if current_user.is_authenticated:
         classe_name = db_funcs.classe_da_id(current_user.classe_id).classe
-    return render_template("home.html", user=current_user, classe_name=classe_name)
+    return render_template(
+        "home.html",
+        user=current_user,
+        classe_name=classe_name,
+    )
 
 
 @pagine_sito.route("/classe/<classe_name>", methods=["GET", "POST"])
 @login_required
-def classe(classe_name):
+def classe(classe_name) -> str:
     stagione_corrente = db_funcs.get_last_season()
     if current_user.admin_user:
         classe = db_funcs.classe_da_nome(classe_name)
@@ -94,20 +73,19 @@ def classe(classe_name):
         studenti=studenti,
         n_stagioni=n_stagioni,
         stagione_corrente=stagione_corrente,
-        cronologia_da_user=db_funcs.cronologia_da_user,
-        list_label=ct_funcs.list_label,
-        list_data=ct_funcs.list_data,
+        cronologia_da_user=db_funcs.cronologia_user,
+        elenco_date=ct_funcs.elenco_date,
+        elenco_punti_cumulativi=ct_funcs.elenco_punti_cumulativi,
         calcola_valore_rgb=mc_utils.calcola_valore_rgb,
-        list_attivita=ct_funcs.list_attivita,
         zip=zip,
         url_name=mc_utils.insert_underscore_name,
-        classifica_squadre=classifica_squadre,
+        classifica_squadre=db_funcs.classifica_squadre,
     )
 
 
 @pagine_sito.route("/classe/<classe_name>/<nominativo>/<int:stagione>", methods=["GET"])
 @login_required
-def info_studente(classe_name, nominativo, stagione):
+def info_studente(classe_name: str, nominativo: str, stagione: int) -> str:
     if (
         mc_utils.insert_underscore_name(current_user.nominativo) != nominativo
         and not current_user.admin_user
@@ -119,19 +97,18 @@ def info_studente(classe_name, nominativo, stagione):
         user=current_user,
         stagione_corrente=stagione,
         studente=db_funcs.user_da_nominativo(nominativo),
-        cronologia_da_user=db_funcs.cronologia_da_user,
-        list_label=ct_funcs.list_label,
+        cronologia_da_user=db_funcs.cronologia_user,
+        elenco_date=ct_funcs.elenco_date,
         calcola_valore_rgb=mc_utils.calcola_valore_rgb,
-        list_data=ct_funcs.list_data,
-        list_attivita=ct_funcs.list_attivita,
-        cronologia_stagione=cronologia_utente,
+        elenco_punti_cumulativi=ct_funcs.elenco_punti_cumulativi,
+        cronologia_stagione=db_funcs.cronologia_user_di_una_stagione,
         zip=zip,
         classe=classe_name,
     )
 
 
 @pagine_sito.route("/regole")
-def regole():
+def regole() -> str:
     classe_name = None
     if current_user.is_authenticated:
         classe_name = db_funcs.classe_da_id(current_user.classe_id).classe
@@ -141,7 +118,7 @@ def regole():
 @pagine_sito.route("/admin_dashboard")
 @login_required
 @admin_permission_required
-def admin_dashboard():
+def admin_dashboard() -> str:
     errori = open(path.join(Path.cwd(), "data", "errore.txt"), "r").read() == VUOTO
     numero_degli_studenti = len(db_funcs.elenco_studenti())
     numero_delle_classi = len(db_funcs.elenco_classi_studenti())
@@ -166,7 +143,7 @@ def admin_dashboard():
 @pagine_sito.route("/classi", methods=["GET", "POST"])
 @login_required
 @admin_permission_required
-def menu_classi():
+def menu_classi() -> str:
     classi = db_funcs.elenco_classi_studenti()
     error_file = path.join(Path.cwd(), "data", "errore.txt")
 
@@ -200,7 +177,7 @@ def menu_classi():
 @pagine_sito.route("/db_errori")
 @login_required
 @admin_permission_required
-def db_errori():
+def db_errori() -> str:
     with open(FILE_ERRORE, LEGGI) as file_errore:
         content_error = file_errore.read().splitlines()
     return "<br><br>".join(content_error)
@@ -209,7 +186,7 @@ def db_errori():
 @pagine_sito.route("/versioni")
 @login_required
 @admin_permission_required
-def versioni():
+def versioni() -> str:
     return "<br>".join(reversed(open(FILE_VERSIONI, LEGGI).read().splitlines()))
 
 
@@ -218,7 +195,7 @@ def versioni():
 )
 @login_required
 @admin_permission_required
-def create_event(classe_name, studente_id, stagione):
+def create_event(classe_name: str, studente_id: int, stagione: int) -> Response:
     # Recupera i dati dal form di creazione evento
     data = request.form["data"]
     attivita = request.form["attivita"]
@@ -258,7 +235,9 @@ def create_event(classe_name, studente_id, stagione):
 )
 @login_required
 @admin_permission_required
-def delete_event(classe_name, studente_id, stagione, event_id):
+def delete_event(
+    classe_name: str, studente_id: int, stagione: int, event_id: int
+) -> Response:
     # Recupera l'evento da eliminare
     evento = db_funcs.evento_da_id(event_id)
 
@@ -285,7 +264,7 @@ def delete_event(classe_name, studente_id, stagione, event_id):
 @pagine_sito.route("/elenco_user/<elenco_type>", methods=["GET"])
 @login_required
 @admin_permission_required
-def elenco_user_display(elenco_type):
+def elenco_user_display(elenco_type: str) -> str:
     if elenco_type == "tutti_gli_studenti_registrati":
 
         utenti = db_funcs.elenco_studenti_registrati()

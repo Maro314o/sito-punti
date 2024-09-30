@@ -8,3 +8,7 @@ data/
 __pycache__/
 log.txt
 errore.txt
+secrets/
+secret_starter_admin_password.txt
+secret_token.txt
+todo.txt

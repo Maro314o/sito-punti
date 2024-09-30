@@ -1,46 +1,58 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from pathlib import Path
+from flask import (
+    Blueprint,
+    Response,
+    render_template,
+    request,
+    flash,
+    redirect,
+    url_for,
+)
 
-from sito.database_funcs.database_queries import user_da_email
+from sito.errors_utils import admin_permission_required
+from sito.errors_utils.errors_classes.users_error_classes import UserAlreadyExists
+from sito.pagine_sito import VUOTO
 from .modelli import User, Classi
 from . import db, app
+import sito.misc_utils_funcs as mc_utils
 
-from sito.misc_utils_funcs.permission_utils import errore_accesso
+import sito.errors_utils as e_utils
+from sito.errors_utils import InitPasswordNotSet
 
 with app.app_context():
     import sito.database_funcs as db_funcs
 import sito.misc_utils_funcs as mc_utils
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
+import os
 
 autenticazione = Blueprint("autenticazione", __name__)
 
 
-def capitalize_all(nominativo):
-    nominativo = nominativo.split()
-    nominativo = [parola.capitalize() for parola in nominativo]
-    nominativo = " ".join(nominativo)
-    return nominativo
-
-
-def crea_classe():
-    return [classe.classe for classe in db_funcs.elenco_classi_studenti()]
+@autenticazione.route("/init_starter_admin")
+def init_admin_starter() -> Response:
+    with open(
+        os.path.join(Path.cwd(), "secrets", "secret_starter_admin_password.txt")
+    ) as f:
+        starter_admin_password = f.read().strip()
+    if starter_admin_password == VUOTO:
+        raise InitPasswordNotSet(
+            "Non hai cambiato la passoword vuota di default di admin starter"
+        )
+    try:
+        db_funcs.crea_admin_user(
+            email="s-admin.starter@isiskeynes.it",
+            account_attivo=1,
+            nominativo="starter admin",
+            password=starter_admin_password,
+        )
+    except UserAlreadyExists:
+        pass
+    return e_utils.redirect_home()
 
 
 @autenticazione.route("/login", methods=["GET", "POST"])
-def login():
-    if len(db_funcs.elenco_tutte_le_classi()) == 0:
-        db.session.add(Classi(classe="admin"))
-        nuovo_utente = User(
-            email="s-admin.starter@isiskeynes.it",
-            nominativo="starter admin",
-            password="sha256$y0Y51pDkCYToataW$6e588c567f61d5d623a091c0cd3357b20db7e85ca4aa4b7535e5bb5c16f40858",
-            punti="0",
-            account_attivo=1,
-            admin_user=1,
-            classe_id=db_funcs.classe_da_nome("admin").id,
-        )
-        db.session.add(nuovo_utente)
-        db.session.commit()
+def login() -> str:
     if request.method == "POST":
         email = request.form.get("email")
         password = request.form.get("password")
@@ -70,7 +82,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for("pagine_sito.home"))
+    return e_utils.redirect_home()
 
 
 @autenticazione.route("/sign_up", methods=["GET", "POST"])
@@ -82,9 +94,9 @@ def sign_up():
         nominativo = dati.get("nominativo").strip()
         password = dati.get("password")
         password_di_conferma = dati.get("password_di_conferma")
-        nominativo = capitalize_all(nominativo)
+        nominativo = mc_utils.capitalize_all(nominativo)
         user = db_funcs.user_da_nominativo(nominativo)
-        if user_da_email(email):
+        if db_funcs.user_da_email(email):
             flash(
                 "Esiste già un altro account con questa email in uso", category="error"
             )
@@ -124,9 +136,8 @@ def sign_up():
 
 @autenticazione.route("/crea_admin", methods=["GET", "POST"])
 @login_required
+@admin_permission_required
 def crea_admin():
-    if not current_user.admin_user:
-        return errore_accesso()
 
     if request.method == "POST":
         dati = request.form
@@ -137,29 +148,26 @@ def crea_admin():
         password = dati.get("password")
         password_di_conferma = dati.get("password_di_conferma")
 
-        user = db_funcs.user_da_email(email)
         nominativo = f"{cognome} {nome}"
-        if mc_utils.campi_vuoti(dati) is True:
+        user = db_funcs.user_da_email(email) or db_funcs.user_da_nominativo(nominativo)
+        if mc_utils.campi_vuoti(dati):
             flash("Devi compilare tutti i campi", category="error")
         elif user:
-            flash("Esiste gia' un account con questa email", category="error")
+            flash(
+                "Esiste gia' un account con questa email e/o combinazione di cognome + nome",
+                category="error",
+            )
         elif len(password) < 5:
             flash("La password deve essere almeno di 5 caratteri", category="error")
         elif password != password_di_conferma:
             flash("La password di conferma non e' corretta", category="error")
         else:
-            nuovo_utente = User(
+            db_funcs.crea_admin_user(
                 email=email,
                 nominativo=nominativo,
-                password=generate_password_hash(password, method="sha256"),
-                punti="0",
+                password=password,
                 account_attivo=1,
-                admin_user=1,
-                classe_id=Classi.query.filter_by(classe="admin").first().id,
             )
-            db.session.add(nuovo_utente)
-
-            db.session.commit()
             flash("Account creato con successo!", category="success")
-            return redirect((url_for("pagine_sito.home")))
+            return e_utils.redirect_home()
     return render_template("crea_admin.html", user=current_user)
