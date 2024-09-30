@@ -2,7 +2,7 @@ import sqlalchemy
 from ..modelli import User, Classi
 from werkzeug.security import generate_password_hash
 from .. import db, app
-from ..errors_utils import UserAlreadyExists, ClasseAlreadyExists
+from ..errors_utils import UserAlreadyExistsError, ClasseAlreadyExistsError
 
 with app.app_context():
     import sito.database_funcs as db_funcs
@@ -15,7 +15,7 @@ def crea_classe(classe_name):
     try:
         db.session.add(Classi(classe=classe_name))
     except sqlalchemy.exc.IntegrityError:
-        raise ClasseAlreadyExists("Esiste già una classe con questo nome")
+        raise ClasseAlreadyExistsError("Esiste già una classe con questo nome")
 
 
 def crea_user(**kwargs) -> None:
@@ -43,7 +43,7 @@ def crea_user(**kwargs) -> None:
         db.session.add(nuovo_utente)
         db.session.commit()
     except sqlalchemy.exc.IntegrityError:
-        raise UserAlreadyExists(
+        raise UserAlreadyExistsError(
             f"Un utente con questa email : {kwargs['email']} o/e questo nominativo : {kwargs['nominativo']} "
         )
 

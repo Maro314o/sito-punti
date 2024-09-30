@@ -8,6 +8,7 @@ from flask import (
     flash,
 )
 import sito.errors_utils as e_utils
+from sito.errors_utils.errors_classes.data_error_classes import InvalidSeasonError
 from . import db, app
 
 with app.app_context():
@@ -39,7 +40,7 @@ ALLOWED_EXTENSIONS = set(["xlsx"])
 
 
 @pagine_sito.route("/")
-def home() -> str:
+def pagina_home() -> str:
     classe_name = None
     if current_user.is_authenticated:
         classe_name = db_funcs.classe_da_id(current_user.classe_id).classe
@@ -52,7 +53,7 @@ def home() -> str:
 
 @pagine_sito.route("/classe/<classe_name>", methods=["GET", "POST"])
 @login_required
-def classe(classe_name) -> str:
+def pagina_classe(classe_name) -> str:
     stagione_corrente = db_funcs.get_last_season()
     if current_user.admin_user:
         classe = db_funcs.classe_da_nome(classe_name)
@@ -85,7 +86,7 @@ def classe(classe_name) -> str:
 
 @pagine_sito.route("/classe/<classe_name>/<nominativo>/<int:stagione>", methods=["GET"])
 @login_required
-def info_studente(classe_name: str, nominativo: str, stagione: int) -> str:
+def pagina_info_studente(classe_name: str, nominativo: str, stagione: int) -> str:
     if (
         mc_utils.insert_underscore_name(current_user.nominativo) != nominativo
         and not current_user.admin_user
@@ -108,7 +109,7 @@ def info_studente(classe_name: str, nominativo: str, stagione: int) -> str:
 
 
 @pagine_sito.route("/regole")
-def regole() -> str:
+def pagina_regole() -> str:
     classe_name = None
     if current_user.is_authenticated:
         classe_name = db_funcs.classe_da_id(current_user.classe_id).classe
@@ -118,7 +119,7 @@ def regole() -> str:
 @pagine_sito.route("/admin_dashboard")
 @login_required
 @admin_permission_required
-def admin_dashboard() -> str:
+def pagina_admin_dashboard() -> str:
     errori = open(path.join(Path.cwd(), "data", "errore.txt"), "r").read() == VUOTO
     numero_degli_studenti = len(db_funcs.elenco_studenti())
     numero_delle_classi = len(db_funcs.elenco_classi_studenti())
@@ -143,7 +144,7 @@ def admin_dashboard() -> str:
 @pagine_sito.route("/classi", methods=["GET", "POST"])
 @login_required
 @admin_permission_required
-def menu_classi() -> str:
+def pagina_menu_classi() -> str:
     classi = db_funcs.elenco_classi_studenti()
     error_file = path.join(Path.cwd(), "data", "errore.txt")
 
@@ -177,7 +178,7 @@ def menu_classi() -> str:
 @pagine_sito.route("/db_errori")
 @login_required
 @admin_permission_required
-def db_errori() -> str:
+def pagina_db_errori() -> str:
     with open(FILE_ERRORE, LEGGI) as file_errore:
         content_error = file_errore.read().splitlines()
     return "<br><br>".join(content_error)
@@ -186,21 +187,24 @@ def db_errori() -> str:
 @pagine_sito.route("/versioni")
 @login_required
 @admin_permission_required
-def versioni() -> str:
+def pagina_versioni() -> str:
     return "<br>".join(reversed(open(FILE_VERSIONI, LEGGI).read().splitlines()))
 
 
 @pagine_sito.route(
-    "/classe/<classe_name>/<studente_id>/<stagione>/create_event", methods=["POST"]
+    "/classe/<classe_name>/<studente_id>/<int:stagione>/create_event", methods=["POST"]
 )
 @login_required
 @admin_permission_required
-def create_event(classe_name: str, studente_id: int, stagione: int) -> Response:
+def pagina_create_event(classe_name: str, studente_id: int, stagione: int) -> Response:
     # Recupera i dati dal form di creazione evento
     data = request.form["data"]
     attivita = request.form["attivita"]
     modifica_punti = request.form["modifica_punti"]
-    stagione = request.form["stagione"]
+    stagione = float(request.form["stagione"])
+
+    if stagione > db_funcs.get_last_season():
+        raise InvalidSeasonError("La season che hai inserito non esiste")
 
     # Crea un nuovo evento
     nuovo_evento = Cronologia(
@@ -221,7 +225,7 @@ def create_event(classe_name: str, studente_id: int, stagione: int) -> Response:
     # Reindirizza alla pagina della classifica
     return redirect(
         url_for(
-            "pagine_sito.info_studente",
+            "pagine_sito.pagina_info_studente",
             classe_name=classe_name,
             nominativo="_".join(db_funcs.user_da_id(studente_id).nominativo.split()),
             stagione=stagione,
@@ -235,7 +239,7 @@ def create_event(classe_name: str, studente_id: int, stagione: int) -> Response:
 )
 @login_required
 @admin_permission_required
-def delete_event(
+def pagina_delete_event(
     classe_name: str, studente_id: int, stagione: int, event_id: int
 ) -> Response:
     # Recupera l'evento da eliminare
@@ -253,7 +257,7 @@ def delete_event(
     # Reindirizza alla pagina della classifica
     return redirect(
         url_for(
-            "pagine_sito.info_studente",
+            "pagine_sito.pagina_info_studente",
             classe_name=classe_name,
             nominativo="_".join(db_funcs.user_da_id(studente_id).nominativo.split()),
             stagione=stagione,
@@ -264,7 +268,7 @@ def delete_event(
 @pagine_sito.route("/elenco_user/<elenco_type>", methods=["GET"])
 @login_required
 @admin_permission_required
-def elenco_user_display(elenco_type: str) -> str:
+def pagina_elenco_user_display(elenco_type: str) -> str:
     if elenco_type == "tutti_gli_studenti_registrati":
 
         utenti = db_funcs.elenco_studenti_registrati()

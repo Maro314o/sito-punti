@@ -1,6 +1,7 @@
 from ..cronology_utils_funcs import cronologia_user
 from ... import db
 from ...modelli import Info, User
+import sito.database_funcs as db_funcs
 
 
 def aggiorna_punti_cumulativi(studente: User) -> None:
@@ -28,7 +29,7 @@ def aggiorna_punti(utente: User) -> None:
     last_season = last_season_obj.last_season
     nuovi_punti = [0]
 
-    for riga in cronologia_da_user(utente):
+    for riga in db_funcs.cronologia_user(utente):
         if riga.stagione > last_season:
             last_season = riga.stagione
             last_season_obj.last_season = last_season

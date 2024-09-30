@@ -1,6 +1,6 @@
-class ClasseAlreadyExistsError(Exception):
+class InvalidSeasonError(Exception):
     """
-    errore per la creazione di classi già esistenti
+    errore di stagione non valida
     """
 
     def __init__(self, message):

@@ -68,7 +68,7 @@
                         <td>{{ evento.punti_cumulativi }}</td>
                         {% if user.admin_user %}
                         <td>
-                            <form action="{{ url_for('pagine_sito.delete_event', classe_name=classe, studente_id=studente.id, stagione=stagione_corrente, event_id=evento.id) }}" method="POST" style="display:inline;">
+                            <form action="{{ url_for('pagine_sito.pagina_delete_event', classe_name=classe, studente_id=studente.id, stagione=stagione_corrente, event_id=evento.id) }}" method="POST" style="display:inline;">
                                 <button type="submit" class="btn-delete">Elimina</button>
                             </form>
                         </td>
@@ -85,7 +85,7 @@
         <div id="myModal" class="modal">
             <div class="modal-content">
                 <span class="close-btn" id="closeModalBtn">&times;</span>
-                <form action="{{ url_for('pagine_sito.create_event', classe_name=classe, studente_id=studente.id, stagione=stagione_corrente) }}" method="POST" class="form-new-event">
+                <form action="{{ url_for('pagine_sito.pagina_create_event', classe_name=classe, studente_id=studente.id, stagione=stagione_corrente) }}" method="POST" class="form-new-event">
                     <h1>Aggiungi Nuovo Evento</h1>
                     <label style="margin-botton:18px;"for="data">Data:</label>
                     <input type="date" name="data" required>

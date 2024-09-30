@@ -10,14 +10,14 @@ from flask import (
 )
 
 from sito.errors_utils import admin_permission_required
-from sito.errors_utils.errors_classes.users_error_classes import UserAlreadyExists
+from sito.errors_utils.errors_classes.users_error_classes import UserAlreadyExistsError
 from sito.pagine_sito import VUOTO
 from .modelli import User, Classi
 from . import db, app
 import sito.misc_utils_funcs as mc_utils
 
 import sito.errors_utils as e_utils
-from sito.errors_utils import InitPasswordNotSet
+from sito.errors_utils import InitPasswordNotSetError
 
 with app.app_context():
     import sito.database_funcs as db_funcs
@@ -30,13 +30,13 @@ autenticazione = Blueprint("autenticazione", __name__)
 
 
 @autenticazione.route("/init_starter_admin")
-def init_admin_starter() -> Response:
+def pagina_init_admin_starter() -> Response:
     with open(
         os.path.join(Path.cwd(), "secrets", "secret_starter_admin_password.txt")
     ) as f:
         starter_admin_password = f.read().strip()
     if starter_admin_password == VUOTO:
-        raise InitPasswordNotSet(
+        raise InitPasswordNotSetError(
             "Non hai cambiato la passoword vuota di default di admin starter"
         )
     try:
@@ -46,13 +46,13 @@ def init_admin_starter() -> Response:
             nominativo="starter admin",
             password=starter_admin_password,
         )
-    except UserAlreadyExists:
+    except UserAlreadyExistsError:
         pass
     return e_utils.redirect_home()
 
 
 @autenticazione.route("/login", methods=["GET", "POST"])
-def login() -> str:
+def pagina_login() -> str:
     if request.method == "POST":
         email = request.form.get("email")
         password = request.form.get("password")
@@ -74,19 +74,19 @@ def login() -> str:
             flash("La password non e' corretta", category="error")
         else:
             login_user(user, remember=True)
-            return redirect(url_for("pagine_sito.home"))
+            return e_utils.redirect_home()
     return render_template("login.html", user=current_user)
 
 
 @autenticazione.route("/logout")
 @login_required
-def logout():
+def pagina_logout():
     logout_user()
     return e_utils.redirect_home()
 
 
 @autenticazione.route("/sign_up", methods=["GET", "POST"])
-def sign_up():
+def pagina_sign_up():
     if request.method == "POST":
         dati = request.form
 
@@ -127,7 +127,7 @@ def sign_up():
 
             flash("Account creato con successo!", category="success")
             login_user(user, remember=True)
-            return redirect((url_for("pagine_sito.home")))
+            return e_utils.redirect_home()
 
     return render_template(
         "sign_up.html", user=current_user, studenti=db_funcs.elenco_studenti()
@@ -137,7 +137,7 @@ def sign_up():
 @autenticazione.route("/crea_admin", methods=["GET", "POST"])
 @login_required
 @admin_permission_required
-def crea_admin():
+def pagina_crea_admin():
 
     if request.method == "POST":
         dati = request.form

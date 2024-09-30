@@ -11,7 +11,7 @@ def redirect_home() -> Response:
     """
     funzione che reindirizza alla pagina home
     """
-    return redirect(url_for("pagine_sito.home"))
+    return redirect(url_for("pagine_sito.pagina_home"))
 
 
 def admin_permission_required(func: Callable[..., Any]) -> Callable[..., Any]:
