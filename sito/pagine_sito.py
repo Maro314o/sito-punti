@@ -14,6 +14,7 @@ with app.app_context():
     import sito.database_funcs as db_funcs
 import sito.misc_utils_funcs as mc_utils
 import sito.chart_funcs as ct_funcs
+from sito.errors_utils import admin_permission_required
 
 from flask_login import login_required, current_user
 from .modelli import Classi, Info, Cronologia
@@ -78,7 +79,7 @@ def classe(classe_name) -> str:
         calcola_valore_rgb=mc_utils.calcola_valore_rgb,
         zip=zip,
         url_name=mc_utils.insert_underscore_name,
-        classifica_squadre=classifica_squadre,
+        classifica_squadre=db_funcs.classifica_squadre,
     )
 
 

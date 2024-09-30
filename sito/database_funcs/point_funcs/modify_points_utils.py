@@ -1,4 +1,4 @@
-from ..database_queries import cronologia_da_user
+from ..cronology_utils_funcs import cronologia_user
 from ... import db
 from ...modelli import Info, User
 
@@ -10,7 +10,7 @@ def aggiorna_punti_cumulativi(studente: User) -> None:
     """
     punti_cumulativi = 0
     season = 1
-    for evento in cronologia_da_user(studente):
+    for evento in cronologia_user(studente):
         if season != evento.stagione:
             punti_cumulativi = 0
             season = evento.stagione

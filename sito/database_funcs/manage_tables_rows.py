@@ -26,6 +26,8 @@ def crea_user(**kwargs) -> None:
     -squadra
     -password
     -account_attivo (facoltativo)
+    -admin user (facoltativo)
+    -nome della classe
     """
     try:
         nuovo_utente = User(
@@ -47,6 +49,13 @@ def crea_user(**kwargs) -> None:
 
 
 def crea_admin_user(**kwargs) -> None:
+    """
+    wrapper della funzione crea user per gli admin :
+    prende i parametri :
+    -email
+    -nominativo
+    -password
+    """
     kwargs["admin_user"] = 1
     kwargs["classe_name"] = "admin"
     kwargs["squadra"] = "admin"
