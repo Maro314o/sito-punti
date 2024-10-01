@@ -125,10 +125,11 @@
         </script>
         {% endif %}
     </div>
-
+  
     <div class="grafico">
         <canvas id="lineChart-{{ studente.id }}" width="650" height="400"></canvas>
         <script>
+            const attivita_tooltip={{ elenco_attivita(cronologia_da_user(studente),stagione_corrente)| tojson}}
             var ctx = document.getElementById("lineChart-{{ studente.id }}").getContext("2d");
             var lineChart = new Chart(ctx, {
                 type: "line",
@@ -150,7 +151,9 @@
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
-                                    return context.formattedValue;
+                                     const index = context.dataIndex;
+
+                                     return attivita_tooltip[index];
                                 },
                             },
                         },

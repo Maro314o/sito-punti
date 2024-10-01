@@ -1,6 +1,5 @@
-from sito.database_funcs.database_queries import studenti_da_classe
+import sito.database_funcs as db_funcs
 from ..modelli import User, Classi, Info
-from .database_queries import studenti_da_classe
 
 
 def elenco_utenti() -> list[User]:
@@ -58,7 +57,7 @@ def elenco_squadre_da_classe(classe: Classi) -> set[str]:
     """
     restituisce l'elenco di tutte le squadre di una classe
     """
-    return {studente.squadra for studente in studenti_da_classe(classe)}
+    return {studente.squadra for studente in db_funcs.studenti_da_classe(classe)}
 
 
 def get_last_season() -> int:

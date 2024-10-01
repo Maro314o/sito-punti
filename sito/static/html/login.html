@@ -29,9 +29,9 @@
                     <div class="social-login">
                     <form method="POST" class="the-form">
                         <label for="email">Email</label>
-                        <input type="email" name="email" id="email" placeholder="Inserisci la tua e-mail">
+                        <input type="email" name="email" id="email" placeholder="Inserisci la tua e-mail" required>
                         <label for="password">Password</label>
-                        <input type="password" name="password" id="password" placeholder="Inserisci la tua password">
+                        <input type="password" name="password" id="password" placeholder="Inserisci la tua password" required>
                         <input type="submit" value="Accedi">
                     </form>
                         {% with messages = get_flashed_messages(with_categories=true) %}

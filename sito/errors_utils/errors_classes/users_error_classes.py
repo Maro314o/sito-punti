@@ -1,6 +1,6 @@
-class UserAlreadyExistsError(Exception):
+class FailedSignUpError(Exception):
     """
-    errore per la creazione di utenti già esistenti
+    errore per la creazione di utenti
     """
 
     def __init__(self, message):

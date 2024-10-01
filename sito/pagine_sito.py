@@ -102,6 +102,7 @@ def pagina_info_studente(classe_name: str, nominativo: str, stagione: int) -> st
         elenco_date=ct_funcs.elenco_date,
         calcola_valore_rgb=mc_utils.calcola_valore_rgb,
         elenco_punti_cumulativi=ct_funcs.elenco_punti_cumulativi,
+        elenco_attivita=ct_funcs.elenco_attivita,
         cronologia_stagione=db_funcs.cronologia_user_di_una_stagione,
         zip=zip,
         classe=classe_name,

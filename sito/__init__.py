@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from pathlib import Path
 
-from .misc_utils_funcs import init_directory, init_file
+import sito.misc_utils_funcs as mc_funcs
 
 db = SQLAlchemy()
 
@@ -22,9 +22,9 @@ def crea_app():
     SECRET_PASSWORD_PATH = os.path.join(
         SECRETS_DIRECTORY_PATH, "secret_starter_admin_password.txt"
     )
-    init_directory(SECRETS_DIRECTORY_PATH)
-    init_file(SECRET_KEY_PATH)
-    init_file(SECRET_PASSWORD_PATH)
+    mc_funcs.init_directory(SECRETS_DIRECTORY_PATH)
+    mc_funcs.init_file(SECRET_KEY_PATH)
+    mc_funcs.init_file(SECRET_PASSWORD_PATH)
     with open(SECRET_KEY_PATH, "r") as file:
         secret_key = file.read().strip()
     app.config["SECRET_KEY"] = secret_key
@@ -32,9 +32,9 @@ def crea_app():
         f'sqlite:///{os.path.join(Path.cwd(),"data",DB_NAME)}'
     )
     app.config["SOLALCHEMY_TRACK_MODIFICATIONS"] = False
-    init_directory(DATA_DIRECTORY)
-    init_file(ERRORS_FILE_PATH)
-    init_file(LOG_FILE_PATH)
+    mc_funcs.init_directory(DATA_DIRECTORY)
+    mc_funcs.init_file(ERRORS_FILE_PATH)
+    mc_funcs.init_file(LOG_FILE_PATH)
     db.init_app(app)
 
     from .pagine_sito import pagine_sito
