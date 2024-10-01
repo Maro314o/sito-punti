@@ -47,7 +47,7 @@ def pagina_init_admin_starter() -> Response:
             nominativo="starter admin",
             password=starter_admin_password,
         )
-    except UserAlreadyExistsError:
+    except FailedSignUpError:
         pass
     return e_utils.redirect_home()
 
