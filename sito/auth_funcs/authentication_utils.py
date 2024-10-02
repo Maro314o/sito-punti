@@ -14,6 +14,9 @@ with app.app_context():
 
 
 def login(email: str, password: str) -> None:
+    """
+    data un email ed una password fa il login di un account
+    """
     user = db_funcs.user_da_email(email)
     if not user:
         raise FailedLoginError("Questo utente non esiste")
@@ -34,6 +37,7 @@ def crea_user(**kwargs) -> None:
     -account_attivo (facoltativo)
     -admin user (facoltativo)
     -nome della classe
+    crea un utente
     """
     user = db_funcs.user_da_email(kwargs["email"]) or db_funcs.user_da_nominativo(
         kwargs["nominativo"]

@@ -7,6 +7,8 @@ from .modelli import User
 from sito.database_funcs.database_queries import user_da_nominativo
 import sito.misc_utils_funcs as mc_utils
 
+
+# <!> SONO CONSAPEVOLE CHE QUESTO FILE E' UN DISASTRO E UN GIORNO LO SISTEMERO <!>
 mesi = {
     "gennaio": 1,
     "febbraio": 2,
@@ -28,6 +30,7 @@ def refactor_file(current_user: User) -> None:
 
     from .modelli import User, Classi, Cronologia, Info
     import sito.database_funcs as db_funcs
+    import sito.auth_funcs as auth_utils
 
     db.session.query(Cronologia).delete()
 
@@ -61,7 +64,7 @@ def refactor_file(current_user: User) -> None:
             utente = user_da_nominativo(nominativo)
             nominativi_trovati.add(nominativo)
             if not utente:
-                db_funcs.crea_user(
+                auth_utils.crea_user(
                     email=f"email_non_registrata_per_{'_'.join(nominativo.split())}",
                     nominativo=nominativo,
                     squadra=squadra,
@@ -85,7 +88,6 @@ def refactor_file(current_user: User) -> None:
         # 4 attivita'
         # 5 punti
         data = str(riga[0]).split()
-
         try:
             data = f"{data[1]}/{mesi[data[2]]}/{data[3]}"
         except:
