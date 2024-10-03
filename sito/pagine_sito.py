@@ -15,12 +15,15 @@ with app.app_context():
     import sito.database_funcs as db_funcs
 import sito.misc_utils_funcs as mc_utils
 import sito.chart_funcs as ct_funcs
+import sito.excel_funcs as xlsx_funcs
 from sito.errors_utils import admin_permission_required
 
+
 from flask_login import login_required, current_user
-from .modelli import Classi, Info, Cronologia
+from .modelli import Info, Cronologia
 from os import path, listdir
-from .refactor import load_data
+from .load_data import load_data
+
 from pathlib import Path
 from math import ceil, sqrt
 
@@ -245,7 +248,14 @@ def pagina_delete_event(
     classe_name: str, studente_id: int, stagione: int, event_id: int
 ) -> Response:
     evento = db_funcs.evento_da_id(event_id)
-
+    xlsx_funcs.elimina_riga_excel(
+        evento.data,
+        evento.stagione,
+        classe_name,
+        db_funcs.user_da_id(studente_id).nominativo,
+        evento.attivita,
+        evento.modifica_punti,
+    )
     if evento:
         db_funcs.elimina_evento_cronologia(evento)
 
@@ -259,7 +269,7 @@ def pagina_delete_event(
         url_for(
             "pagine_sito.pagina_info_studente",
             classe_name=classe_name,
-            nominativo=mc_utils.insert_underscore_name(
+            nominativo_con_underscore=mc_utils.insert_underscore_name(
                 db_funcs.user_da_id(studente_id).nominativo
             ),
             stagione=stagione,
