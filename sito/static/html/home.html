@@ -89,6 +89,7 @@
         <script src="https://unpkg.com/scrollreveal"></script>   
 
         <footer class="footer">
+          {% if lenght_square_of_loghi>0 %}
             <div class="image-grid">
                 {% for i in range(0, lista_loghi|length, lenght_square_of_loghi ) %}
                     <div class="row">
@@ -98,6 +99,7 @@
                     </div>
                 {% endfor %}
             </div>
+            {% endif %}
             <div class="footer-text">
                 <p>&copy; Peppino-Mawwo-Sowwi. All Rights Reserved.</p>
             </div>
