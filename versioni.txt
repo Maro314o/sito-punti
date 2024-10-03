@@ -11,3 +11,4 @@
 23/09/2024 22:21 | Versione 0.0.11 | Aggiornamento metodo creazione dell'account per personalizzare di piu' email,nome,cognome
 24/09/2024 20:20 | Versione 0.0.12 | Aggiornamento metodo della creazione dell'account rimuovendo nome e cognome per facilitare la creazione degli account alle persone con più di un nome e/o cognome
 25/09/2024 16:23 | Versione 0.0.13 | Aggiunta classifica delle squadre 
+03/10/2024 15:23 | Versione 0.0.14 | Aggiunte immagini delle squadre nella pagina home 

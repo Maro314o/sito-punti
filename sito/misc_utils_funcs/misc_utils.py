@@ -1,16 +1,6 @@
 ALLOWED_EXTENSIONS = set(["xlsx"])
 
 
-def campi_vuoti(dati: dict[str, str]) -> bool:
-    """
-    restituisce true se i campi di un form sono vuoti.
-    """
-    for campo in dati.values():
-        if campo == "":
-            return True
-    return False
-
-
 def allowed_files(filename: str) -> bool:
     """
     restituisce true se il file fa parte della lista delle estensioni supportate
@@ -28,3 +18,19 @@ def calcola_valore_rgb(stringa: str) -> tuple[int, int, int, float]:
     b = (numero_hashato // 3) % 201
 
     return r, g, b, 0.3
+
+
+def is_empty(file_path: str) -> bool:
+    """
+    se il file specificato e' vuoto ritorna True
+    """
+    with open(file_path, "r") as file:
+        return file.read() == ""
+
+
+def clear_file(file_path: str) -> None:
+    """
+    elimina tutti i contenuti di un file (di testo)
+    """
+    with open(file_path, "w") as file:
+        file.write("")

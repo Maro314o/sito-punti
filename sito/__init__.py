@@ -22,8 +22,9 @@ def crea_app():
     SECRET_PASSWORD_PATH = os.path.join(
         SECRETS_DIRECTORY_PATH, "secret_starter_admin_password.txt"
     )
+    standard_base_key = "standardbasekey"
     mc_funcs.init_directory(SECRETS_DIRECTORY_PATH)
-    mc_funcs.init_file(SECRET_KEY_PATH)
+    mc_funcs.init_file(SECRET_KEY_PATH, standard_base_key)
     mc_funcs.init_file(SECRET_PASSWORD_PATH)
     with open(SECRET_KEY_PATH, "r") as file:
         secret_key = file.read().strip()

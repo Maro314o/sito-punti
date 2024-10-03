@@ -19,14 +19,18 @@ from sito.errors_utils import admin_permission_required
 
 from flask_login import login_required, current_user
 from .modelli import Classi, Info, Cronologia
-from os import path
-from .refactor import refactor_file
+from os import path, listdir
+from .refactor import load_data
 from pathlib import Path
+from math import ceil, sqrt
 
 pagine_sito = Blueprint("pagine_sito", __name__)
 FILE_ERRORE = path.join(Path.cwd(), "data", "errore.txt")
 FILE_VERSIONI = path.join(Path.cwd(), "versioni.txt")
 PATH_CARTELLA_LOGHI = path.join(Path.cwd(), "sito", "static", "images", "loghi")
+
+
+SAVE_LOCATION_PATH = path.join(path.join(Path.cwd(), "data"), "foglio.xlsx")
 LEGGI = "r"
 RETURN_VALUE = "bottone"
 ELIMINA_UTENTE = "elimina"
@@ -44,10 +48,14 @@ def pagina_home() -> str:
     classe_name = None
     if current_user.is_authenticated:
         classe_name = db_funcs.classe_da_id(current_user.classe_id).classe
+    loghi = [logo for logo in listdir(PATH_CARTELLA_LOGHI)]
+    lenght_square_of_loghi = ceil(sqrt(len(loghi)))
     return render_template(
         "home.html",
         user=current_user,
         classe_name=classe_name,
+        lista_loghi=loghi,
+        lenght_square_of_loghi=lenght_square_of_loghi,
     )
 
 
@@ -84,15 +92,21 @@ def pagina_classe(classe_name) -> str:
     )
 
 
-@pagine_sito.route("/classe/<classe_name>/<nominativo>/<int:stagione>", methods=["GET"])
+@pagine_sito.route(
+    "/classe/<classe_name>/<nominativo_con_underscore>/<int:stagione>", methods=["GET"]
+)
 @login_required
-def pagina_info_studente(classe_name: str, nominativo: str, stagione: int) -> str:
+def pagina_info_studente(
+    classe_name: str, nominativo_con_underscore: str, stagione: int
+) -> str | Response:
+
     if (
-        mc_utils.insert_underscore_name(current_user.nominativo) != nominativo
+        mc_utils.insert_underscore_name(current_user.nominativo)
+        != nominativo_con_underscore
         and not current_user.admin_user
     ):
-        return errore_accesso()
-    nominativo = mc_utils.remove_underscore_name(nominativo)
+        return e_utils.redirect_home()
+    nominativo = mc_utils.remove_underscore_name(nominativo_con_underscore)
     return render_template(
         "info_studente.html",
         user=current_user,
@@ -121,7 +135,7 @@ def pagina_regole() -> str:
 @login_required
 @admin_permission_required
 def pagina_admin_dashboard() -> str:
-    errori = open(path.join(Path.cwd(), "data", "errore.txt"), "r").read() == VUOTO
+    errori = not mc_utils.is_empty(FILE_ERRORE)
     numero_degli_studenti = len(db_funcs.elenco_studenti())
     numero_delle_classi = len(db_funcs.elenco_classi_studenti())
     numero_degli_admin = len(db_funcs.elenco_admin())
@@ -146,32 +160,23 @@ def pagina_admin_dashboard() -> str:
 @login_required
 @admin_permission_required
 def pagina_menu_classi() -> str:
-    classi = db_funcs.elenco_classi_studenti()
-    error_file = path.join(Path.cwd(), "data", "errore.txt")
 
     if request.method == "POST":
         dati = request.form
         if dati[RETURN_VALUE] == CONFERMA_CAMBIAMENTI_DATABASE:
             file = request.files["file_db"]
-            if mc_utils.allowed_files(file.filename):
-                new_filename = "foglio.xlsx"
-
-                save_location = path.join(path.join(Path.cwd(), "data"), new_filename)
-                file.save(save_location)
-                error_file = path.join(Path.cwd(), "data", "errore.txt")
-                with open(error_file, "w") as f:
-                    f.write(VUOTO)
-                refactor_file(current_user)
-
-                classi = db_funcs.elenco_classi_studenti()
-
-            else:
-                with open(error_file, "w") as f:
+            if not mc_utils.allowed_files(file.filename):
+                with open(FILE_ERRORE, "w") as f:
                     f.write(
                         f"Impossibile aprire questa estensione dei file, per adesso puoi caricare il database sono in questo/i formato/i : {ALLOWED_EXTENSIONS}"
                     )
-    with open(error_file, LEGGI) as f:
-        error = f.read() != VUOTO
+                return render_template("menu_classi.html", classi=classi, error=1)
+
+            file.save(SAVE_LOCATION_PATH)
+            load_data(current_user)
+
+    classi = db_funcs.elenco_classi_studenti()
+    error = not mc_utils.is_empty(FILE_ERRORE)
 
     return render_template("menu_classi.html", classi=classi, error=error)
 
@@ -198,7 +203,6 @@ def pagina_versioni() -> str:
 @login_required
 @admin_permission_required
 def pagina_create_event(classe_name: str, studente_id: int, stagione: int) -> Response:
-    # Recupera i dati dal form di creazione evento
     data = request.form["data"]
     attivita = request.form["attivita"]
     modifica_punti = request.form["modifica_punti"]
@@ -207,7 +211,6 @@ def pagina_create_event(classe_name: str, studente_id: int, stagione: int) -> Re
     if stagione > db_funcs.get_last_season():
         raise InvalidSeasonError("La season che hai inserito non esiste")
 
-    # Crea un nuovo evento
     nuovo_evento = Cronologia(
         utente_id=studente_id,
         stagione=stagione,
@@ -217,13 +220,11 @@ def pagina_create_event(classe_name: str, studente_id: int, stagione: int) -> Re
         punti_cumulativi=0,
     )
 
-    # Aggiungi l'evento al database
     db.session.add(nuovo_evento)
     db.session.commit()
     db_funcs.aggiorna_punti_cumulativi(db_funcs.user_da_id(studente_id))
     db_funcs.aggiorna_punti(db_funcs.user_da_id(studente_id))
 
-    # Reindirizza alla pagina della classifica
     return redirect(
         url_for(
             "pagine_sito.pagina_info_studente",
@@ -243,7 +244,6 @@ def pagina_create_event(classe_name: str, studente_id: int, stagione: int) -> Re
 def pagina_delete_event(
     classe_name: str, studente_id: int, stagione: int, event_id: int
 ) -> Response:
-    # Recupera l'evento da eliminare
     evento = db_funcs.evento_da_id(event_id)
 
     if evento:
@@ -255,12 +255,13 @@ def pagina_delete_event(
     else:
         flash("Evento non trovato", "error")
 
-    # Reindirizza alla pagina della classifica
     return redirect(
         url_for(
             "pagine_sito.pagina_info_studente",
             classe_name=classe_name,
-            nominativo="_".join(db_funcs.user_da_id(studente_id).nominativo.split()),
+            nominativo=mc_utils.insert_underscore_name(
+                db_funcs.user_da_id(studente_id).nominativo
+            ),
             stagione=stagione,
         )
     )

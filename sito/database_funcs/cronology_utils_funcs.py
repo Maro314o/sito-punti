@@ -1,5 +1,13 @@
 from sito.modelli import Cronologia, User
 from .. import db
+from ..misc_utils_funcs import converti_a_unix
+
+
+def ordina_cronologicamente(lista_cronologia: list[Cronologia]) -> list[Cronologia]:
+    """
+    ordina gli eventi di una cronologia in ordine cronologico
+    """
+    return sorted(lista_cronologia, key=lambda evento: converti_a_unix(evento.data))
 
 
 def elimina_evento_cronologia(evento: Cronologia) -> None:
@@ -11,9 +19,9 @@ def elimina_evento_cronologia(evento: Cronologia) -> None:
 
 def cronologia_user(utente: User) -> list[Cronologia]:
     """
-    restituisce l'intera cronologia di un utente
+    restituisce l'intera cronologia di un utente ordinata cronolicamente
     """
-    return utente.cronologia_studente
+    return ordina_cronologicamente(utente.cronologia_studente)
 
 
 def cronologia_user_di_una_stagione(utente: User, stagione: int) -> list[Cronologia]:

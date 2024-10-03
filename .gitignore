@@ -1,14 +1,9 @@
 .DS_Store
-*.pyc
-*.xlsx
-*.db
+.mypy_chache/
 data/
 .idea/
-.mypy_chache/
 __pycache__/
-log.txt
-errore.txt
+*.pyc
 secrets/
-secret_starter_admin_password.txt
-secret_token.txt
 todo.txt
+tests/

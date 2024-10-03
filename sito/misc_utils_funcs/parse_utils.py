@@ -1,3 +1,7 @@
+import time
+from datetime import datetime
+
+
 def insert_underscore_name(stringa: str) -> str:
     """
     sostituisce tutti gli spazi di una stringa con un underscore
@@ -20,3 +24,14 @@ def capitalize_all(stringa: str) -> str:
     stringa = [parola.capitalize() for parola in stringa]
     stringa = " ".join(stringa)
     return stringa
+
+
+def converti_a_unix(data_str: str) -> int:
+    """
+    converte una stringa data in formato y-m-d nella corrispondente unix timestamp
+    """
+    data = datetime.strptime(data_str, "%Y-%m-%d")
+
+    unix_timestamp = int(time.mktime(data.timetuple()))
+
+    return unix_timestamp

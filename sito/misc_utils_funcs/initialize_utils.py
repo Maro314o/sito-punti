@@ -9,9 +9,10 @@ def init_directory(directory_path: str) -> None:
         os.makedirs(directory_path)
 
 
-def init_file(file_path: str) -> None:
+def init_file(file_path: str, message: str = "") -> None:
     """
     se non esiste inizializza un file
     """
     if not os.path.exists(file_path):
-        open(file_path, "w").close()
+        with open(file_path, "w") as file:
+            file.write(message)

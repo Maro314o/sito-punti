@@ -24,6 +24,7 @@
 </head>
 <body>
     <header>
+
         <a href="https://www.isiskeynes.edu.it/" class="logo"><img src="{{ url_for('static',
                 filename='images/logo.png')}}" alt=""></a>
 
@@ -49,6 +50,7 @@
             <h5>&nbspISIS J.M KEYNES</h5>
             <h1>SITO PUNTI</h1>
             <p>Guarda informazioni sui tuoi punti, quelli della tua squadra e quelli della classe, tutto alla portata di un click!</p>
+            <!---<h2>"Frase del giorno"</h2>-->
             {%if user.is_authenticated%}
             {%if user.admin_user%}
             <a href="admin_dashboard">Admin Dashboard</a>
@@ -73,6 +75,8 @@
 
     </div>
 
+
+
     {% if user.admin_user %}
     <div class="scroll-down"> <!---icona scrolldown--->
         <a href="/versioni"><i class=""></i></a>
@@ -83,6 +87,21 @@
         <script src="{{ url_for('static',
                 filename='js/home.js')}}"></script>
         <script src="https://unpkg.com/scrollreveal"></script>   
+
+        <footer class="footer">
+            <div class="image-grid">
+                {% for i in range(0, lista_loghi|length, lenght_square_of_loghi ) %}
+                    <div class="row">
+                        {% for logo in lista_loghi[i:i+lenght_square_of_loghi] %}
+                            <img src="{{ url_for('static', filename='images/loghi/'+logo) }}" alt="Image" height="30px" width="30px">
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="footer-text">
+                <p>&copy; Peppino-Mawwo-Sowwi. All Rights Reserved.</p>
+            </div>
+        </footer>
 
 </body>
 
