@@ -213,7 +213,14 @@ def pagina_create_event(classe_name: str, studente_id: int, stagione: int) -> Re
 
     if stagione > db_funcs.get_last_season():
         raise InvalidSeasonError("La season che hai inserito non esiste")
-
+    xlsx_funcs.aggiungi_riga_excel(
+        data,
+        stagione,
+        classe_name,
+        db_funcs.user_da_id(studente_id).nominativo,
+        attivita,
+        modifica_punti,
+    )
     nuovo_evento = Cronologia(
         utente_id=studente_id,
         stagione=stagione,
@@ -232,7 +239,9 @@ def pagina_create_event(classe_name: str, studente_id: int, stagione: int) -> Re
         url_for(
             "pagine_sito.pagina_info_studente",
             classe_name=classe_name,
-            nominativo="_".join(db_funcs.user_da_id(studente_id).nominativo.split()),
+            nominativo_con_underscore="_".join(
+                db_funcs.user_da_id(studente_id).nominativo.split()
+            ),
             stagione=stagione,
         )
     )
