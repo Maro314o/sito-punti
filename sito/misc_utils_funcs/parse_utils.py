@@ -43,5 +43,5 @@ def to_datetime_object(data: str) -> datetime:
     """
     converte una stringa che specifica la data con formato Y-m-d in un oggetto datetime
     """
-    data = "".join([data, "00:00:00"])
+    data = " ".join([data, "00:00:00"])
     return datetime.strptime(data, "%Y-%m-%d %H:%M:%S")
