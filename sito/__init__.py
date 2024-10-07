@@ -54,7 +54,7 @@ def crea_app():
             db.session.add(Classi(classe="admin"))
             db.session.commit()
     login_manager = LoginManager()
-    login_manager.login_view = "autenticazione.login"
+    login_manager.login_view = "autenticazione.pagina_login"
     login_manager.init_app(app)
 
     @login_manager.user_loader
