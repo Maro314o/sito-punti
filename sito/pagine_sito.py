@@ -77,7 +77,8 @@ def pagina_classe(classe_name) -> str:
 
     studenti = db_funcs.classifica_studenti_di_una_classe(stagione_corrente, classe)
     n_stagioni = db_funcs.get_last_season()
-
+    loghi = {logo.rsplit(".", 1)[0]: logo for logo in listdir(PATH_CARTELLA_LOGHI)}
+    print(loghi)
     return render_template(
         "classe.html",
         user=current_user,
@@ -92,6 +93,7 @@ def pagina_classe(classe_name) -> str:
         zip=zip,
         url_name=mc_utils.insert_underscore_name,
         classifica_squadre=db_funcs.classifica_squadre,
+        loghi=loghi,
     )
 
 
@@ -159,29 +161,12 @@ def pagina_admin_dashboard() -> str:
     )
 
 
-@pagine_sito.route("/classi", methods=["GET", "POST"])
+@pagine_sito.route("/classi", methods=["GET"])
 @login_required
 @admin_permission_required
 def pagina_menu_classi() -> str:
-
-    if request.method == "POST":
-        dati = request.form
-        if dati[RETURN_VALUE] == CONFERMA_CAMBIAMENTI_DATABASE:
-            file = request.files["file_db"]
-            if not mc_utils.allowed_files(file.filename):
-                with open(FILE_ERRORE, "w") as f:
-                    f.write(
-                        f"Impossibile aprire questa estensione dei file, per adesso puoi caricare il database sono in questo/i formato/i : {ALLOWED_EXTENSIONS}"
-                    )
-                return render_template("menu_classi.html", classi=classi, error=1)
-
-            file.save(SAVE_LOCATION_PATH)
-            load_data(current_user)
-
     classi = db_funcs.elenco_classi_studenti()
-    error = not mc_utils.is_empty(FILE_ERRORE)
-
-    return render_template("menu_classi.html", classi=classi, error=error)
+    return render_template("menu_classi.html", classi=classi)
 
 
 @pagine_sito.route("/db_errori")
@@ -301,3 +286,32 @@ def pagina_elenco_user_display(elenco_type: str) -> str:
     return render_template(
         "elenco_user.html", utenti=utenti, classe_da_id=db_funcs.classe_da_id
     )
+
+
+@pagine_sito.route("/gestione_dati", methods=["GET"])
+@login_required
+@admin_permission_required
+def pagina_gestione_dati() -> str:
+    error = not mc_utils.is_empty(FILE_ERRORE)
+    return render_template("manage_data.html", error=error)
+
+
+@pagine_sito.route("/load_db", methods=["POST"])
+@login_required
+@admin_permission_required
+def pagina_load_db() -> Response:
+    if request.method == "POST":
+        dati = request.form
+        if dati[RETURN_VALUE] == CONFERMA_CAMBIAMENTI_DATABASE:
+            file = request.files["file_db"]
+            if not mc_utils.allowed_files(file.filename):
+                with open(FILE_ERRORE, "w") as f:
+                    f.write(
+                        f"Impossibile aprire questa estensione dei file, per adesso puoi caricare il database sono in questo/i formato/i : {ALLOWED_EXTENSIONS}"
+                    )
+
+                return redirect(url_for("pagine_sito.pagina_gestione_dati"))
+            file.save(SAVE_LOCATION_PATH)
+            load_data(current_user)
+
+    return redirect(url_for("pagine_sito.pagina_gestione_dati"))
