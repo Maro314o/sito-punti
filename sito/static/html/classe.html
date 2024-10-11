@@ -82,7 +82,7 @@
                               <td>&#160&#160 {{loop.index}} </td>
                           {%endif%}
                           <td style="text-align:center;">{{ studente.nominativo}}</td>
-                    <td style="text-align:center" >{{ studente.squadra }}</td>
+                          <td style="text-align:center" >{{ studente.squadra }} <img src="{{ url_for('static',filename='images/loghi/'+loghi[studente.squadra])}}"></td>
 
                             <td style="text-align:center" >{{ studente.punti.split(',')[stagione_corrente-1] }}
                           {% if user.admin_user or user.nominativo==studente.nominativo %}
@@ -129,7 +129,7 @@
                             {% else %}
                                 <td>&#160&#160 {{loop.index}} </td>
                             {%endif%}
-                      <td style="text-align:center" >{{ squadra}}</td>
+                            <td style="text-align:center" >{{ squadra}}<img src=""></td>
                       <td style="text-align:center" >{{ punti}}</td>
 
                      {% endfor %}
