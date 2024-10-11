@@ -129,7 +129,7 @@
                             {% else %}
                                 <td>&#160&#160 {{loop.index}} </td>
                             {%endif%}
-                            <td style="text-align:center" >{{ squadra}}<img src=""></td>
+                            <td style="text-align:center" >{{ squadra}} <img src="{{ url_for('static',filename='images/loghi/'+loghi[squadra])}}"></td>
                       <td style="text-align:center" >{{ punti}}</td>
 
                      {% endfor %}
