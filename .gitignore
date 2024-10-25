@@ -10,3 +10,4 @@ tests/
 loghi/
 backup_dati/
 richieste.txt
+.venv/
