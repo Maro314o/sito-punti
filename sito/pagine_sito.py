@@ -78,7 +78,6 @@ def pagina_classe(classe_name) -> str:
     studenti = db_funcs.classifica_studenti_di_una_classe(stagione_corrente, classe)
     n_stagioni = db_funcs.get_last_season()
     loghi = {logo.rsplit(".", 1)[0]: logo for logo in listdir(PATH_CARTELLA_LOGHI)}
-    print(loghi)
     return render_template(
         "classe.html",
         user=current_user,

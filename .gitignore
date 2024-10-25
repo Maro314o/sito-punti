@@ -6,7 +6,6 @@ __pycache__/
 *.pyc
 secrets/
 todo.txt
-tests/
 loghi/
 backup_dati/
 richieste.txt
