@@ -6,6 +6,7 @@ from flask import (
     redirect,
     url_for,
     flash,
+    send_from_directory,
 )
 import sito.errors_utils as e_utils
 from sito.errors_utils.errors_classes.data_error_classes import InvalidSeasonError
@@ -34,6 +35,7 @@ PATH_CARTELLA_LOGHI = path.join(Path.cwd(), "sito", "static", "images", "loghi")
 
 
 SAVE_LOCATION_PATH = path.join(path.join(Path.cwd(), "data"), "foglio.xlsx")
+DOWNLOAD_PATH = path.join(Path.cwd(), "data")
 LEGGI = "r"
 RETURN_VALUE = "bottone"
 ELIMINA_UTENTE = "elimina"
@@ -313,3 +315,10 @@ def pagina_load_db() -> Response:
             load_data(current_user)
 
     return redirect(url_for("pagine_sito.pagina_gestione_dati"))
+
+
+@app.route("/download/<filename>")
+@login_required
+@admin_permission_required
+def download_file(filename):
+    return send_from_directory(DOWNLOAD_PATH, filename, as_attachment=True)

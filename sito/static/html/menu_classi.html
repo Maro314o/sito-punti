@@ -215,6 +215,16 @@ textarea {
     }
 }
 
+.zoom-image {
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 25px 50px -12px;
+    transition: transform 0.3s ease; 
+}
+
+.zoom-image:hover {
+    transform: scale(1.1);
+}
+
+
   </style>
 
     <div class="sidebar">
@@ -266,22 +276,22 @@ textarea {
                     <div class="container">
                         <button type='submit' class="button" name='bottone' value="raggiungi">
                             {% if loop.index % 5 == 1 %}
-                                <img src="{{ url_for('static', filename='images/logo_classe_4.png') }}">
+                                <img class="zoom-image" src="{{ url_for('static', filename='images/logo_classe_4.png') }}">
                             {% elif loop.index % 5 == 2 %}
-                                <img src="{{ url_for('static', filename='images/logo_classe_3.png') }}">
+                                <img class="zoom-image" src="{{ url_for('static', filename='images/logo_classe_3.png') }}">
                             {% elif loop.index % 5 == 3 %}
-                                <img src="{{ url_for('static', filename='images/logo_classe_2.png') }}">
+                                <img class="zoom-image" src="{{ url_for('static', filename='images/logo_classe_2.png') }}">
                             {% elif loop.index % 5 == 4 %}
-                                <img src="{{ url_for('static', filename='images/logo_classe_1.png') }}">
+                                <img class="zoom-image" src="{{ url_for('static', filename='images/logo_classe_1.png') }}">
                             {% else %}
-                                <img src="{{ url_for('static', filename='images/logo_classe_5.png') }}">
+                                <img class="zoom-image" src="{{ url_for('static', filename='images/logo_classe_5.png') }}">
                             {% endif %}
                             <h1 style="color: black;">{{ classe.classe }}</h1>
                         </button>
                     </div>
                 </form>
                 {% endfor %}
-            </div>
+            </div>            
         </main>
     </div>
 
