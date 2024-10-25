@@ -31,6 +31,7 @@ from math import ceil, sqrt
 pagine_sito = Blueprint("pagine_sito", __name__)
 FILE_ERRORE = path.join(Path.cwd(), "data", "errore.txt")
 FILE_VERSIONI = path.join(Path.cwd(), "versioni.txt")
+FILE_LOG = path.join(Path.cwd(), "data", "log.txt")
 PATH_CARTELLA_LOGHI = path.join(Path.cwd(), "sito", "static", "images", "loghi")
 
 
@@ -322,3 +323,10 @@ def pagina_load_db() -> Response:
 @admin_permission_required
 def download_file(filename):
     return send_from_directory(DOWNLOAD_PATH, filename, as_attachment=True)
+
+
+@app.route("/log_excel")
+@login_required
+@admin_permission_required
+def pagina_log_excel():
+    return "<br>".join(reversed(open(FILE_LOG, LEGGI).read().splitlines()))
