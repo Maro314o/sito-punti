@@ -418,10 +418,10 @@ textarea {
                         
                         <!-- Ultimi Update or Modifica -->
                         <p style="text-align: left; font-weight: 300; font-size: 15px;">
-                            Ultimo Update: <b>19/10/2024</b>
+                        Ultimo Update: <b>{{ultimo_upload}}</b>
                         </p>
                         <p style="text-align: left; font-weight: 300; font-size: 15px;">
-                            Ultimo Modifica: <b>19/10/2024</b>
+                        Ultimo Modifica: <b>{{ultima_modifica}}</b>
                         </p>
                     </div>
                 </div>
@@ -430,19 +430,16 @@ textarea {
                            
                 <div class="rectangle" style="padding: 20px;">
                     <h2 style="text-align: center; margin-bottom: 25px; font-weight: 400; font-size: 20px;">Frase Del Giorno</h2>
-                    <form class="inserisci-form" style="display: flex; flex-direction: column; gap: 5px;">
+                    <form class="inserisci-form" style="display: flex; flex-direction: column; gap: 5px;" action="{{url_for('pagine_sito.pagina_aggiungi_frase')}}" method="POST">
                         <label for="frase" style="margin: 0;">Inserisci Frase</label>
                         <input type="text" id="frase" name="frase" placeholder="Inserisci una frase" required style="margin: 0;">
                         
                         <label for="autore" style="margin: 0;">Inserisci il nome del Autore</label>
                         <input type="text" id="autore" name="autore" placeholder="Nome del Autore" required style="margin: 0;">
                         
-                        <label for="classe-autore" style="margin: 0;">Inserisci la classe del Autore</label>
-                        <div style="display: flex; align-items: center;">
-                            <input type="text" id="classe-autore" name="classe-autore" placeholder="Classe del Autore" required style="flex-grow: 1; margin: 0;">
-                            <button class="conferma-frase">Conferma</button>
-                        </div>
+                            <button type="submit" class="conferma-frase">Conferma</button>
                     </form>
+  
                 </div>                                                      
                 <div class="rectangle" style="padding: 20px;">
                     <div style="margin-top: -20px;">

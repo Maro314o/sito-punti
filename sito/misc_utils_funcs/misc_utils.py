@@ -1,3 +1,6 @@
+import json
+import random
+
 ALLOWED_EXTENSIONS = set(["xlsx"])
 
 
@@ -34,3 +37,34 @@ def clear_file(file_path: str) -> None:
     """
     with open(file_path, "w") as file:
         file.write("")
+
+
+def get_item_of_json(file_path: str, field: str) -> str | int:
+    """
+    ritorna un il valore di un campo di un file json
+    """
+    with open(file_path, "r") as file:
+        data = json.load(file)
+    return data[field]
+
+
+def set_item_of_json(file_path: str, field: str, data: str) -> None:
+    """
+    imposta il campo di un file json ad un certo dato
+    """
+    with open(file_path, "r") as file:
+        json_data = json.load(file)
+    json_data[field] = data
+    with open(file_path, "w") as file:
+        json.dump(json_data, file, indent=4)
+
+
+def get_random_json_item(file_path: str) -> str | int:
+    """
+    dato un file json restituisce un elemento a caso
+    """
+
+    with open(file_path, "r") as file:
+        data = json.load(file)
+    elemento_random = random.choice(data)
+    return elemento_random

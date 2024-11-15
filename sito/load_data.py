@@ -1,4 +1,4 @@
-from re import LOCALE
+import json
 import pandas as pd
 from pathlib import Path
 from os import path
@@ -33,6 +33,7 @@ ERROR_FILE = path.join(Path.cwd(), "data", "errore.txt")
 LOG_FILE = path.join(Path.cwd(), "data", "log.txt")
 NAME_FILE = path.join(Path.cwd(), "data", "foglio.xlsx")
 FILE_ERRORE = path.join(Path.cwd(), "data", "errore.txt")
+GLOBAL_DATA = path.join(Path.cwd(), "data", "global_data.json")
 
 
 def load_data(current_user: User) -> None:
@@ -137,3 +138,8 @@ def load_data(current_user: User) -> None:
         f.write(
             f"{datetime.datetime.now()} | {current_user.nominativo} ha appena caricato un file excel con {errori} errori\n"
         )
+    with open(GLOBAL_DATA, "r") as file:
+        global_data = json.load(file)
+    global_data["ultimo_upload"] = str(datetime.datetime.now().date())
+    with open(GLOBAL_DATA, "w") as file:
+        json.dump(global_data, file, indent=4)
