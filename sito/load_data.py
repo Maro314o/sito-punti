@@ -2,6 +2,7 @@ import json
 import pandas as pd
 from pathlib import Path
 from os import path
+import os
 import datetime
 
 from .modelli import User
@@ -31,9 +32,10 @@ mesi = {
 }
 ERROR_FILE = path.join(Path.cwd(), "data", "errore.txt")
 LOG_FILE = path.join(Path.cwd(), "data", "log.txt")
-NAME_FILE = path.join(Path.cwd(), "data", "foglio.xlsx")
+NAME_FILE = path.join(Path.cwd(), "data", "foglio_pre-merge.xlsx")
 FILE_ERRORE = path.join(Path.cwd(), "data", "errore.txt")
 GLOBAL_DATA = path.join(Path.cwd(), "data", "global_data.json")
+NAME_FILE_MERGED = path.join(Path.cwd(), "data", "foglio.xlsx")
 
 
 def load_data(current_user: User) -> None:
@@ -44,7 +46,7 @@ def load_data(current_user: User) -> None:
     db_funcs.crea_classe("admin")
     db.session.commit()
 
-    file = pd.read_excel(NAME_FILE, sheet_name=None)
+    file = pd.read_excel(NAME_FILE_MERGED, sheet_name=None)
     dataset, *lista_fogli = file.keys()
     nominativi_trovati = set()
 
@@ -90,6 +92,7 @@ def load_data(current_user: User) -> None:
         # 3 alunno
         # 4 attivita'
         # 5 punti
+        print(str(riga[0]).split())
         data, _ = str(riga[0]).split()
         stagione = riga[1]
         classe_name = riga[2]
@@ -105,6 +108,8 @@ def load_data(current_user: User) -> None:
             errori += 1
             continue
         elif not db_funcs.user_da_nominativo(nominativo):
+
+            print(nominativo)
             with open(ERROR_FILE, "a") as f:
                 f.write(
                     f"{datetime.datetime.now()} | errore alla linea {numero_riga} del database : non è stato possibile modificare i punti dell' utente {nominativo} della classe {classe_name}. Controlla se ci sono errori nella scrittura del suo nome o se non è stato aggiunto ad una classe nel corrispettivo foglio .xlsx\n"
@@ -143,3 +148,30 @@ def load_data(current_user: User) -> None:
     global_data["ultimo_upload"] = str(datetime.datetime.now().date())
     with open(GLOBAL_DATA, "w") as file:
         json.dump(global_data, file, indent=4)
+
+
+def merge_excel() -> None:
+    """
+    fa il merge di due file excel
+    """
+
+    if not os.path.exists(NAME_FILE_MERGED):
+        os.rename(NAME_FILE, NAME_FILE_MERGED)
+        return
+    df1 = pd.read_excel(NAME_FILE)
+    df2 = pd.read_excel(NAME_FILE_MERGED)
+    merged_df = pd.concat([df1, df2], ignore_index=True)
+    merged_df.to_excel("merged_file.xlsx", index=False)
+    merged_df = merged_df.drop_duplicates()
+
+    other_sheets = {
+        sheet: pd.read_excel(NAME_FILE_MERGED, sheet_name=sheet)
+        for sheet in pd.ExcelFile(NAME_FILE_MERGED).sheet_names
+        if sheet != "Challenge"
+    }
+
+    with pd.ExcelWriter(NAME_FILE_MERGED) as writer:
+        merged_df.to_excel(writer, sheet_name="Challenge", index=False)
+
+        for sheet_name, df in other_sheets.items():
+            df.to_excel(writer, sheet_name=sheet_name, index=False)

@@ -24,7 +24,7 @@ from sito.errors_utils import admin_permission_required
 from flask_login import login_required, current_user
 from .modelli import Info, Cronologia
 from os import path, listdir
-from .load_data import load_data
+from .load_data import load_data, merge_excel
 
 from pathlib import Path
 import datetime
@@ -41,7 +41,7 @@ FRASI_PATH = path.join(Path.cwd(), "data", "frasi.json")
 GLOBAL_DATA = path.join(Path.cwd(), "data", "global_data.json")
 
 
-SAVE_LOCATION_PATH = path.join(path.join(Path.cwd(), "data"), "foglio.xlsx")
+SAVE_LOCATION_PATH = path.join(path.join(Path.cwd(), "data"), "foglio_pre-merge.xlsx")
 DOWNLOAD_PATH = path.join(Path.cwd(), "data")
 LEGGI = "r"
 RETURN_VALUE = "bottone"
@@ -266,6 +266,10 @@ def pagina_delete_event(
 
         db_funcs.aggiorna_punti_cumulativi(db_funcs.user_da_id(studente_id))
         db_funcs.aggiorna_punti(db_funcs.user_da_id(studente_id))
+
+        mc_utils.set_item_of_json(
+            GLOBAL_DATA, "ultima_modifica", str(datetime.datetime.now().date())
+        )
         flash("Evento eliminato con successo", "success")
     else:
         flash("Evento non trovato", "error")
@@ -330,6 +334,7 @@ def pagina_load_db() -> Response:
 
                 return redirect(url_for("pagine_sito.pagina_gestione_dati"))
             file.save(SAVE_LOCATION_PATH)
+            merge_excel()
             load_data(current_user)
 
     return redirect(url_for("pagine_sito.pagina_gestione_dati"))
