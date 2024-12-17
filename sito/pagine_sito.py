@@ -75,7 +75,7 @@ def pagina_home() -> str:
 
 @pagine_sito.route("/classe/<classe_name>", methods=["GET", "POST"])
 @login_required
-def pagina_classe(classe_name) -> str:
+def pagina_classe(classe_name: str) -> str:
     stagione_corrente = db_funcs.get_last_season()
     if current_user.admin_user:
         classe = db_funcs.classe_da_nome(classe_name)

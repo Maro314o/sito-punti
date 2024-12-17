@@ -6,7 +6,6 @@ from flask import (
     request,
     flash,
 )
-from sqlalchemy.orm import exc
 
 from sito.errors_utils import admin_permission_required
 from sito.errors_utils.errors_classes.users_error_classes import (
