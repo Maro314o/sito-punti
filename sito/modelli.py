@@ -15,6 +15,7 @@ class User(db.Model, UserMixin):
     account_attivo = db.Column(db.Integer)
     cronologia_studente = db.relationship("Cronologia")
     classe_id = db.Column(db.Integer, db.ForeignKey("classi.id"))
+    squadra_id = db.Column(db.Integer, db.ForeignKey("squadra.id"))
 
 
 class Cronologia(db.Model, UserMixin):
@@ -30,7 +31,16 @@ class Cronologia(db.Model, UserMixin):
 class Classi(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     classe = db.Column(db.String(150), unique=True)
+    massimo_studenti_squadra = db.Column(db.Integer)
     studenti = db.relationship("User")
+
+
+class Squadra(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    numero_componenti = db.Column(db.Integer)
+    punti_reali = db.Column(db.Integer)
+    punti_compensati = db.Column(db.Integer)
+    studenti_componenti = db.relationship("User")
 
 
 class Info(db.Model, UserMixin):
