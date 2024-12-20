@@ -39,8 +39,8 @@ class Classi(db.Model, UserMixin):
 class Squadra(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     numero_componenti = db.Column(db.Integer)
-    punti_reali = db.Column(db.Integer)
-    punti_compensati = db.Column(db.Integer)
+    punti_reali = db.Column(db.String(150))
+    punti_compensati = db.Column(db.String(150))
     studenti_componenti = db.relationship("User")
     classe_id = db.Column(db.Integer, db.ForeignKey("classi.id"))
 
