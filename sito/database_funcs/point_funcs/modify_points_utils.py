@@ -4,10 +4,10 @@ from ...modelli import Info, User
 import sito.database_funcs as db_funcs
 
 
-def aggiorna_punti_cumulativi(studente: User) -> None:
+def aggiorna_punti_cumulativi_eventi(studente: User) -> None:
     """
-    dato un utente,si itera sulla sua cronologia degli eventi e in base ai singoli punteggi di ogni evento
-    si modificano i punti cumulativi di tutta la cronolgia di quell'utente
+    per ogni evento di un utente assegna dei punti 'cumulativi'
+    i puntunti cumulativi sono la somma dei punti di quell'evento e di tutti quelli precedenti cronologicamente
     """
     punti_cumulativi = 0
     season = 1

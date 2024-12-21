@@ -226,7 +226,7 @@ def pagina_create_event(classe_name: str, studente_id: int, stagione: int) -> Re
 
     db.session.add(nuovo_evento)
     db.session.commit()
-    db_funcs.aggiorna_punti_cumulativi(db_funcs.user_da_id(studente_id))
+    db_funcs.aggiorna_punti_cumulativi_eventi(db_funcs.user_da_id(studente_id))
     db_funcs.aggiorna_punti(db_funcs.user_da_id(studente_id))
     mc_utils.set_item_of_json(
         GLOBAL_DATA, "ultima_modifica", str(datetime.datetime.now().date())
@@ -264,7 +264,7 @@ def pagina_delete_event(
     if evento:
         db_funcs.elimina_evento_cronologia(evento)
 
-        db_funcs.aggiorna_punti_cumulativi(db_funcs.user_da_id(studente_id))
+        db_funcs.aggiorna_punti_cumulativi_eventi(db_funcs.user_da_id(studente_id))
         db_funcs.aggiorna_punti(db_funcs.user_da_id(studente_id))
 
         mc_utils.set_item_of_json(

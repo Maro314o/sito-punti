@@ -68,3 +68,8 @@ def get_random_json_item(file_path: str) -> str | int:
         data = json.load(file)
     elemento_random = random.choice(data)
     return elemento_random
+
+
+def append_to_file(file: str, contents: str) -> None:
+    with open(file, "a") as f:
+        f.write(contents)
