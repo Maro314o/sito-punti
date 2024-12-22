@@ -154,6 +154,8 @@ def pagina_admin_dashboard() -> str:
     numero_delle_classi = len(db_funcs.elenco_classi_studenti())
     numero_degli_admin = len(db_funcs.elenco_admin())
     numero_studenti_registrati = len(db_funcs.elenco_studenti_registrati())
+    numero_studenti_non_registrati = len(db_funcs.elenco_studenti_non_registrati())
+
     if not Info.query.filter_by().first():
         db.session.add(Info(last_season=0))
         db.session.commit()
@@ -163,6 +165,7 @@ def pagina_admin_dashboard() -> str:
         numero_classi=numero_delle_classi,
         numero_admin=numero_degli_admin,
         numero_studenti_registrati=numero_studenti_registrati,
+        numero_studenti_non_registrati = numero_studenti_non_registrati,
         novita=db_funcs.classifica_studenti(db_funcs.get_last_season())[0:8],
         errori=errori,
         classe_da_id=db_funcs.classe_da_id,
@@ -293,6 +296,10 @@ def pagina_elenco_user_display(elenco_type: str) -> str:
     if elenco_type == "tutti_gli_studenti_registrati":
 
         utenti = db_funcs.elenco_studenti_registrati()
+
+    elif elenco_type == "studenti_non_registrati":
+        utenti = db_funcs.elenco_studenti_non_registrati()
+
     elif elenco_type == "tutti_gli_admin":
         utenti = db_funcs.elenco_admin()
     else:

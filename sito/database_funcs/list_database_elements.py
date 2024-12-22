@@ -29,6 +29,12 @@ def elenco_studenti_registrati() -> list[User]:
     """
     return [studente for studente in elenco_studenti() if studente.account_attivo]
 
+def elenco_studenti_non_registrati() -> list[User]:
+    """
+    restituisce l'elenco di tutti gli studenti non registrati
+    """
+    return [studente for studente in elenco_studenti() if not studente.account_attivo]
+
 
 def elenco_user_da_classe_id_e_nome_squadra(
     classe_id: int, nome_squadra: str
