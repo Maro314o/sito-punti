@@ -1,8 +1,10 @@
 from typing import Dict, Tuple
 
 from sqlalchemy import tuple_
+
+from sito.database_funcs.manage_tables_rows import crea_squadra
 from .. import db
-from ..modelli import Cronologia, Info, Classi, User
+from ..modelli import Cronologia, Info, Classi, Squadra, User
 import sito.database_funcs as db_funcs
 import sito.misc_utils_funcs as mc_utils
 from pathlib import Path
@@ -43,20 +45,32 @@ def reset_database() -> None:
     db.session.query(Info).delete()
     User.query.filter_by(account_attivo=0).delete()
     db.session.query(Classi).delete()
+    db.session.query(Squadra).delete()
     db_funcs.crea_classe("admin")
+    db_funcs.crea_classe("Nessuna_squadra")
+    db_funcs.crea_squadra(nome_squadra="admin", classe_name="admin")
+    db_funcs.crea_squadra(nome_squadra="Nessuna_squadra", classe_name="Nessuna_squadra")
 
     mc_utils.clear_file(ERROR_FILE)
 
     db.session.commit()
 
 
-def processa_riga_classe(numero_riga: int, riga: list[str], nome_classe) -> str:
+def processa_riga_classe(numero_riga: int, riga: list[str], nome_classe: str) -> str:
 
     # la riga dovrebbe essere [nominativo,squadra]
     nominativo = mc_utils.capitalize_all(riga[0])
     utente = db_queries.user_da_nominativo(nominativo)
     if len(riga) == 2:
         squadra = riga[1]
+        oggetto_squadra = db_queries.squadra_da_nome(squadra)
+        if not oggetto_squadra:
+            crea_squadra(
+                nome_squadra=squadra, numero_componenti=1, classe_name=nome_classe
+            )
+        else:
+            oggetto_squadra.numero_componenti += 1
+
     else:
 
         squadra = "Nessuna_squadra"
@@ -67,8 +81,9 @@ def processa_riga_classe(numero_riga: int, riga: list[str], nome_classe) -> str:
     if utente:
         utente.nominativo = nominativo
         utente.squadra = squadra
-        utente.punti = "0"
+        utente.punti = "0.0"
         utente.classe_id = db_funcs.classe_da_nome(nome_classe).id
+        utente.squadra_id = db_funcs.squadra_da_nome(squadra).id
 
     else:
         auth_utils.crea_user(
@@ -82,9 +97,11 @@ def processa_riga_classe(numero_riga: int, riga: list[str], nome_classe) -> str:
     return nominativo
 
 
-def genera_studenti(classe_dataframe: pd.DataFrame, nome_classe: str) -> set[str]:
+def genera_studenti_e_squadre(
+    classe_dataframe: pd.DataFrame, nome_classe: str
+) -> set[str]:
     """
-    genera tutti gli studenti di una determinata classe
+    genera tutti gli studenti e squadre di una determinata classe
     """
 
     nominativi_trovati = set()
@@ -95,7 +112,7 @@ def genera_studenti(classe_dataframe: pd.DataFrame, nome_classe: str) -> set[str
     return nominativi_trovati
 
 
-def genera_classi_e_studenti(file_sheets: Dict[str, pd.DataFrame]) -> int:
+def genera_struttura_classi(file_sheets: Dict[str, pd.DataFrame]) -> int:
     """
     genera le classi caricate e gli studenti di quelle classi nel database per poterli successivamente scrivere
     """
@@ -104,7 +121,9 @@ def genera_classi_e_studenti(file_sheets: Dict[str, pd.DataFrame]) -> int:
 
     for nome_classe in lista_fogli_classi:
         db_funcs.crea_classe(nome_classe)
-        nominativi_trovati |= genera_studenti(file_sheets[nome_classe], nome_classe)
+        nominativi_trovati |= genera_studenti_e_squadre(
+            file_sheets[nome_classe], nome_classe
+        )
 
     elimina_studenti_non_presenti(nominativi_trovati)
     db.session.commit()
@@ -133,6 +152,7 @@ def processa_riga_dataset(
     nominativo: str = mc_utils.capitalize_all(riga[3])
     attivita: str = riga[4]
     punti: float = riga[5]
+    print(punti)
     if riga_nulla(riga):
         error_str = f"{datetime.datetime.now()} | errore alla linea {numero_riga} del database : La riga corrente e' vuota\n"
         mc_utils.append_to_file(ERROR_FILE, error_str)
@@ -148,14 +168,14 @@ def processa_riga_dataset(
             stagione=stagione,
             attivita=attivita,
             modifica_punti=punti,
-            punti_cumulativi=0,
+            punti_cumulativi=0.0,
             utente_id=db_funcs.user_da_nominativo(nominativo).id,
         )
     )
     return stagione, NO_ERROR
 
 
-def processa_dati(file_sheets: Dict[str, pd.DataFrame]) -> int:
+def processa_dati_dataframe(file_sheets: Dict[str, pd.DataFrame]) -> int:
     """
     processa tutti i dati e punti del dataset
     """
@@ -171,3 +191,11 @@ def processa_dati(file_sheets: Dict[str, pd.DataFrame]) -> int:
     db.session.add(Info(last_season=last_season))
     db.session.commit()
     return errori
+
+
+def numero_massimo_componenti_squadra_in_classe(classe: Classi) -> int:
+    componenti_massimi = 0
+    for squadra in db_queries.squadre_da_classe(classe):
+        if squadra.numero_componenti > componenti_massimi:
+            componenti_massimi = squadra.numero_componenti
+    return componenti_massimi

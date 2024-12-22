@@ -1,3 +1,4 @@
+from enum import unique
 from . import db
 from flask_login import UserMixin
 
@@ -23,8 +24,8 @@ class Cronologia(db.Model, UserMixin):
     data = db.Column(db.String(150))
     stagione = db.Column(db.Integer)
     attivita = db.Column(db.String(150))
-    modifica_punti = db.Column(db.Integer)
-    punti_cumulativi = db.Column(db.Integer)
+    modifica_punti = db.Column(db.Float)
+    punti_cumulativi = db.Column(db.Float)
     utente_id = db.Column(db.Integer, db.ForeignKey("user.id"))
 
 
@@ -38,6 +39,7 @@ class Classi(db.Model, UserMixin):
 
 class Squadra(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
+    nome_squadra = db.Column(db.String(150), unique=True)
     numero_componenti = db.Column(db.Integer)
     punti_reali = db.Column(db.String(150))
     punti_compensati = db.Column(db.String(150))

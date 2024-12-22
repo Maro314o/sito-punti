@@ -62,6 +62,8 @@ def crea_app():
         db.create_all()
         if not db_funcs.classe_da_nome("admin"):
             db.session.add(Classi(classe="admin"))
+
+            db_funcs.crea_squadra(nome_squadra="admin", classe_name="admin")
             db.session.commit()
     login_manager = LoginManager()
     login_manager.login_view = "autenticazione.pagina_login"

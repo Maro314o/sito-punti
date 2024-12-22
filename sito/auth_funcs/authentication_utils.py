@@ -49,9 +49,10 @@ def crea_user(**kwargs) -> None:
         nominativo=kwargs["nominativo"],
         squadra=kwargs["squadra"],
         password=generate_password_hash(kwargs["password"], method="sha256"),
-        punti="0",
+        punti="0.0",
         account_attivo=kwargs.get("account_attivo", 0),
         admin_user=kwargs.get("admin_user", 0),
+        squadra_id=db_funcs.squadra_da_nome(kwargs["squadra"]).id,
         classe_id=db_funcs.classe_da_nome(kwargs["classe_name"]).id,
     )
     db.session.add(nuovo_utente)

@@ -5,6 +5,8 @@ from os import path
 import os
 import datetime
 
+import sito.database_funcs.point_funcs.modify_points_utils as modfiy_point_utils
+
 from .modelli import User
 from sito.database_funcs.database_queries import user_da_nominativo
 import sito.misc_utils_funcs as mc_utils
@@ -46,13 +48,24 @@ def load_data(current_user: User) -> None:
     errori = 0
     file = pd.read_excel(NAME_FILE_MERGED, sheet_name=None)
     load_excel_helpers.reset_database()
-    errori += load_excel_helpers.genera_classi_e_studenti(file)
-    errori += load_excel_helpers.processa_dati(file)
+    errori += load_excel_helpers.genera_struttura_classi(file)
+    errori += load_excel_helpers.processa_dati_dataframe(file)
 
     studenti = db_funcs.elenco_studenti()
+    squadre = db_funcs.elenco_squadre_studenti()
+    classi_studenti = db_funcs.elenco_classi_studenti()
     for studente in studenti:
         db_funcs.aggiorna_punti_cumulativi_eventi(studente)
         db_funcs.aggiorna_punti(studente)
+        db_funcs.aggiorna_punti_squadra(studente)
+    for classe in classi_studenti:
+        classe.massimo_studenti_squadra = (
+            load_excel_helpers.numero_massimo_componenti_squadra_in_classe(classe)
+        )
+
+    for squadra in squadre:
+        modfiy_point_utils.compensa_punti_squadra(squadra)
+
     log_str = f"{datetime.datetime.now()} | {current_user.nominativo} ha appena caricato un file excel con {errori} errori\n"
     mc_utils.append_to_file(LOG_FILE, log_str)
     last_upload_time = str(datetime.datetime.now().date())

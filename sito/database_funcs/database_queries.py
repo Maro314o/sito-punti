@@ -1,4 +1,4 @@
-from ..modelli import User, Classi, Cronologia
+from ..modelli import Squadra, User, Classi, Cronologia
 
 
 def user_da_nominativo(nominativo: str) -> User | None:
@@ -41,3 +41,24 @@ def classe_da_id(classe_id: int) -> Classi | None:
     restituisce un oggetto classe dato il suo id
     """
     return Classi.query.filter_by(id=classe_id).first()
+
+
+def squadre_da_classe(classe: Classi) -> list[Squadra]:
+    """
+    restiturisce le squadre di una classe
+    """
+    return classe.squadre
+
+
+def squadra_da_nome(nome_squadra: str) -> Squadra | None:
+    """
+    restituisce un oggetto squadra dato il suo nome
+    """
+    return Squadra.query.filter_by(nome_squadra=nome_squadra).first()
+
+
+def squadra_da_id(squadra_id: int) -> Squadra | None:
+    """
+    restituisce un oggetto squadra dato il suo id
+    """
+    return Squadra.query.filter_by(id=squadra_id).first()
