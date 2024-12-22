@@ -32,15 +32,6 @@ def elenco_studenti_registrati() -> list[User]:
     return [studente for studente in elenco_studenti() if studente.account_attivo]
 
 
-def elenco_user_da_classe_id_e_nome_squadra(
-    classe_id: int, nome_squadra: str
-) -> list[User]:
-    """
-    restituisce l'elenco di tutti gli studenti di una squadra di una classe
-    """
-    return User.query.filter_by(classe_id=classe_id, squadra=nome_squadra).all()
-
-
 def elenco_tutte_le_classi() -> list[Classi]:
     """
     restituisce l'elenco di tutte le classi

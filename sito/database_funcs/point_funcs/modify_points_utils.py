@@ -32,11 +32,16 @@ def aggiorna_punti_squadra(utente: User) -> None:
     punti_utente = parse_utils.get_points_as_array(utente.punti)
     punti_squadra = parse_utils.get_points_as_array(squadra.punti_reali)
     punti_squadra.extend([0.0] * (len(punti_utente) - len(punti_squadra)))
+
+    punti_squadra.extend([0.0] * (len(punti_utente) - len(punti_squadra)))
     for stagione, (punti_stagione_squadra, punti_stagione_utente) in enumerate(
         zip(punti_squadra, punti_utente)
     ):
         punti_squadra[stagione] = punti_stagione_squadra + punti_stagione_utente
+
     squadra.punti_reali = parse_utils.convert_array_to_points_string(punti_squadra)
+    print(squadra.punti_reali)
+    db.session.commit()
 
 
 def compensa_punti_squadra(squadra: Squadra) -> None:
@@ -50,7 +55,7 @@ def compensa_punti_squadra(squadra: Squadra) -> None:
     punti_squadra_reali = parse_utils.get_points_as_array(squadra.punti_reali)
     punti_squadra_compensati = parse_utils.get_points_as_array(squadra.punti_compensati)
     punti_squadra_compensati.extend(
-        [0] * (len(punti_squadra_reali) - len(punti_squadra_compensati))
+        [0.0] * (len(punti_squadra_reali) - len(punti_squadra_compensati))
     )
     for stagione, punti_stagione_squadra in enumerate(punti_squadra_reali):
         punti_squadra_compensati[stagione] = (
@@ -59,6 +64,8 @@ def compensa_punti_squadra(squadra: Squadra) -> None:
     squadra.punti_compensati = parse_utils.convert_array_to_points_string(
         punti_squadra_compensati
     )
+
+    db.session.commit()
 
 
 def aggiorna_punti(utente: User) -> None:
@@ -83,3 +90,13 @@ def aggiorna_punti(utente: User) -> None:
     utente.punti = utente.punti + ",0.0" * (last_season - len(utente.punti.split(",")))
 
     db.session.commit()
+
+
+def aggiorna_punti_composto(studente: User) -> None:
+    """
+    aggiorna tutti i punti dell'utente e della sua squadra
+    """
+    aggiorna_punti_cumulativi_eventi(studente)
+    aggiorna_punti(studente)
+    aggiorna_punti_squadra(studente)
+    compensa_punti_squadra(db_queries.squadra_da_id(studente.squadra_id))

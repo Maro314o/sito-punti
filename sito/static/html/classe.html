@@ -84,7 +84,7 @@
                           <td style="text-align:center;">{{ studente.nominativo}}</td>
                     <td style="text-align:center" >{{ studente.squadra }}</td>
 
-                            <td style="text-align:center" >{{ studente.punti.split(',')[stagione_corrente-1] }}
+                            <td style="text-align:center" >{{ get_season_points(studente.punti,stagione_corrente) }}
                           {% if user.admin_user or user.nominativo==studente.nominativo %}
 
                       </div> <a href="/classe/{{classe.classe}}/{{url_name(studente.nominativo)}}/{{stagione_corrente}}">

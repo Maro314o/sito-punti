@@ -8,8 +8,11 @@ from flask import (
     flash,
     send_from_directory,
 )
+from pandas.util.version import parse
+from sito.database_funcs import list_database_elements
 import sito.errors_utils as e_utils
 from sito.errors_utils.errors_classes.data_error_classes import InvalidSeasonError
+from sito.misc_utils_funcs import parse_utils
 from . import db, app
 
 with app.app_context():
@@ -96,6 +99,7 @@ def pagina_classe(classe_name: str) -> str:
         studenti=studenti,
         n_stagioni=n_stagioni,
         stagione_corrente=stagione_corrente,
+        get_season_points=parse_utils.get_season_points,
         cronologia_da_user=db_funcs.cronologia_user,
         elenco_date=ct_funcs.elenco_date,
         elenco_punti_cumulativi=ct_funcs.elenco_punti_cumulativi,
@@ -167,6 +171,8 @@ def pagina_admin_dashboard() -> str:
         errori=errori,
         classe_da_id=db_funcs.classe_da_id,
         calcola_valore_rgb=mc_utils.calcola_valore_rgb,
+        get_season_points=parse_utils.get_season_points,
+        last_season=list_database_elements.get_last_season(),
     )
 
 
@@ -226,8 +232,9 @@ def pagina_create_event(classe_name: str, studente_id: int, stagione: int) -> Re
 
     db.session.add(nuovo_evento)
     db.session.commit()
-    db_funcs.aggiorna_punti_cumulativi_eventi(db_funcs.user_da_id(studente_id))
-    db_funcs.aggiorna_punti(db_funcs.user_da_id(studente_id))
+
+    db_funcs.aggiorna_punti_composto(db_funcs.user_da_id(studente_id))
+
     mc_utils.set_item_of_json(
         GLOBAL_DATA, "ultima_modifica", str(datetime.datetime.now().date())
     )
@@ -264,8 +271,7 @@ def pagina_delete_event(
     if evento:
         db_funcs.elimina_evento_cronologia(evento)
 
-        db_funcs.aggiorna_punti_cumulativi_eventi(db_funcs.user_da_id(studente_id))
-        db_funcs.aggiorna_punti(db_funcs.user_da_id(studente_id))
+        db_funcs.aggiorna_punti_composto(db.user_da_id(studente_id))
 
         mc_utils.set_item_of_json(
             GLOBAL_DATA, "ultima_modifica", str(datetime.datetime.now().date())

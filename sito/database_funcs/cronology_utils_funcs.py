@@ -21,7 +21,11 @@ def cronologia_user(utente: User) -> list[Cronologia]:
     """
     restituisce l'intera cronologia di un utente ordinata cronolicamente
     """
-    return ordina_cronologicamente(utente.cronologia_studente)
+
+    return sorted(
+        ordina_cronologicamente(utente.cronologia_studente),
+        key=lambda evento: evento.stagione,
+    )
 
 
 def cronologia_user_di_una_stagione(utente: User, stagione: int) -> list[Cronologia]:

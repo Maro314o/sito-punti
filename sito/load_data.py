@@ -65,6 +65,7 @@ def load_data(current_user: User) -> None:
 
     for squadra in squadre:
         modfiy_point_utils.compensa_punti_squadra(squadra)
+    db.session.commit()
 
     log_str = f"{datetime.datetime.now()} | {current_user.nominativo} ha appena caricato un file excel con {errori} errori\n"
     mc_utils.append_to_file(LOG_FILE, log_str)
@@ -86,8 +87,8 @@ def merge_excel() -> None:
     merged_df = merged_df.drop_duplicates()
 
     other_sheets = {
-        sheet: pd.read_excel(NAME_FILE_MERGED, sheet_name=sheet)
-        for sheet in pd.ExcelFile(NAME_FILE_MERGED).sheet_names
+        sheet: pd.read_excel(NAME_FILE, sheet_name=sheet)
+        for sheet in pd.ExcelFile(NAME_FILE).sheet_names
         if sheet != "Challenge"
     }
 

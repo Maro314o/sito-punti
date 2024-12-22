@@ -39,7 +39,7 @@ def riga_nulla(riga: list[str]) -> bool:
 
 def reset_database() -> None:
     """
-    prepara is database per uno stato di scrittura via il caricamento di un file excel
+    prepara il database per uno stato di scrittura via il caricamento di un file excel
     """
     db.session.query(Cronologia).delete()
     db.session.query(Info).delete()
@@ -152,11 +152,10 @@ def processa_riga_dataset(
     nominativo: str = mc_utils.capitalize_all(riga[3])
     attivita: str = riga[4]
     punti: float = riga[5]
-    print(punti)
     if riga_nulla(riga):
         error_str = f"{datetime.datetime.now()} | errore alla linea {numero_riga} del database : La riga corrente e' vuota\n"
         mc_utils.append_to_file(ERROR_FILE, error_str)
-        return stagione, ERROR
+        return 0, ERROR
     elif not db_funcs.user_da_nominativo(nominativo):
         error_str = f"{datetime.datetime.now()} | errore alla linea {numero_riga} del database : non è stato possibile modificare i punti dell' utente {nominativo} della classe {nome_classe}. Controlla se ci sono errori nella scrittura del suo nome o se non è stato aggiunto ad una classe nel corrispettivo foglio .xlsx\n"
         mc_utils.append_to_file(ERROR_FILE, error_str)
