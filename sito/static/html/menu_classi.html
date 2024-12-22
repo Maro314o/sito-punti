@@ -272,7 +272,7 @@ textarea {
             <div class="button-list">
                 <hr style="border: none; border-top: 2px solid black;" />
                 {% for classe in classi %}
-                <form method="POST" action="/classe/{{ classe.classe }}">
+                <form method="POST" action="/classe/{{ classe.classe }}/{{last_season}}">
                     <div class="container">
                         <button type='submit' class="button" name='bottone' value="raggiungi">
                             {% if loop.index % 5 == 1 %}

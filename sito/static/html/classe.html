@@ -32,7 +32,8 @@
   <main  class="table" id="customers_table">
       <section class="table__header">
         <div class="nomeclasse">
-          <h1>Classe {{classe.classe}}</h1>  
+          <h1>Classe {{classe.classe}} :</h1>
+          <h1>{{stagione_corrente}}° stagione</h1>  
         </div>
         <form method="POST" class="the-form">
 
@@ -41,8 +42,12 @@
             <input type="checkbox" id="export-file">
             <div class="season_btn-options">
                 {% for i in range(n_stagioni)%}
-                <label for="{{i}}">Season {{i+1}}</label>
-                <input type="submit" id="{{i}}" name="selected_season" value={{i+1}}>
+                <a href="/classe/{{classe.classe}}/{{i+1}}">
+
+                <label for="{{i+1}}">Season {{i+1}}</label>
+
+
+                </a>
                 {% endfor%}
 
 
@@ -87,7 +92,7 @@
                             <td style="text-align:center" >{{ get_season_points(studente.punti,stagione_corrente) }}
                           {% if user.admin_user or user.nominativo==studente.nominativo %}
 
-                      </div> <a href="/classe/{{classe.classe}}/{{url_name(studente.nominativo)}}/{{stagione_corrente}}">
+                      </div> <a href="/classe/{{classe.classe}}/{{stagione_corrente}}/{{url_name(studente.nominativo)}}">
   <button  class="material-symbols--info-outline" ></button></a></td>
                             {% endif %}
 

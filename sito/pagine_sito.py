@@ -76,20 +76,17 @@ def pagina_home() -> str:
     )
 
 
-@pagine_sito.route("/classe/<classe_name>", methods=["GET", "POST"])
+@pagine_sito.route("/classe/<classe_name>/<int:stagione>", methods=["GET", "POST"])
 @login_required
-def pagina_classe(classe_name: str) -> str:
-    stagione_corrente = db_funcs.get_last_season()
+def pagina_classe(
+    classe_name: str,
+    stagione: int,
+) -> str:
     if current_user.admin_user:
         classe = db_funcs.classe_da_nome(classe_name)
     else:
         classe = db_funcs.classe_da_id(current_user.classe_id)
-    if request.method == "POST":
-        dati = request.form
-        if dati.get("selected_season"):
-            stagione_corrente = int(dati.get("selected_season"))
-
-    studenti = db_funcs.classifica_studenti_di_una_classe(stagione_corrente, classe)
+    studenti = db_funcs.classifica_studenti_di_una_classe(stagione, classe)
     n_stagioni = db_funcs.get_last_season()
 
     return render_template(
@@ -98,7 +95,7 @@ def pagina_classe(classe_name: str) -> str:
         classe=classe,
         studenti=studenti,
         n_stagioni=n_stagioni,
-        stagione_corrente=stagione_corrente,
+        stagione_corrente=stagione,
         get_season_points=parse_utils.get_season_points,
         cronologia_da_user=db_funcs.cronologia_user,
         elenco_date=ct_funcs.elenco_date,
@@ -111,11 +108,14 @@ def pagina_classe(classe_name: str) -> str:
 
 
 @pagine_sito.route(
-    "/classe/<classe_name>/<nominativo_con_underscore>/<int:stagione>", methods=["GET"]
+    "/classe/<classe_name>/<int:stagione>/<nominativo_con_underscore>",
+    methods=["GET"],
 )
 @login_required
 def pagina_info_studente(
-    classe_name: str, nominativo_con_underscore: str, stagione: int
+    classe_name: str,
+    stagione: int,
+    nominativo_con_underscore: str,
 ) -> str | Response:
 
     if (
@@ -181,7 +181,8 @@ def pagina_admin_dashboard() -> str:
 @admin_permission_required
 def pagina_menu_classi() -> str:
     classi = db_funcs.elenco_classi_studenti()
-    return render_template("menu_classi.html", classi=classi)
+    last_season = list_database_elements.get_last_season()
+    return render_template("menu_classi.html", classi=classi, last_season=last_season)
 
 
 @pagine_sito.route("/db_errori")
@@ -271,7 +272,7 @@ def pagina_delete_event(
     if evento:
         db_funcs.elimina_evento_cronologia(evento)
 
-        db_funcs.aggiorna_punti_composto(db.user_da_id(studente_id))
+        db_funcs.aggiorna_punti_composto(db_funcs.user_da_id(studente_id))
 
         mc_utils.set_item_of_json(
             GLOBAL_DATA, "ultima_modifica", str(datetime.datetime.now().date())
