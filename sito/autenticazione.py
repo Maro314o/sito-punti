@@ -80,7 +80,7 @@ def pagina_sign_up() -> str | Response:
         password_di_conferma = dati.get("password_di_conferma")
         nominativo = mc_utils.capitalize_all(nominativo)
         user = db_funcs.user_da_nominativo(nominativo)
-        if db_funcs.user_da_email(email):
+        if db_funcs.user_da_email(email) and user.account_attivo:
             flash(
                 "Esiste già un altro account con questa email in uso", category="error"
             )
