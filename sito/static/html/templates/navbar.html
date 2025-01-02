@@ -1,0 +1,21 @@
+<!-- sito/templates/navbar.html -->
+<ul class="navbarra">
+    {% if request.path == '/' %}
+        <li><a href="/regole">Regole</a></li>
+    {% elif request.path == '/regole' %}
+        <li><a href="/">Home</a></li>
+    {% endif %}
+
+    <li><a href="#">Coming Soon...</a></li>
+
+    {% if user.is_authenticated %}
+        {% if user.admin_user %}
+            <li><a href="/admin_dashboard">Admin Dashboard</a></li>
+        {% else %}
+            <li><a href="/classe/{{ classe_name }}">Classe {{ classe_name }}</a></li>
+        {% endif %}
+        <li><a href="/logout">Esci dall'account</a></li>
+    {% else %}
+        <li><a href="/login">Accedi</a></li>
+    {% endif %}
+</ul>

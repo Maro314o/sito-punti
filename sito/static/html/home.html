@@ -1,111 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Home</title>
+        <!---link dello stylesheet di reset--->
+        <link rel="icon" href="{{ url_for('static',filename='images/logo.png') }}" type="image/icon">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
+        <!---link del css--->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+        <!---link per i bottoni--->
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        <!---link per le icone custom--->
+        <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet">
+        <!---import del font--->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
+              rel="stylesheet">
+    </head>
+    <body>
+        <header>
+            <a href="/" class="logo"><img src="{{ url_for('static', filename='images/logo.png') }}" alt=""></a>
+            {% include 'templates/navbar.html' %}
+        </header>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-    <!---link dello stylesheet di reset--->
-    <link rel="icon" href="{{ url_for('static',filename='images/logo.png')}}" type="image/icon">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css')}}">
-    <!---link del css--->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}" >
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css')}}">
-    <!---link per i bottoni--->
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <!---link per le icone custom--->
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet">
-    <!---import del font--->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+        <section class="sezione">
+            <div class="testo"> <!---testi sotto i bottoni--->
+                <h5>&nbspISIS J.M KEYNES</h5>
+                <h1>SITO PUNTI</h1>
+                <p>Guarda informazioni sui tuoi punti, quelli della tua squadra e quelli della classe, tutto alla portata di un
+                    click!</p>
+                <!---<h2>"Frase del giorno"</h2>-->
+                {% if user.is_authenticated %}
+                    {% if user.admin_user %}
+                        <a href="admin_dashboard">Admin Dashboard</a>
+                    {% else %}
+                        <a href="/classe/{{ classe_name }}">Classe {{ classe_name }}</a>
+                    {% endif %}
+                {% else %}
+                    <a href="/login">Accedi</a>
+                {% endif %}
+                <a href="/regole" class="bottone"><i class="ri-play-fill"></i>Leggi il regolamento</a>
+                <!---bottoni per il font--->
+            </div>
 
-</head>
-<body>
-    <header>
+            <div class="immagine"> <!---immagine vicino al testo--->
+                <img src="{{ url_for('static', filename='images/immagine_home.png') }}">
+            </div>
+        </section>
 
-        <a href="/" class="logo"><img src="{{ url_for('static',
-                filename='images/logo.png')}}" alt=""></a>
-
-
-        <ul class="navbarra"> <!---barra navigazione (puoi cambiare anche i nomi)--->
-            <li><a href="/regole">Regole</a></li>
-          {% if user.is_authenticated%}
-          {%if user.admin_user%}
-            
-            <li><a href="/admin_dashboard">Admin Dashboard</a></li>
-          {% else%}
-          <li><a href="/classe/{{classe_name}}">Classe {{classe_name}}</a></li>
-          {%endif%}
-            <li><a href="/logout">Esci dall'account</a></li>
-          {%else%}
-            <li><a href="/login">Accedi</a></li>
-          {%endif%}
-              <div class="bx bx-menu" id="menu-icon"></div> <!---icona per il menu da smartphone--->
-    </header>
-
-    <section class="sezione">
-        <div class="testo"> <!---testi sotto i bottoni--->
-            <h5>&nbspISIS J.M KEYNES</h5>
-            <h1>SITO PUNTI</h1>
-            <p>Guarda informazioni sui tuoi punti, quelli della tua squadra e quelli della classe, tutto alla portata di un click!</p>
-            <!---<h2>"Frase del giorno"</h2>-->
-            {%if user.is_authenticated%}
-            {%if user.admin_user%}
-            <a href="admin_dashboard">Admin Dashboard</a>
-            {%else%}  
-            <a href="/classe/{{classe_name}}">Classe {{classe_name}}</a>
-            {%endif%}
-            {%else%}
-            <a href="/login">Accedi</a>
-            {%endif%}
-            <a href="/regole" class="bottone"><i class="ri-play-fill"></i>Leggi il regolamento</a> <!---bottoni per il font--->
+        <div class="icone"> <!---icone laterali--->
+            <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"><i class="ri-map-pin-line"></i></a>
+            <a href="https://github.com/Maro314o/sito_punti"><i class="ri-github-line"></i></a>
+            <a href="mailto:puntikeynes@gmail.com?subject=&body=Scrivi%20pure%20un%20consiglio%20su%20come%20migliorare%20il%20sito%20oppure%20se%20stai%20riscontrando%20un%20problema%20cerca%20di%20descrivercelo%20in%20dettaglio%20cos%C3%AC%20da%20poter%20aiutarti%20al%20meglio"><i
+                    class="ri-mail-send-line"></i></a>
         </div>
 
-        <div class="immagine"> <!---immagine vicino al testo--->
-            <img src="{{ url_for('static',
-                filename='images/immagine_home.png')}}">
-        </div>
-    </section>
+        {% if user.admin_user %}
+            <div class="scroll-down"> <!---icona scrolldown--->
+                <a href="/versioni"><i class=""></i></a>
+            </div>
 
-    <div class="icone"> <!---icone laterali--->
-        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"><i class="ri-map-pin-line"></i></a>
-        <a href="https://github.com/Maro314o/sito_punti"><i class="ri-github-line"></i></a>
-        <a href="mailto:puntikeynes@gmail.com?subject=&body=Scrivi%20pure%20un%20consiglio%20su%20come%20migliorare%20il%20sito%20oppure%20se%20stai%20riscontrando%20un%20problema%20cerca%20di%20descrivercelo%20in%20dettaglio%20cos%C3%AC%20da%20poter%20aiutarti%20al%20meglio"><i class="ri-mail-send-line"></i></a>
-
-    </div>
-
-
-
-    {% if user.admin_user %}
-    <div class="scroll-down"> <!---icona scrolldown--->
-        <a href="/versioni"><i class=""></i></a>
-    </div>
-
-    {% endif %}
-     <!---import del js--->
+        {% endif %}
+        <!---import del js--->
         <script src="{{ url_for('static',
-                filename='js/home.js')}}"></script>
-        <script src="https://unpkg.com/scrollreveal"></script>   
+                        filename='js/home.js') }}"></script>
+        <script src="https://unpkg.com/scrollreveal"></script>
 
         <footer class="footer">
-          {% if lenght_square_of_loghi>0 %}
-            <div class="image-grid">
-                {% for i in range(0, lista_loghi|length, lenght_square_of_loghi ) %}
-                    <div class="row">
-                        {% for logo in lista_loghi[i:i+lenght_square_of_loghi] %}
-                            <img src="{{ url_for('static', filename='images/loghi/'+logo) }}" alt="Image" height="30px" width="30px">
-                        {% endfor %}
-                    </div>
-                {% endfor %}
-            </div>
+            {% if lenght_square_of_loghi>0 %}
+                <div class="image-grid">
+                    {% for i in range(0, lista_loghi|length, lenght_square_of_loghi ) %}
+                        <div class="row">
+                            {% for logo in lista_loghi[i:i+lenght_square_of_loghi] %}
+                                <img src="{{ url_for('static', filename='images/loghi/'+logo) }}" alt="Image" height="30px"
+                                     width="30px">
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
             {% endif %}
             <div class="footer-text">
                 <p>&copy; Peppino-Mawwo-Sowwi. All Rights Reserved.</p>
             </div>
         </footer>
-
-</body>
-
+    </body>
 </html>
