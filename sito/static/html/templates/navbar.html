@@ -2,11 +2,13 @@
 <ul class="navbarra">
     {% if request.path == '/' %}
         <li><a href="/regole">Regole</a></li>
-    {% elif request.path == '/regole' %}
+    {% else %}
         <li><a href="/">Home</a></li>
     {% endif %}
 
-    <li><a href="#">Coming Soon...</a></li>
+    {% if request.path != '/coming_soon' %}
+        <li><a href="/coming_soon">Coming Soon...</a></li>
+    {% endif %}
 
     {% if user.is_authenticated %}
         {% if user.admin_user %}

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="it">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Regole</title>
+    <link rel="icon" href="{{ url_for('static',filename='images/logo.png')}}" type="image/icon">
+        <!---link dello stylesheet di reset--->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css')}}">
+        <!---link del css--->
+        <link href="{{ url_for('static', filename='css/main.css')}}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/coming_soon.css')}}" rel="stylesheet">
+        <!---link per i bottoni--->
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        <!---link per le icone custom--->
+        <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet">
+        <!---import del font--->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    </head>
+    <body>
+        <header>
+            <a href="/" class="logo"><img src="{{ url_for('static', filename='images/logo.png')}}" alt=""></a>
+            {% include 'templates/navbar.html' %}
+        </header>
+
+        <main class="container">
+            <div>
+                <h1>COMING SOON...</h2>
+            </div>
+        </main>
+
+        <!---import del js--->
+        <script src="static/js/home.js"></script>
+        <script src="https://unpkg.com/scrollreveal"></script>
+    </body>
+</html>

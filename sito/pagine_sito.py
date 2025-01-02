@@ -134,6 +134,12 @@ def pagina_regole() -> str:
         classe_name = db_funcs.classe_da_id(current_user.classe_id).classe
     return render_template("regole.html", user=current_user, classe_name=classe_name)
 
+@pagine_sito.route("/coming_soon")
+def pagina_comingsoon() -> str:
+    classe_name = None
+    if current_user.is_authenticated:
+        classe_name = db_funcs.classe_da_id(current_user.classe_id).classe
+    return render_template("coming_soon.html", user=current_user, classe_name=classe_name)
 
 @pagine_sito.route("/admin_dashboard")
 @login_required
