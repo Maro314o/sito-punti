@@ -43,8 +43,9 @@
                     <input type="checkbox" id="export-file">
                     <div class="season_btn-options">
                         {% for i in range(n_stagioni) %}
-                        <option for="{{i}}">Season {{i+1}}</option>
-                        <input type="submit" id="{{i}}" name="selected_season" value={{i+1}}>
+                <a href="/classe/{{classe.classe}}/{{i+1}}">
+                <label for="{{i+1}}">Season {{i+1}}</label>
+                </a>
                         {% endfor %}
                     </div>
                     <input type="submit" value="Submit">
