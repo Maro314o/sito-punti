@@ -38,15 +38,20 @@
             <div style="background:rgb{{ calcola_valore_rgb(studente.squadra) }}; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);" class="circle"></div>
             <h1 style="flex-grow:1;height:15px;font-size:30px;text-align:left; font-weight: 570;">&#160;{{ studente.nominativo }}</h1>
         </div>
+
         <div>
            <h2 style="width:100%;text-align:left;font-size: 20px;padding-top:1.5em">
                 <strong style="font-weight: 510; color: rgb(74, 74, 74);">Email:</strong> {{ studente.email }}
             </h2>
-            <h2 style="width:100%;text-align:left;font-size: 20px;">
-                <strong style="font-weight: 510; color: rgb(74, 74, 74);">Squadra:</strong> {{ studente.squadra }}
-            </h2>            
+            <div style="display: flex; align-items: center;">
+                <h2 style="text-align:left; font-size: 20px;">
+                    <strong style="font-weight: 510; color: rgb(74, 74, 74); margin-right: 4px;">Squadra:</strong> {{ studente.squadra }}
+                </h2>
+                <div class="circle" style="background-size: cover; background-image: url({{ url_for('static', filename='images/loghi/' + loghi.get(studente.squadra, '../default.png'))}}); box-shadow: 0px 4px 10px rgba(0,0,0, 0.3); margin-left:4px; margin-bottom:4px"></div>
+            </div>      
         </div>
-<div class="table-container">
+
+        <div class="table-container">
             <table class="content-table">
                 <thead>
                     <tr>
