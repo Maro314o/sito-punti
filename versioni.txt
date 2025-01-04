@@ -15,3 +15,4 @@
 06/10/2024 10:38 | Versione 0.0.15 | Aggiunta aggiornamento del file excel in memoria quando si modificano i punti dal sito (non implementata ancora la funzione per scaricarlo)
 06/10/2024 22:03 | Versione 0.0.16 | Spostamento del caricamento del database nella pagina gestisci dati
 11/10/2024 17:15 | Versione 0.0.17 | Aggiunta immagini dei loghi accanto ai nomi 
+15/11/2024 21:39 | Versione 0.0.18 | Aggiunto caricamento delle frasi e la visualizzazione casuale nella pagina home

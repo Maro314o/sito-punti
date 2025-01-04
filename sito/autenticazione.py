@@ -6,7 +6,6 @@ from flask import (
     request,
     flash,
 )
-from sqlalchemy.orm import exc
 
 from sito.errors_utils import admin_permission_required
 from sito.errors_utils.errors_classes.users_error_classes import (
@@ -28,13 +27,14 @@ from flask_login import login_user, login_required, logout_user, current_user
 import os
 
 autenticazione = Blueprint("autenticazione", __name__)
+SECRET_PASSWORD_PATH = os.path.join(
+    Path.cwd(), "secrets", "secret_starter_admin_password.txt"
+)
 
 
 @autenticazione.route("/init_starter_admin")
 def pagina_init_admin_starter() -> Response:
-    with open(
-        os.path.join(Path.cwd(), "secrets", "secret_starter_admin_password.txt")
-    ) as f:
+    with open(SECRET_PASSWORD_PATH) as f:
         starter_admin_password = f.read().strip()
     if starter_admin_password == VUOTO:
         raise InitPasswordNotSetError(
@@ -49,6 +49,7 @@ def pagina_init_admin_starter() -> Response:
         )
     except FailedSignUpError:
         pass
+    os.remove(SECRET_PASSWORD_PATH)
     return e_utils.redirect_home()
 
 

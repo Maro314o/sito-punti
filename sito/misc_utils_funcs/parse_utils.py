@@ -45,3 +45,27 @@ def to_datetime_object(data: str) -> datetime:
     """
     data = " ".join([data, "00:00:00"])
     return datetime.strptime(data, "%Y-%m-%d %H:%M:%S")
+
+
+def get_season_points(points_str: str, season: int) -> float:
+    """
+    restituisce i punti di una persona in base alla stagione e stringa di punti
+    """
+    return float(points_str.split(",")[season - 1])
+
+
+def set_season_points(points_str: str, season: int, points_to_set: float) -> str:
+    """
+    cambia i punti di una stagione in una stringa di punti
+    """
+    lista_punti = points_str.split(",")
+    lista_punti[season - 1] = str(points_to_set)
+    return ",".join(lista_punti)
+
+
+def get_points_as_array(points_str: str) -> list[float]:
+    return list(map(float, points_str.split(",")))
+
+
+def convert_array_to_points_string(points_array: list[float]) -> str:
+    return ",".join(list(map(str, points_array)))

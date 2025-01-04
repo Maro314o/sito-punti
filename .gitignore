@@ -10,3 +10,5 @@ loghi/
 backup_dati/
 richieste.txt
 .venv/
+alembic
+alembic.ini

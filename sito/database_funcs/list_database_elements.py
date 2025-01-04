@@ -1,5 +1,7 @@
 import sito.database_funcs as db_funcs
-from ..modelli import User, Classi, Info
+from ..modelli import Squadra, User, Classi, Info
+
+NOT_AVALIDABLE = ["admin", "Nessuna_squadra"]
 
 
 def elenco_utenti() -> list[User]:
@@ -30,15 +32,6 @@ def elenco_studenti_registrati() -> list[User]:
     return [studente for studente in elenco_studenti() if studente.account_attivo]
 
 
-def elenco_user_da_classe_id_e_nome_squadra(
-    classe_id: int, nome_squadra: str
-) -> list[User]:
-    """
-    restituisce l'elenco di tutti gli studenti di una squadra di una classe
-    """
-    return User.query.filter_by(classe_id=classe_id, squadra=nome_squadra).all()
-
-
 def elenco_tutte_le_classi() -> list[Classi]:
     """
     restituisce l'elenco di tutte le classi
@@ -46,11 +39,33 @@ def elenco_tutte_le_classi() -> list[Classi]:
     return Classi.query.filter_by().all()
 
 
+def elenco_tutte_le_squadre() -> list[Squadra]:
+    """
+    restituisce l'elenco di tutte le squadre
+    """
+    return Squadra.query.filter_by().all()
+
+
 def elenco_classi_studenti() -> list[Classi]:
     """
     restituisce l'elenco di tutte le classi degli studenti (cioè tutte trannne quella admin)
     """
-    return [classe for classe in elenco_tutte_le_classi() if classe.classe != "admin"]
+    return [
+        classe
+        for classe in elenco_tutte_le_classi()
+        if classe.classe not in NOT_AVALIDABLE
+    ]
+
+
+def elenco_squadre_studenti() -> list[Squadra]:
+    """
+    restituisce l'elenco di tutte le squadre degli studenti (cioè tutte trannne quella admin)
+    """
+    return [
+        squadra
+        for squadra in elenco_tutte_le_squadre()
+        if squadra.nome_squadra not in NOT_AVALIDABLE
+    ]
 
 
 def elenco_squadre_da_classe(classe: Classi) -> set[str]:

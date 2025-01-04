@@ -6,9 +6,13 @@ from flask import (
     redirect,
     url_for,
     flash,
+    send_from_directory,
 )
+from pandas.util.version import parse
+from sito.database_funcs import list_database_elements
 import sito.errors_utils as e_utils
 from sito.errors_utils.errors_classes.data_error_classes import InvalidSeasonError
+from sito.misc_utils_funcs import parse_utils
 from . import db, app
 
 with app.app_context():
@@ -16,24 +20,32 @@ with app.app_context():
 import sito.misc_utils_funcs as mc_utils
 import sito.chart_funcs as ct_funcs
 import sito.excel_funcs as xlsx_funcs
+
 from sito.errors_utils import admin_permission_required
 
 
 from flask_login import login_required, current_user
 from .modelli import Info, Cronologia
 from os import path, listdir
-from .load_data import load_data
+from .load_data import load_data, merge_excel
 
 from pathlib import Path
+import datetime
+import json
 from math import ceil, sqrt
 
 pagine_sito = Blueprint("pagine_sito", __name__)
 FILE_ERRORE = path.join(Path.cwd(), "data", "errore.txt")
 FILE_VERSIONI = path.join(Path.cwd(), "versioni.txt")
+FILE_LOG = path.join(Path.cwd(), "data", "log.txt")
 PATH_CARTELLA_LOGHI = path.join(Path.cwd(), "sito", "static", "images", "loghi")
+FRASI_PATH = path.join(Path.cwd(), "data", "frasi.json")
+
+GLOBAL_DATA = path.join(Path.cwd(), "data", "global_data.json")
 
 
-SAVE_LOCATION_PATH = path.join(path.join(Path.cwd(), "data"), "foglio.xlsx")
+SAVE_LOCATION_PATH = path.join(path.join(Path.cwd(), "data"), "foglio_pre-merge.xlsx")
+DOWNLOAD_PATH = path.join(Path.cwd(), "data")
 LEGGI = "r"
 RETURN_VALUE = "bottone"
 ELIMINA_UTENTE = "elimina"
@@ -53,29 +65,28 @@ def pagina_home() -> str:
         classe_name = db_funcs.classe_da_id(current_user.classe_id).classe
     loghi = [logo for logo in listdir(PATH_CARTELLA_LOGHI)]
     lenght_square_of_loghi = ceil(sqrt(len(loghi)))
+    frase = mc_utils.get_random_json_item(FRASI_PATH)
     return render_template(
         "home.html",
         user=current_user,
         classe_name=classe_name,
         lista_loghi=loghi,
         lenght_square_of_loghi=lenght_square_of_loghi,
+        frase=frase,
     )
 
 
-@pagine_sito.route("/classe/<classe_name>", methods=["GET", "POST"])
+@pagine_sito.route("/classe/<classe_name>/<int:stagione>", methods=["GET", "POST"])
 @login_required
-def pagina_classe(classe_name) -> str:
-    stagione_corrente = db_funcs.get_last_season()
+def pagina_classe(
+    classe_name: str,
+    stagione: int,
+) -> str:
     if current_user.admin_user:
         classe = db_funcs.classe_da_nome(classe_name)
     else:
         classe = db_funcs.classe_da_id(current_user.classe_id)
-    if request.method == "POST":
-        dati = request.form
-        if dati.get("selected_season"):
-            stagione_corrente = int(dati.get("selected_season"))
-
-    studenti = db_funcs.classifica_studenti_di_una_classe(stagione_corrente, classe)
+    studenti = db_funcs.classifica_studenti_di_una_classe(stagione, classe)
     n_stagioni = db_funcs.get_last_season()
     loghi = {logo.rsplit(".", 1)[0]: logo for logo in listdir(PATH_CARTELLA_LOGHI)}
     return render_template(
@@ -84,7 +95,8 @@ def pagina_classe(classe_name) -> str:
         classe=classe,
         studenti=studenti,
         n_stagioni=n_stagioni,
-        stagione_corrente=stagione_corrente,
+        stagione_corrente=stagione,
+        get_season_points=parse_utils.get_season_points,
         cronologia_da_user=db_funcs.cronologia_user,
         elenco_date=ct_funcs.elenco_date,
         elenco_punti_cumulativi=ct_funcs.elenco_punti_cumulativi,
@@ -97,11 +109,14 @@ def pagina_classe(classe_name) -> str:
 
 
 @pagine_sito.route(
-    "/classe/<classe_name>/<nominativo_con_underscore>/<int:stagione>", methods=["GET"]
+    "/classe/<classe_name>/<int:stagione>/<nominativo_con_underscore>",
+    methods=["GET"],
 )
 @login_required
 def pagina_info_studente(
-    classe_name: str, nominativo_con_underscore: str, stagione: int
+    classe_name: str,
+    stagione: int,
+    nominativo_con_underscore: str,
 ) -> str | Response:
 
     if (
@@ -157,6 +172,8 @@ def pagina_admin_dashboard() -> str:
         errori=errori,
         classe_da_id=db_funcs.classe_da_id,
         calcola_valore_rgb=mc_utils.calcola_valore_rgb,
+        get_season_points=parse_utils.get_season_points,
+        last_season=list_database_elements.get_last_season(),
     )
 
 
@@ -165,7 +182,8 @@ def pagina_admin_dashboard() -> str:
 @admin_permission_required
 def pagina_menu_classi() -> str:
     classi = db_funcs.elenco_classi_studenti()
-    return render_template("menu_classi.html", classi=classi)
+    last_season = list_database_elements.get_last_season()
+    return render_template("menu_classi.html", classi=classi, last_season=last_season)
 
 
 @pagine_sito.route("/db_errori")
@@ -216,9 +234,12 @@ def pagina_create_event(classe_name: str, studente_id: int, stagione: int) -> Re
 
     db.session.add(nuovo_evento)
     db.session.commit()
-    db_funcs.aggiorna_punti_cumulativi(db_funcs.user_da_id(studente_id))
-    db_funcs.aggiorna_punti(db_funcs.user_da_id(studente_id))
 
+    db_funcs.aggiorna_punti_composto(db_funcs.user_da_id(studente_id))
+
+    mc_utils.set_item_of_json(
+        GLOBAL_DATA, "ultima_modifica", str(datetime.datetime.now().date())
+    )
     return redirect(
         url_for(
             "pagine_sito.pagina_info_studente",
@@ -252,8 +273,11 @@ def pagina_delete_event(
     if evento:
         db_funcs.elimina_evento_cronologia(evento)
 
-        db_funcs.aggiorna_punti_cumulativi(db_funcs.user_da_id(studente_id))
-        db_funcs.aggiorna_punti(db_funcs.user_da_id(studente_id))
+        db_funcs.aggiorna_punti_composto(db_funcs.user_da_id(studente_id))
+
+        mc_utils.set_item_of_json(
+            GLOBAL_DATA, "ultima_modifica", str(datetime.datetime.now().date())
+        )
         flash("Evento eliminato con successo", "success")
     else:
         flash("Evento non trovato", "error")
@@ -292,7 +316,14 @@ def pagina_elenco_user_display(elenco_type: str) -> str:
 @admin_permission_required
 def pagina_gestione_dati() -> str:
     error = not mc_utils.is_empty(FILE_ERRORE)
-    return render_template("manage_data.html", error=error)
+    ultimo_upload = mc_utils.get_item_of_json(GLOBAL_DATA, "ultimo_upload")
+    ultima_modifica = mc_utils.get_item_of_json(GLOBAL_DATA, "ultima_modifica")
+    return render_template(
+        "manage_data.html",
+        error=error,
+        ultimo_upload=ultimo_upload,
+        ultima_modifica=ultima_modifica,
+    )
 
 
 @pagine_sito.route("/load_db", methods=["POST"])
@@ -311,6 +342,41 @@ def pagina_load_db() -> Response:
 
                 return redirect(url_for("pagine_sito.pagina_gestione_dati"))
             file.save(SAVE_LOCATION_PATH)
+            merge_excel()
             load_data(current_user)
 
+    return redirect(url_for("pagine_sito.pagina_gestione_dati"))
+
+
+@app.route("/download/<filename>")
+@login_required
+@admin_permission_required
+def download_file(filename):
+    return send_from_directory(DOWNLOAD_PATH, filename, as_attachment=True)
+
+
+@app.route("/log_excel")
+@login_required
+@admin_permission_required
+def pagina_log_excel():
+    return "<br>".join(reversed(open(FILE_LOG, LEGGI).read().splitlines()))
+
+
+@pagine_sito.route("/aggiunta_frase", methods=["POST"])
+@login_required
+@admin_permission_required
+def pagina_aggiungi_frase() -> Response:
+    frase = request.form["frase"]
+    autore = request.form["autore"]
+    with open(FRASI_PATH, "r") as file:
+        json_data = json.load(file)
+    json_data.append(
+        {
+            "autore": str(autore),
+            "frase": str(frase),
+            "data": str(datetime.datetime.now().date()),
+        }
+    )
+    with open(FRASI_PATH, "w") as file:
+        json.dump(json_data, file, indent=4)
     return redirect(url_for("pagine_sito.pagina_gestione_dati"))

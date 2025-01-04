@@ -50,7 +50,7 @@
             <h5>&nbspISIS J.M KEYNES</h5>
             <h1>SITO PUNTI</h1>
             <p>Guarda informazioni sui tuoi punti, quelli della tua squadra e quelli della classe, tutto alla portata di un click!</p>
-            <!---<h2>"Frase del giorno"</h2>-->
+            <h2>"{{frase['frase']}}" -{{frase['autore']}}</h2>
             {%if user.is_authenticated%}
             {%if user.admin_user%}
             <a href="admin_dashboard">Admin Dashboard</a>
@@ -75,7 +75,6 @@
         <a href="mailto:puntikeynes@gmail.com?subject=&body=Scrivi%20pure%20un%20consiglio%20su%20come%20migliorare%20il%20sito%20oppure%20se%20stai%20riscontrando%20un%20problema%20cerca%20di%20descrivercelo%20in%20dettaglio%20cos%C3%AC%20da%20poter%20aiutarti%20al%20meglio"><i class="ri-mail-send-line"></i></a>
 
     </div>
-
 
 
     {% if user.admin_user %}

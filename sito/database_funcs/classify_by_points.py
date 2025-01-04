@@ -1,25 +1,13 @@
+from sito.database_funcs import database_queries as db_queries
+from sito.misc_utils_funcs import parse_utils
 from ..modelli import User, Classi
-from .database_queries import studenti_da_classe
+
 from .. import app
 
 with app.app_context():
     from .list_database_elements import (
         elenco_studenti,
-        elenco_squadre_da_classe,
-        elenco_user_da_classe_id_e_nome_squadra,
     )
-
-    def somma_punti_squadra(
-        classe: Classi, nome_squadra: str, stagione_corrente: int
-    ) -> float:
-        """
-        data una squadra si ottengono i punti totali di essa durante una stagione
-        """
-        studenti = elenco_user_da_classe_id_e_nome_squadra(classe.id, nome_squadra)
-        punti_squadra = 0
-        for studente in studenti:
-            punti_squadra += float(studente.punti.split(",")[stagione_corrente - 1])
-        return punti_squadra
 
     def classifica_user(stagione: int, users: list[User]) -> list[User]:
         """
@@ -34,7 +22,7 @@ with app.app_context():
         """
         ordina una gli utenti di una classe in base ai loro punti
         """
-        studenti = studenti_da_classe(classe)
+        studenti = db_queries.studenti_da_classe(classe)
         return classifica_user(stagione, studenti)
 
     def classifica_studenti(stagione: int) -> list[User]:
@@ -52,10 +40,15 @@ with app.app_context():
         """
         ordina le squadre di una classe in base ai loro punti
         """
-        elenco_squadre = elenco_squadre_da_classe(classe)
+        elenco_squadre = db_queries.squadre_da_classe(classe)
+        for squadra in elenco_squadre:
+            print(squadra.nome_squadra)
+            print(squadra.punti_compensati)
         punti_squadre = {
-            nome_squadra: somma_punti_squadra(classe, nome_squadra, stagione_corrente)
-            for nome_squadra in elenco_squadre
+            squadra.nome_squadra: parse_utils.get_season_points(
+                squadra.punti_compensati, stagione_corrente
+            )
+            for squadra in elenco_squadre
         }
 
         return dict(

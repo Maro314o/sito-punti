@@ -28,7 +28,8 @@
 
 <body>
     <div class="boxcrocealta">
-        <a href="/classe/{{classe}}">
+
+      <a href="/classe/{{classe}}/{{stagione_corrente}}">
             <i class="fas fa-times top-right-cross"></i>
         </a>
     </div>    
@@ -60,7 +61,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for evento in cronologia_stagione(studente, stagione_corrente) %}
+                    {% for evento in cronologia_stagione(studente, stagione_corrente)[::-1] %}
                     <tr>
                         <td>{{ evento.data }}</td>
                         <td>{{ evento.attivita }}</td>
