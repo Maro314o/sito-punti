@@ -38,7 +38,7 @@
                     {% if user.admin_user %}
                         <a href="admin_dashboard">Admin Dashboard</a>
                     {% else %}
-                        <a href="/classe/{{ classe_name }}">Classe {{ classe_name }}</a>
+                    <a href="/classe/{{ classe_name }}/{{ last_season }}">Classe {{ classe_name }}</a>
                     {% endif %}
                 {% else %}
                     <a href="/login">Accedi</a>

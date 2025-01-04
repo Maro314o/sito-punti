@@ -66,6 +66,7 @@ def pagina_home() -> str:
     loghi = [logo for logo in listdir(PATH_CARTELLA_LOGHI)]
     lenght_square_of_loghi = ceil(sqrt(len(loghi)))
     frase = mc_utils.get_random_json_item(FRASI_PATH)
+    last_season = list_database_elements.get_last_season()
     return render_template(
         "home.html",
         user=current_user,
@@ -73,6 +74,7 @@ def pagina_home() -> str:
         lista_loghi=loghi,
         lenght_square_of_loghi=lenght_square_of_loghi,
         frase=frase,
+        last_season=last_season,
     )
 
 
@@ -118,7 +120,6 @@ def pagina_info_studente(
     stagione: int,
     nominativo_con_underscore: str,
 ) -> str | Response:
-
     if (
         mc_utils.insert_underscore_name(current_user.nominativo)
         != nominativo_con_underscore
@@ -151,12 +152,16 @@ def pagina_regole() -> str:
         classe_name = db_funcs.classe_da_id(current_user.classe_id).classe
     return render_template("regole.html", user=current_user, classe_name=classe_name)
 
+
 @pagine_sito.route("/coming_soon")
 def pagina_comingsoon() -> str:
     classe_name = None
     if current_user.is_authenticated:
         classe_name = db_funcs.classe_da_id(current_user.classe_id).classe
-    return render_template("coming_soon.html", user=current_user, classe_name=classe_name)
+    return render_template(
+        "coming_soon.html", user=current_user, classe_name=classe_name
+    )
+
 
 @pagine_sito.route("/admin_dashboard")
 @login_required
@@ -178,7 +183,7 @@ def pagina_admin_dashboard() -> str:
         numero_classi=numero_delle_classi,
         numero_admin=numero_degli_admin,
         numero_studenti_registrati=numero_studenti_registrati,
-        numero_studenti_non_registrati = numero_studenti_non_registrati,
+        numero_studenti_non_registrati=numero_studenti_non_registrati,
         novita=db_funcs.classifica_studenti(db_funcs.get_last_season())[0:8],
         errori=errori,
         classe_da_id=db_funcs.classe_da_id,
@@ -310,7 +315,6 @@ def pagina_delete_event(
 @admin_permission_required
 def pagina_elenco_user_display(elenco_type: str) -> str:
     if elenco_type == "tutti_gli_studenti_registrati":
-
         utenti = db_funcs.elenco_studenti_registrati()
 
     elif elenco_type == "studenti_non_registrati":
@@ -319,7 +323,6 @@ def pagina_elenco_user_display(elenco_type: str) -> str:
     elif elenco_type == "tutti_gli_admin":
         utenti = db_funcs.elenco_admin()
     else:
-
         utenti = db_funcs.elenco_studenti()
     return render_template(
         "elenco_user.html", utenti=utenti, classe_da_id=db_funcs.classe_da_id
