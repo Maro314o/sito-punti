@@ -126,6 +126,7 @@ def pagina_info_studente(
     ):
         return e_utils.redirect_home()
     nominativo = mc_utils.remove_underscore_name(nominativo_con_underscore)
+    loghi = {logo.rsplit(".", 1)[0]: logo for logo in listdir(PATH_CARTELLA_LOGHI)}
     return render_template(
         "info_studente.html",
         user=current_user,
@@ -139,6 +140,7 @@ def pagina_info_studente(
         cronologia_stagione=db_funcs.cronologia_user_di_una_stagione,
         zip=zip,
         classe=classe_name,
+        loghi=loghi,
     )
 
 
@@ -149,6 +151,12 @@ def pagina_regole() -> str:
         classe_name = db_funcs.classe_da_id(current_user.classe_id).classe
     return render_template("regole.html", user=current_user, classe_name=classe_name)
 
+@pagine_sito.route("/coming_soon")
+def pagina_comingsoon() -> str:
+    classe_name = None
+    if current_user.is_authenticated:
+        classe_name = db_funcs.classe_da_id(current_user.classe_id).classe
+    return render_template("coming_soon.html", user=current_user, classe_name=classe_name)
 
 @pagine_sito.route("/admin_dashboard")
 @login_required

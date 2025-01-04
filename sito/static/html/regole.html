@@ -22,32 +22,12 @@
 
     </head>
     <body>
-
         <header>
-            <a href="/" class="logo"><img src="{{ url_for('static',
-                filename='images/logo.png')}}" alt=""></a>
-
-
-        <ul class="navbarra"> <!---barra navigazione (puoi cambiare anche i nomi)--->
-            <li><a href="/">Home</a></li>
-          {% if user.is_authenticated%}
-          {%if user.admin_user%}
-            
-            <li><a href="/admin_dashboard">Admin Dashboard</a></li>
-          {% else%}
-          <li><a href="/classe/{{classe_name}}">Classe {{classe_name}}</a></li>
-          {%endif%}
-            <li><a href="/logout">Esci dall'account</a></li>
-          {%else%}
-            <li><a href="/login">Accedi</a></li>
-          {%endif%}
-              <div class="bx bx-menu" id="menu-icon"></div> <!---icona per il menu da smartphone--->
+            <a href="/" class="logo"><img src="{{ url_for('static', filename='images/logo.png')}}" alt=""></a>
+            {% include 'templates/navbar.html' %}
         </header>
-    
- 
-        
-        <main class="container">
 
+        <main class="container">
             <div>
                 <section class="content">
                     <h2>SISTEMA<br>DEI PUNTI</h2>
@@ -151,12 +131,10 @@
                     <img src="{{url_for('static',filename='images/stranger_things_persone.png')}}">
                 </section>
             </div>
-
         </main>
 
-            <!---import del js--->
-            <script src="static/js/home.js"></script>
-            <script src="https://unpkg.com/scrollreveal"></script>  
-
+        <!---import del js--->
+        <script src="static/js/home.js"></script>
+        <script src="https://unpkg.com/scrollreveal"></script>
     </body>
 </html>

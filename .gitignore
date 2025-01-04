@@ -12,3 +12,4 @@ richieste.txt
 .venv/
 alembic
 alembic.ini
+.vscode/
