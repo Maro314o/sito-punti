@@ -34,6 +34,7 @@
                 <p>Guarda informazioni sui tuoi punti, quelli della tua squadra e quelli della classe, tutto alla portata di un
                     click!</p>
                 <!---<h2>"Frase del giorno"</h2>-->
+            <h2>"{{frase['frase']}}" -{{frase['autore']}}</h2>
                 {% if user.is_authenticated %}
                     {% if user.admin_user %}
                         <a href="admin_dashboard">Admin Dashboard</a>
