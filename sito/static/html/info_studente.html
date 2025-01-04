@@ -47,7 +47,7 @@
                 <h2 style="text-align:left; font-size: 20px;">
                     <strong style="font-weight: 510; color: rgb(74, 74, 74); margin-right: 4px;">Squadra:</strong> {{ studente.squadra }}
                 </h2>
-                <div class="circle" style="background-size: cover; background-image: url({{ url_for('static', filename='images/loghi/' + loghi.get(studente.squadra, 'default.png'))}}); box-shadow: 0px 4px 10px rgba(0,0,0, 0.3); margin-left:4px; margin-bottom:4px"></div>
+                <div class="circle" style="background-size: cover; background-image: url({{ url_for('static', filename='images/loghi/' + loghi.get(studente.squadra, '../default.png'))}}); box-shadow: 0px 4px 10px rgba(0,0,0, 0.3); margin-left:4px; margin-bottom:4px"></div>
             </div>      
         </div>
 
