@@ -43,7 +43,7 @@
                     <input type="checkbox" id="export-file">
                     <div class="season_btn-options">
                         {% for i in range(n_stagioni) %}
-                        <label for="{{i}}">Season {{i+1}}</label>
+                        <option for="{{i}}">Season {{i+1}}</option>
                         <input type="submit" id="{{i}}" name="selected_season" value={{i+1}}>
                         {% endfor %}
                     </div>
@@ -56,7 +56,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th style="cursor: default;color: #000000"">Posizione</th>
+                        <th style="text-align:center;cursor: default;color: #000000">Posizione</th>
                         <th style="text-align:center;cursor: default;color: #000000">Nome e Cognome</th>
                         <th style="text-align:center;cursor: default;color: #000000">Squadra</th>
                         <th style="text-align:center;cursor: default;color: #000000">Punti Totali</th>
@@ -66,19 +66,19 @@
                     {% for studente in studenti %}
                     <tr style="background: rgb{{calcola_valore_rgb(studente.squadra)}};">
                         {% if loop.index==1 %}
-                        <td>
+                        <td style="text-align:center;">
                             <img class="img_top" src="{{ url_for('static',filename='images/primo.png')}}">
                         </td>
                         {% elif loop.index==2%}
-                        <td>
+                        <td style="text-align:center;">
                             <img class="img_top" src="{{ url_for('static',filename='images/secondo.png')}}">
                         </td>
                         {% elif loop.index==3%}
-                        <td>
+                        <td style="text-align:center;">
                             <img class="img_top" src="{{ url_for('static',filename='images/terzo.png')}}">
                         </td>
                         {% else %}
-                        <td>
+                        <td style="text-align:center;">
                             &#160&#160 {{loop.index}}
                         </td>
                         {%endif%}
@@ -103,12 +103,12 @@
             </table>
         </section>
 
-        <section style="margin-top: 50px; width: 40%; float: left; margin-left: 50px;" class="table__body">
+        <section style="margin-top: 50px; float: left; margin-left: 50px;" class="table__body table1">
             <table>
                 <thead>
                     <tr>
-                        <th style="cursor: default;">Posizione</th>
-                        <th style="text-align:center;cursor: default">Squadra</th>
+                        <th style="text-align:center;cursor: default;color: #000000">Posizione</th>
+                        <th style="text-align:center;cursor: default;color: #000000">Squadra</th>
                         <th style="text-align:center;z-index:1;cursor: default;color: #000000">Punti Totali</th>
                     </tr>
                 </thead>
@@ -118,19 +118,19 @@
 
 
                         {% if loop.index==1 %}
-                        <td>
+                        <td style="text-align:center;">
                             <img class="img_top" src="{{ url_for('static',filename='images/primo.png')}}">
                         </td>
                         {% elif loop.index==2%}
-                        <td>
+                        <td style="text-align:center;">
                             <img class="img_top" src="{{ url_for('static',filename='images/secondo.png')}}">
                         </td>
                         {% elif loop.index==3%}
-                        <td>
+                        <td style="text-align:center;">
                             <img class="img_top" src="{{ url_for('static',filename='images/terzo.png')}}">
                         </td>
                         {% else %}
-                        <td>
+                        <td style="text-align:center;">
                             &#160&#160 {{loop.index}} 
                         </td>
                         {%endif%}
@@ -149,7 +149,7 @@
             </table>
         </section>
 
-        <section style="margin-top: 50px; width: 50%; float: left; margin-left: 40px;">
+        <section class="table2" style="margin-top: 50px; float: left; margin-left: 40px;">
             <canvas id="myChart" width="900" height="400"></canvas>
         </section>
     
@@ -165,7 +165,7 @@
 
         var data = [
             {% for squadra, punti in classifica_squadre(classe, stagione_corrente).items() %}
-        { { punti } } {% if not loop.last %}, {% endif %}
+        {{ punti }} {% if not loop.last %}, {% endif %}
         {% endfor %}
     ];
         var colors = [
@@ -208,4 +208,4 @@
     </script>
 </body>
 
-</html>
+</html> 

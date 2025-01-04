@@ -1,7 +1,6 @@
 * {
     margin: 0;
     padding: 0;
-
     box-sizing: border-box;
     font-family: "Arial", sans-serif;
 }
@@ -14,7 +13,6 @@
 }
 
 body {
-    min-height: 100vh;
     background: white center / cover;
     display: flex;
     font-family: "Arial", sans-serif;
@@ -23,6 +21,7 @@ body {
 }
 
 main{
+    width: 82vw;
     position: absolute;
     top: 40px;
 }
@@ -490,7 +489,15 @@ body {
     transform: scale(0.98); /* Slight shrink when clicked */
 }
 
- /* Stili per smartphone */
+.table1{
+    width: 50%;
+}
+
+.table2{
+    width: 40%;
+}
+
+ /* MOBILE */
 @media (max-width: 480px) {
    
     *{
@@ -498,11 +505,10 @@ body {
     }
 
     .sidebar-button-container{
-        width: 20%;
-        height: 5%;
+        width: auto;
         position: absolute;
-        top: 40px;
-        left: 50px;
+        top: 50px;
+        left: 70px;
     }
 
     main{
@@ -511,8 +517,8 @@ body {
     }
 
     .table__header {
-        width: 90%;
-        margin: 80px 0;
+        width: 95%;
+        margin: 100px 0 200px 30px;
     }
 
     td, th, button.material-symbols--info-outline{
@@ -530,5 +536,22 @@ body {
     .img_top{
         width: 25%;
         height: 25%;
+    }
+
+    option{
+        font-size: 20px;
+        padding: 5px;
+    }
+
+    .table__body {
+        border-radius: 50px;
+    }
+
+    .table2{
+        width: 95%;
+    }
+
+    .table1{
+        width: 95%;
     }
 }
