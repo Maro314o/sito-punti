@@ -111,6 +111,7 @@ def pagina_info_studente(
     ):
         return e_utils.redirect_home()
     nominativo = mc_utils.remove_underscore_name(nominativo_con_underscore)
+    loghi = {logo.rsplit(".", 1)[0]: logo for logo in listdir(PATH_CARTELLA_LOGHI)}
     return render_template(
         "info_studente.html",
         user=current_user,
@@ -124,6 +125,7 @@ def pagina_info_studente(
         cronologia_stagione=db_funcs.cronologia_user_di_una_stagione,
         zip=zip,
         classe=classe_name,
+        loghi=loghi,
     )
 
 
