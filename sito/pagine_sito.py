@@ -51,7 +51,7 @@ def pagina_home() -> str:
     classe_name = None
     if current_user.is_authenticated:
         classe_name = db_funcs.classe_da_id(current_user.classe_id).classe
-    loghi = [logo for logo in listdir(PATH_CARTELLA_LOGHI)]
+    loghi = [logo for logo in listdir(PATH_CARTELLA_LOGHI) if logo != "default.png"]
     lenght_square_of_loghi = ceil(sqrt(len(loghi)))
     return render_template(
         "home.html",
