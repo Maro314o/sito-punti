@@ -41,9 +41,6 @@ with app.app_context():
         ordina le squadre di una classe in base ai loro punti
         """
         elenco_squadre = db_queries.squadre_da_classe(classe)
-        for squadra in elenco_squadre:
-            print(squadra.nome_squadra)
-            print(squadra.punti_compensati)
         punti_squadre = {
             squadra.nome_squadra: parse_utils.get_season_points(
                 squadra.punti_compensati, stagione_corrente

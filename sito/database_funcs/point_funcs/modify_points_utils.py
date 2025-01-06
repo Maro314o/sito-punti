@@ -40,7 +40,6 @@ def aggiorna_punti_squadra(utente: User) -> None:
         punti_squadra[stagione] = punti_stagione_squadra + punti_stagione_utente
 
     squadra.punti_reali = parse_utils.convert_array_to_points_string(punti_squadra)
-    print(squadra.punti_reali)
     db.session.commit()
 
 

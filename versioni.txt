@@ -16,3 +16,4 @@
 06/10/2024 22:03 | Versione 0.0.16 | Spostamento del caricamento del database nella pagina gestisci dati
 11/10/2024 17:15 | Versione 0.0.17 | Aggiunta immagini dei loghi accanto ai nomi 
 15/11/2024 21:39 | Versione 0.0.18 | Aggiunto caricamento delle frasi e la visualizzazione casuale nella pagina home
+06/01/2025 16:34 | Versione 0.0.19 | Aggiunta di un thread per il caricamento del file excel in background
