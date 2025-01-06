@@ -8,7 +8,7 @@ import datetime
 import sito.database_funcs.point_funcs.modify_points_utils as modfiy_point_utils
 
 from .modelli import User
-from sito.database_funcs.database_queries import user_da_nominativo
+from sito.database_funcs.database_queries import user_da_id, user_da_nominativo
 import sito.misc_utils_funcs as mc_utils
 
 from . import db
@@ -41,7 +41,7 @@ GLOBAL_DATA = path.join(Path.cwd(), "data", "global_data.json")
 NAME_FILE_MERGED = path.join(Path.cwd(), "data", "foglio.xlsx")
 
 
-def load_data(current_user: User) -> None:
+def load_data(current_user_id: int) -> None:
     """
     processa il file excel caricato
     """
@@ -66,11 +66,12 @@ def load_data(current_user: User) -> None:
     for squadra in squadre:
         modfiy_point_utils.compensa_punti_squadra(squadra)
     db.session.commit()
-
+    current_user = user_da_id(current_user_id)
     log_str = f"{datetime.datetime.now()} | {current_user.nominativo} ha appena caricato un file excel con {errori} errori\n"
     mc_utils.append_to_file(LOG_FILE, log_str)
     last_upload_time = str(datetime.datetime.now().date())
     mc_utils.set_item_of_json(GLOBAL_DATA, "ultimo_upload", last_upload_time)
+    print(log_str)
 
 
 def merge_excel() -> None:

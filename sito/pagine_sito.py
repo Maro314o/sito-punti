@@ -10,6 +10,7 @@ from flask import (
 )
 from pandas.util.version import parse
 from sito.database_funcs import list_database_elements
+from sito.database_funcs.database_queries import user_da_id
 import sito.errors_utils as e_utils
 from sito.errors_utils.errors_classes.data_error_classes import InvalidSeasonError
 from sito.misc_utils_funcs import parse_utils
@@ -33,6 +34,9 @@ from pathlib import Path
 import datetime
 import json
 from math import ceil, sqrt
+from threading import Thread
+from flask import flash
+
 
 pagine_sito = Blueprint("pagine_sito", __name__)
 FILE_ERRORE = path.join(Path.cwd(), "data", "errore.txt")
@@ -344,6 +348,16 @@ def pagina_gestione_dati() -> str:
     )
 
 
+def background_task(current_user_id: int) -> None:
+    """
+    funzione chiamata in background per il caricamento del file excel
+    """
+    print(current_user)
+    with app.app_context():
+        merge_excel()
+        load_data(current_user_id)
+
+
 @pagine_sito.route("/load_db", methods=["POST"])
 @login_required
 @admin_permission_required
@@ -359,9 +373,10 @@ def pagina_load_db() -> Response:
                     )
 
                 return redirect(url_for("pagine_sito.pagina_gestione_dati"))
+
             file.save(SAVE_LOCATION_PATH)
-            merge_excel()
-            load_data(current_user)
+            thread = Thread(target=background_task, args=(current_user.id,))
+            thread.start()
 
     return redirect(url_for("pagine_sito.pagina_gestione_dati"))
 
