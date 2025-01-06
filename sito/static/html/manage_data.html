@@ -402,6 +402,15 @@ textarea {
 
                     <button class="upload-btn" name="bottone" value="load_database" type="submit">Conferma</button>
                 </form>
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <ul>
+            {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
                 {% if error %}
                 <button id="upload-btn" class="upload-btn" onclick="location.href='/db_errori'" style="border-radius:15px;background-color:red;">Errori nel dataset, clicca per vederli</button>
                 {% endif %}

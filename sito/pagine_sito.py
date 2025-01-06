@@ -352,7 +352,6 @@ def background_task(current_user_id: int) -> None:
     """
     funzione chiamata in background per il caricamento del file excel
     """
-    print(current_user)
     with app.app_context():
         merge_excel()
         load_data(current_user_id)
@@ -377,6 +376,7 @@ def pagina_load_db() -> Response:
             file.save(SAVE_LOCATION_PATH)
             thread = Thread(target=background_task, args=(current_user.id,))
             thread.start()
+            flash("Elaborazione del database avviata in background", "info")
 
     return redirect(url_for("pagine_sito.pagina_gestione_dati"))
 
