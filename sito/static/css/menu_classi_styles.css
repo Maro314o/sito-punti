@@ -150,7 +150,8 @@ body{
 }
 
 .sidebar .side-menu li.active a{
-    color: var(--success);
+    color: var(--light);
+    background-color: var(--success);
 }
 
 .sidebar.close .side-menu li a{
