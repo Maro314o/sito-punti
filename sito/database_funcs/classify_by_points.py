@@ -1,4 +1,4 @@
-from sito.database_funcs import database_queries as db_queries
+from sito.database_funcs import database_queries as db_queries, list_database_elements
 from sito.misc_utils_funcs import parse_utils
 from ..modelli import User, Classi
 
@@ -22,7 +22,7 @@ with app.app_context():
         """
         ordina una gli utenti di una classe in base ai loro punti
         """
-        studenti = db_queries.studenti_da_classe(classe)
+        studenti = list_database_elements.elenco_studenti_da_classe(classe)
         return classifica_user(stagione, studenti)
 
     def classifica_studenti(stagione: int) -> list[User]:
@@ -40,10 +40,7 @@ with app.app_context():
         """
         ordina le squadre di una classe in base ai loro punti
         """
-        elenco_squadre = db_queries.squadre_da_classe(classe)
-        for squadra in elenco_squadre:
-            print(squadra.nome_squadra)
-            print(squadra.punti_compensati)
+        elenco_squadre = list_database_elements.elenco_squadre_da_classe(classe)
         punti_squadre = {
             squadra.nome_squadra: parse_utils.get_season_points(
                 squadra.punti_compensati, stagione_corrente
