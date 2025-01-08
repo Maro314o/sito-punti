@@ -93,7 +93,8 @@
 
                         <td style="text-align:center">{{ studente.punti.split(',')[stagione_corrente-1] }}
                             {% if user.admin_user or user.nominativo==studente.nominativo %}
-                            <a href="/classe/{{classe.classe}}/{{url_name(studente.nominativo)}}/{{stagione_corrente}}">
+            <a href="/classe/{{classe.classe}}/{{stagione_corrente}}/{{url_name(studente.nominativo)}}">
+
                                 <button class="material-symbols--info-outline"></button>
                             </a>
                         </td>
