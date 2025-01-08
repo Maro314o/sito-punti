@@ -1,80 +1,111 @@
- <!DOCTYPE html>
-
+<!DOCTYPE html>
 <html lang="it">
+
 <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Crea un account</title>
-        <link rel="icon" href="{{ url_for('static',filename='images/logo.png')}}" type="image/icon">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css')}}">
-        <link href="https://fonts.googleapis.com/css2?family=Muli:wght@400;700&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="{{ url_for('static',
-                    filename='css/autentica.css')}}">
-        <link rel="shortcut icon" type="image/x-icon" href="images/logo.png">
-        <link
-      rel="stylesheet" 
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
-        />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-            <style>
-            .srouce{
-                text-align: center;
-                color: #ffffff;
-                padding: 10px;
-            }
-        </style>
+    <link rel="icon" href="{{ url_for('static',filename='images/logo.png')}}" type="image/icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css')}}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_autentica.css')}}">
+    <title>Dashboard Admin</title>
 </head>
-    <body>
 
-        <div class="main-container">
+<body>
+
+    <!-- Barra laterale -->
+    <div class="sidebar">
+        <a href="/admin_dashboard" class="logo">
+            <i class='bx bx-code-alt'></i>
+            <div class="logo-name"><span>ADMIN</span>MENU</div>
+        </a>
+        <ul class="side-menu">
+            <li><a href="/"><i class='bx bx-home-alt-2'></i>Home</a></li>
+            <li><a href="/admin_dashboard"><i class='bx bxs-dashboard'></i>Dashboard</a></li>
+            <li><a href="/classi"><i class='bx bx-show-alt'></i>Classi</a></li>
+            <li class="active"><a href="/crea_admin"><i class='bx bx-shield'></i>Crea admin</a></li>
+            <li><a href="/gestione_dati"><i class='bx bx-data'></i>Gestione dati</a></li>
+
+        </ul>
+        <ul class="side-menu">
+            <li>
+                <a href="/logout" class="logout">
+                    <i class='bx bx-log-out-circle'></i>
+                    Esci dall' account
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Contenuto Generale -->
+    <div class="content">
+        <!-- Barra alta per sidebar -->
+        <nav>
+            <i class='bx bx-menu'></i>
+            <form action="#">
+            </form>
+        </nav>
+
+        <main>
+
             <div class="form-container">
                 <div class="form-body">
                     <h2 class="title">Crea un account</h2>
                     <div class="social-login">
-                    <form method="POST" class="the-form">
-                        <label for="email">Email</label>
-                        <input type="email" name="email" id="email" placeholder="Inserisci la tua e-mail" required>
-                        <label for="nome">Nome</label>
-                        <input type="text" name="nome" id="nome" placeholder="Inserisci il tuo nome" required>
+                        <form method="POST" class="the-form">
 
-                        <label for="cognome">Cognome</label>
+                            <input type="email" name="email" id="email" placeholder="Inserisci la tua e-mail" required>
 
-                        <input type="text" name="cognome" id="cognome" placeholder="Inserisci il tuo cognome" required>
+                            <input type="email" name="nome" id="nome" placeholder="Inserisci il tuo nome" required>
 
-                        <label for="password">Password</label>
-                        <input type="password" name="password" id="password" placeholder="Inserisci la tua password" required>
-                        <label for="password">Conferma la password</label>
-                        <input type="password" name="password_di_conferma" id="password_di_conferma" placeholder="Inserisci nuovamente la password" required>
 
-                        <input type="submit" value="Registrati" 
+
+                            <input type="text" name="cognome" id="cognome" placeholder="Inserisci il tuo cognome"
+                                required>
+
+
+                            <input type="password" name="password" id="password" placeholder="Inserisci la tua password"
+                                required>
+
+                            <input type="password" name="password_di_conferma" id="password_di_conferma"
+                                placeholder="Inserisci nuovamente la password" required>
+
+                            <input type="submit" value="Registrati">
                         </form>
                         <br>
+
+                        
 
 
 
                         {% with messages = get_flashed_messages(with_categories=true) %}
                         {% if messages %}
-                            {% for category, message in messages %}
-                            {% if category =='error' %}
+                        {% for category, message in messages %}
+                        {% if category =='error' %}
 
-                                <div class="alert">
-                                  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                                  {{messages[0][1]}}
-                                </div>
+                        <div class="alert">
+                            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                            {{messages[0][1]}}
+                        </div>
 
 
 
-                                               <!--qui-->
+                        <!--qui-->
                         {% endif %} {% endfor %} {% endif %} {% endwith %}
 
-                <div class="form-footer">
-                    <div>
-                        <span>Hai gia' un account admin?</span> <a href="/login">Accedi</a>
+                        <div class="form-footer">
+                            <div>
+                                <span>Hai gia' un account admin?</span> <a href="/login">Accedi</a>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </body>
+
+
+
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='js/admin_dashboard.js')}}"></script>
+</body>
+
 </html>
-
-
