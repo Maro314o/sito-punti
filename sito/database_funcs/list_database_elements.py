@@ -1,88 +1,89 @@
-import sito.database_funcs as db_funcs
+from typing import List
 from ..modelli import Squadra, User, Classi, Info
 
 NOT_AVALIDABLE = ["admin", "Nessuna_squadra"]
 
 
-def elenco_utenti() -> list[User]:
+def elenco_utenti() -> List[User]:
     """
-    restituisce l'elenco di tutti gli utenti
+    Restituisce l'elenco di tutti gli utenti.
     """
-    return User.query.filter_by().all()
+    return User.query.all()
 
 
-def elenco_studenti() -> list[User]:
+def elenco_studenti() -> List[User]:
     """
-    restituisce l'elenco di tutti gli studenti
+    Restituisce l'elenco di tutti gli studenti.
     """
-    return [utente for utente in User.query.filter_by().all() if not utente.admin_user]
+    return User.query.filter_by(admin_user=False).all()
 
 
-def elenco_admin() -> list[User]:
+def elenco_admin() -> List[User]:
     """
-    restituisce l'elenco di tutti gli admin
+    Restituisce l'elenco di tutti gli admin.
     """
-    return [utente for utente in User.query.filter_by().all() if utente.admin_user]
+    return User.query.filter_by(admin_user=True).all()
 
 
-def elenco_studenti_registrati() -> list[User]:
+def elenco_studenti_registrati() -> List[User]:
     """
-    restituisce l'elenco di tutti gli studenti registrati
+    Restituisce l'elenco di tutti gli studenti registrati.
     """
-    return [studente for studente in elenco_studenti() if studente.account_attivo]
-
-def elenco_studenti_non_registrati() -> list[User]:
-    """
-    restituisce l'elenco di tutti gli studenti non registrati
-    """
-    return [studente for studente in elenco_studenti() if not studente.account_attivo]
+    return User.query.filter_by(admin_user=False, account_attivo=True).all()
 
 
-def elenco_tutte_le_classi() -> list[Classi]:
+def elenco_studenti_non_registrati() -> List[User]:
     """
-    restituisce l'elenco di tutte le classi
+    Restituisce l'elenco di tutti gli studenti non registrati.
     """
-    return Classi.query.filter_by().all()
+    return User.query.filter_by(admin_user=False, account_attivo=False).all()
 
 
-def elenco_tutte_le_squadre() -> list[Squadra]:
+def elenco_tutte_le_classi() -> List[Classi]:
     """
-    restituisce l'elenco di tutte le squadre
+    Restituisce l'elenco di tutte le classi.
     """
-    return Squadra.query.filter_by().all()
+    return Classi.query.all()
 
 
-def elenco_classi_studenti() -> list[Classi]:
+def elenco_tutte_le_squadre() -> List[Squadra]:
     """
-    restituisce l'elenco di tutte le classi degli studenti (cioè tutte trannne quella admin)
+    Restituisce l'elenco di tutte le squadre.
     """
-    return [
-        classe
-        for classe in elenco_tutte_le_classi()
-        if classe.classe not in NOT_AVALIDABLE
-    ]
+    return Squadra.query.all()
 
 
-def elenco_squadre_studenti() -> list[Squadra]:
+def elenco_classi_studenti() -> List[Classi]:
     """
-    restituisce l'elenco di tutte le squadre degli studenti (cioè tutte trannne quella admin)
+    Restituisce l'elenco di tutte le classi degli studenti (escludendo quelle in NOT_AVALIDABLE).
     """
-    return [
-        squadra
-        for squadra in elenco_tutte_le_squadre()
-        if squadra.nome_squadra not in NOT_AVALIDABLE
-    ]
+    return Classi.query.filter(Classi.classe.notin_(NOT_AVALIDABLE)).all()
 
 
-def elenco_squadre_da_classe(classe: Classi) -> set[str]:
+def elenco_squadre_studenti() -> List[Squadra]:
     """
-    restituisce l'elenco di tutte le squadre di una classe
+    Restituisce l'elenco di tutte le squadre degli studenti (escludendo quelle in NOT_AVALIDABLE).
     """
-    return {studente.squadra for studente in db_funcs.studenti_da_classe(classe)}
+    return Squadra.query.filter(Squadra.nome_squadra.notin_(NOT_AVALIDABLE)).all()
+
+
+def elenco_studenti_da_classe(classe: Classi) -> List[User]:
+    """
+    Restituisce gli studenti di una classe.
+    """
+    return classe.studenti
+
+
+def elenco_squadre_da_classe(classe: Classi) -> List[Squadra]:
+    """
+    Restituisce le squadre di una classe.
+    """
+    return classe.squadre
 
 
 def get_last_season() -> int:
     """
-    restituisce il numero della stagione più recente
+    Restituisce il numero della stagione più recente.
     """
-    return Info.query.filter_by().first().last_season
+    info = Info.query.first()
+    return info.last_season if info else 1

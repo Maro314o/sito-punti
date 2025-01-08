@@ -1,7 +1,7 @@
 from typing import Dict, Tuple
 
-from sqlalchemy import tuple_
 
+from sito.database_funcs import list_database_elements
 from sito.database_funcs.manage_tables_rows import crea_squadra
 from .. import db
 from ..modelli import Cronologia, Info, Classi, Squadra, User
@@ -57,7 +57,6 @@ def reset_database() -> None:
 
 
 def processa_riga_classe(numero_riga: int, riga: list[str], nome_classe: str) -> str:
-
     # la riga dovrebbe essere [nominativo,squadra]
     nominativo = mc_utils.capitalize_all(riga[0])
     utente = db_queries.user_da_nominativo(nominativo)
@@ -72,7 +71,6 @@ def processa_riga_classe(numero_riga: int, riga: list[str], nome_classe: str) ->
             oggetto_squadra.numero_componenti += 1
 
     else:
-
         squadra = "Nessuna_squadra"
         error_str = f"{datetime.datetime.now()} | errore alla linea {numero_riga} del foglio {nome_classe} del edatabase : La cella della squadra per questo utente e' vuota.Gli verra' assegnata una squadra provvisoria chiamata \"Nessuna_squadra\"\n"
 
@@ -194,7 +192,7 @@ def processa_dati_dataframe(file_sheets: Dict[str, pd.DataFrame]) -> int:
 
 def numero_massimo_componenti_squadra_in_classe(classe: Classi) -> int:
     componenti_massimi = 0
-    for squadra in db_queries.squadre_da_classe(classe):
+    for squadra in list_database_elements.elenco_squadre_da_classe(classe):
         if squadra.numero_componenti > componenti_massimi:
             componenti_massimi = squadra.numero_componenti
     return componenti_massimi
