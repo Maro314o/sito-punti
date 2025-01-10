@@ -24,8 +24,7 @@ def load_data(current_user: User) -> None:
     processa il file excel caricato
     """
     errori = 0
-    file = pd.read_excel(EXCEL_MERGED_PATH)
-    print(file, type(file))
+    file = pd.read_excel(EXCEL_MERGED_PATH, sheet_name=None)
     load_excel_helpers.reset_database()
     errori += load_excel_helpers.genera_struttura_classi(file)
     errori += load_excel_helpers.processa_dati_dataframe(file)

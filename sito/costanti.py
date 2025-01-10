@@ -35,7 +35,7 @@ DATABASE_LOCATION_URL = f"sqlite:///{path.join(DATA_DIRECTORY_PATH,DB_NAME)}"
 
 
 # MISC COSTANTS
-mesi = {
+MESI = {
     "gennaio": 1,
     "febbraio": 2,
     "marzo": 3,
@@ -55,7 +55,7 @@ VUOTO = ""
 ERROR = True
 NO_ERROR = False
 
-ALLOWED_EXTENSIONS = set("xlsx")
+ALLOWED_EXTENSIONS = set(["xlsx"])
 NOT_AVALIDABLE = ["admin", "Nessuna_squadra"]
 
 LEGGI = "r"
