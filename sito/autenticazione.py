@@ -1,3 +1,4 @@
+from pathlib import Path
 from flask import (
     Blueprint,
     Response,
@@ -6,28 +7,29 @@ from flask import (
     flash,
 )
 
-
-from flask_login import login_user, login_required, logout_user, current_user
-from werkzeug.security import generate_password_hash
-import os
-
-from . import db, app
 from sito.errors_utils import admin_permission_required
 from sito.errors_utils.errors_classes.users_error_classes import (
     FailedSignUpError,
     FailedLoginError,
-    InitPasswordNotSetError,
 )
+from sito.pagine_sito import VUOTO
+from . import db, app
 import sito.misc_utils_funcs as mc_utils
 import sito.auth_funcs as auth_utils
 import sito.errors_utils as e_utils
+from sito.errors_utils import InitPasswordNotSetError
 
 with app.app_context():
     import sito.database_funcs as db_funcs
-
-from sito.costanti import SECRET_PASSWORD_PATH, VUOTO
+import sito.misc_utils_funcs as mc_utils
+from werkzeug.security import generate_password_hash
+from flask_login import login_user, login_required, logout_user, current_user
+import os
 
 autenticazione = Blueprint("autenticazione", __name__)
+SECRET_PASSWORD_PATH = os.path.join(
+    Path.cwd(), "secrets", "secret_starter_admin_password.txt"
+)
 
 
 @autenticazione.route("/init_starter_admin")

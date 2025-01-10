@@ -1,9 +1,10 @@
+from sito.database_funcs import list_database_elements
 import sito.database_funcs.database_queries as db_queries
 from sito.misc_utils_funcs import parse_utils
-from sito.database_funcs.cronology_utils_funcs import cronologia_user
-from sito import db
+from ..cronology_utils_funcs import cronologia_user
+from ... import db
+from ...modelli import Info, Squadra, User
 import sito.database_funcs as db_funcs
-from sito.modelli import Info, Squadra, User
 
 
 def aggiorna_punti_cumulativi_eventi(studente: User) -> None:

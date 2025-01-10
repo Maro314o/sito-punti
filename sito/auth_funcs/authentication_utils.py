@@ -1,13 +1,13 @@
+import werkzeug
 from werkzeug.security import generate_password_hash
+
+from ..modelli import User
+from ..errors_utils import FailedSignUpError
 from werkzeug.security import check_password_hash
-
 from flask_login import login_user
-
-from sito.modelli import User
-from sito.errors_utils import FailedSignUpError
 from sito.errors_utils import FailedLoginError
 
-from sito import db, app
+from .. import db, app
 
 with app.app_context():
     import sito.database_funcs as db_funcs

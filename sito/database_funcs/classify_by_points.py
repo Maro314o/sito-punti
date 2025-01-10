@@ -1,8 +1,8 @@
-from sito.database_funcs import list_database_elements
+from sito.database_funcs import database_queries as db_queries, list_database_elements
 from sito.misc_utils_funcs import parse_utils
-from sito.modelli import User, Classi
+from ..modelli import User, Classi
 
-from sito import app
+from .. import app
 
 with app.app_context():
     from .list_database_elements import (
