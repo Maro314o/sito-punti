@@ -1,8 +1,6 @@
 import time
 from datetime import datetime
 
-from datetime import datetime
-
 
 def insert_underscore_name(stringa: str) -> str:
     """

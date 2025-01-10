@@ -1,10 +1,13 @@
 <!-- sito/templates/navbar.html -->
 <ul class="navbarra">
-    {% if request.path == '/' %}
-        <li><a href="/regole">Regole</a></li>
-    {% else %}
+
+    {% if request.path != '/' %}
         <li><a href="/">Home</a></li>
     {% endif %}
+    {% if request.path != '/regole' %}
+        <li><a href="/regole">Regole</a></li>
+    {% endif %}
+
 
     {% if request.path != '/coming_soon' %}
         <li><a href="/coming_soon">Coming Soon...</a></li>
