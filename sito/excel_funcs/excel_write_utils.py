@@ -1,10 +1,7 @@
 import pandas as pd
-from pathlib import Path
 import openpyxl
-import os
+from sito.costanti import EXCEL_MERGED_PATH
 import sito.misc_utils_funcs as mc_utils
-
-FILE_PATH = os.path.join(Path.cwd(), "data", "foglio.xlsx")
 
 
 def aggiungi_riga_excel(
@@ -26,10 +23,10 @@ def aggiungi_riga_excel(
         attivita,
         punteggio,
     ]
-    wb = openpyxl.load_workbook(FILE_PATH)
+    wb = openpyxl.load_workbook(EXCEL_MERGED_PATH)
     ws = wb.active
     ws.append(nuova_riga)
-    wb.save(FILE_PATH)
+    wb.save(EXCEL_MERGED_PATH)
 
 
 def elimina_riga_excel(
@@ -52,7 +49,7 @@ def elimina_riga_excel(
         punteggio,
     ]
 
-    dataframe = pd.read_excel(FILE_PATH, sheet_name=None)
+    dataframe = pd.read_excel(EXCEL_MERGED_PATH, sheet_name=None)
     dataset, *_ = dataframe.keys()
     dataframe = dataframe[dataset]
 
@@ -65,6 +62,6 @@ def elimina_riga_excel(
     riga_da_eliminare = dataframe[valore_riga_da_eliminare].index
     dataframe = dataframe.drop(riga_da_eliminare[0])
     with pd.ExcelWriter(
-        FILE_PATH, engine="openpyxl", mode="a", if_sheet_exists="replace"
+        EXCEL_MERGED_PATH, engine="openpyxl", mode="a", if_sheet_exists="replace"
     ) as writer:
         dataframe.to_excel(writer, sheet_name=dataset, index=False)

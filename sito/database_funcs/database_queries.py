@@ -1,5 +1,5 @@
 from typing import Optional, List
-from ..modelli import Squadra, User, Classi
+from sito.modelli import Squadra, User, Classi
 
 
 def user_da_nominativo(nominativo: str) -> Optional[User]:

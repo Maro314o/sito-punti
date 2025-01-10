@@ -1,7 +1,7 @@
 from typing import List
-from ..modelli import Squadra, User, Classi, Info
 
-NOT_AVALIDABLE = ["admin", "Nessuna_squadra"]
+from sito.costanti import NOT_AVALIDABLE
+from sito.modelli import Squadra, User, Classi, Info
 
 
 def elenco_utenti() -> List[User]:

@@ -1,7 +1,7 @@
 import json
 import random
 
-ALLOWED_EXTENSIONS = set(["xlsx"])
+from sito.costanti import ALLOWED_EXTENSIONS
 
 
 def allowed_files(filename: str) -> bool:
