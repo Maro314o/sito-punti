@@ -1,17 +1,23 @@
 from typing import Dict, Tuple
 
-import pandas as pd
-import datetime
 
-from sito.costanti import ERROR, ERROR_PATH, NO_ERROR
 from sito.database_funcs import list_database_elements
 from sito.database_funcs.manage_tables_rows import crea_squadra
-from sito import db
-from sito.modelli import Cronologia, Info, Classi, Squadra, User
+from .. import db
+from ..modelli import Cronologia, Info, Classi, Squadra, User
 import sito.database_funcs as db_funcs
 import sito.misc_utils_funcs as mc_utils
+from pathlib import Path
+from os import path
+import pandas as pd
 import sito.database_funcs.database_queries as db_queries
+import datetime
 import sito.auth_funcs as auth_utils
+
+ERROR_FILE = path.join(Path.cwd(), "data", "errore.txt")
+NAME_FILE_MERGED = path.join(Path.cwd(), "data", "foglio.xlsx")
+ERROR = True
+NO_ERROR = False
 
 
 def elimina_studenti_non_presenti(nominativi_trovati: set[str]) -> None:
@@ -45,7 +51,7 @@ def reset_database() -> None:
     db_funcs.crea_squadra(nome_squadra="admin", classe_name="admin")
     db_funcs.crea_squadra(nome_squadra="Nessuna_squadra", classe_name="Nessuna_squadra")
 
-    mc_utils.clear_file(ERROR_PATH)
+    mc_utils.clear_file(ERROR_FILE)
 
     db.session.commit()
 
@@ -68,7 +74,7 @@ def processa_riga_classe(numero_riga: int, riga: list[str], nome_classe: str) ->
         squadra = "Nessuna_squadra"
         error_str = f"{datetime.datetime.now()} | errore alla linea {numero_riga} del foglio {nome_classe} del edatabase : La cella della squadra per questo utente e' vuota.Gli verra' assegnata una squadra provvisoria chiamata \"Nessuna_squadra\"\n"
 
-        mc_utils.append_to_file(ERROR_PATH, error_str)
+        mc_utils.append_to_file(ERROR_FILE, error_str)
 
     if utente:
         utente.nominativo = nominativo
@@ -146,11 +152,11 @@ def processa_riga_dataset(
     punti: float = riga[5]
     if riga_nulla(riga):
         error_str = f"{datetime.datetime.now()} | errore alla linea {numero_riga} del database : La riga corrente e' vuota\n"
-        mc_utils.append_to_file(ERROR_PATH, error_str)
+        mc_utils.append_to_file(ERROR_FILE, error_str)
         return 0, ERROR
     elif not db_funcs.user_da_nominativo(nominativo):
         error_str = f"{datetime.datetime.now()} | errore alla linea {numero_riga} del database : non è stato possibile modificare i punti dell' utente {nominativo} della classe {nome_classe}. Controlla se ci sono errori nella scrittura del suo nome o se non è stato aggiunto ad una classe nel corrispettivo foglio .xlsx\n"
-        mc_utils.append_to_file(ERROR_PATH, error_str)
+        mc_utils.append_to_file(ERROR_FILE, error_str)
         return stagione, ERROR
 
     db.session.add(

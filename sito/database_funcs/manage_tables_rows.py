@@ -1,7 +1,7 @@
 import sqlalchemy
-from sito.modelli import Classi, Squadra
-from sito import db, app
-from sito.errors_utils import ClasseAlreadyExistsError
+from ..modelli import Classi, Squadra
+from .. import db, app
+from ..errors_utils import ClasseAlreadyExistsError
 
 with app.app_context():
     import sito.database_funcs as db_funcs

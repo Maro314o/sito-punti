@@ -1,22 +1,44 @@
+import json
 import pandas as pd
+from pathlib import Path
+from os import path
 import os
 import datetime
 
 import sito.database_funcs.point_funcs.modify_points_utils as modfiy_point_utils
 
 from .modelli import User
+from sito.database_funcs.database_queries import user_da_nominativo
 import sito.misc_utils_funcs as mc_utils
 
 from . import db
 
+from .modelli import User, Classi, Cronologia, Info
 import sito.database_funcs as db_funcs
+import sito.auth_funcs as auth_utils
 import sito.excel_funcs.load_excel_helpers as load_excel_helpers
-from sito.costanti import (
-    EXCEL_MERGED_PATH,
-    LOG_PATH,
-    GLOBAL_DATA_PATH,
-    EXCEL_PRE_MERGE_PATH,
-)
+
+
+mesi = {
+    "gennaio": 1,
+    "febbraio": 2,
+    "marzo": 3,
+    "aprile": 4,
+    "maggio": 5,
+    "giugno": 6,
+    "luglio": 7,
+    "agosto": 8,
+    "settembre": 9,
+    "ottobre": 10,
+    "novembre": 11,
+    "dicembre": 12,
+}
+ERROR_FILE = path.join(Path.cwd(), "data", "errore.txt")
+LOG_FILE = path.join(Path.cwd(), "data", "log.txt")
+NAME_FILE = path.join(Path.cwd(), "data", "foglio_pre-merge.xlsx")
+GLOBAL_DATA = path.join(Path.cwd(), "data", "global_data.json")
+
+NAME_FILE_MERGED = path.join(Path.cwd(), "data", "foglio.xlsx")
 
 
 def load_data(current_user: User) -> None:
@@ -24,8 +46,7 @@ def load_data(current_user: User) -> None:
     processa il file excel caricato
     """
     errori = 0
-    file = pd.read_excel(EXCEL_MERGED_PATH)
-    print(file, type(file))
+    file = pd.read_excel(NAME_FILE_MERGED, sheet_name=None)
     load_excel_helpers.reset_database()
     errori += load_excel_helpers.genera_struttura_classi(file)
     errori += load_excel_helpers.processa_dati_dataframe(file)
@@ -47,9 +68,9 @@ def load_data(current_user: User) -> None:
     db.session.commit()
 
     log_str = f"{datetime.datetime.now()} | {current_user.nominativo} ha appena caricato un file excel con {errori} errori\n"
-    mc_utils.append_to_file(LOG_PATH, log_str)
+    mc_utils.append_to_file(LOG_FILE, log_str)
     last_upload_time = str(datetime.datetime.now().date())
-    mc_utils.set_item_of_json(GLOBAL_DATA_PATH, "ultimo_upload", last_upload_time)
+    mc_utils.set_item_of_json(GLOBAL_DATA, "ultimo_upload", last_upload_time)
 
 
 def merge_excel() -> None:
@@ -57,21 +78,21 @@ def merge_excel() -> None:
     fa il merge di due file excel
     """
 
-    if not os.path.exists(EXCEL_MERGED_PATH):
-        os.rename(EXCEL_PRE_MERGE_PATH, EXCEL_MERGED_PATH)
+    if not os.path.exists(NAME_FILE_MERGED):
+        os.rename(NAME_FILE, NAME_FILE_MERGED)
         return
-    df1 = pd.read_excel(EXCEL_PRE_MERGE_PATH)
-    df2 = pd.read_excel(EXCEL_MERGED_PATH)
+    df1 = pd.read_excel(NAME_FILE)
+    df2 = pd.read_excel(NAME_FILE_MERGED)
     merged_df = pd.concat([df1, df2], ignore_index=True)
     merged_df = merged_df.drop_duplicates()
 
     other_sheets = {
-        sheet: pd.read_excel(EXCEL_PRE_MERGE_PATH, sheet_name=sheet)
-        for sheet in pd.ExcelFile(EXCEL_PRE_MERGE_PATH).sheet_names
+        sheet: pd.read_excel(NAME_FILE, sheet_name=sheet)
+        for sheet in pd.ExcelFile(NAME_FILE).sheet_names
         if sheet != "Challenge"
     }
 
-    with pd.ExcelWriter(EXCEL_MERGED_PATH) as writer:
+    with pd.ExcelWriter(NAME_FILE_MERGED) as writer:
         merged_df.to_excel(writer, sheet_name="Challenge", index=False)
 
         for sheet_name, df in other_sheets.items():
