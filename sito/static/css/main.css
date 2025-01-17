@@ -25,6 +25,8 @@ header {
   justify-content: space-between;
   padding: 20px 5%;
   background: transparent;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .logo {
