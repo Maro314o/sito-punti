@@ -13,8 +13,7 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
-    text-align: center;
-    padding: 1rem;
+    padding: 15rem;
 }
 
 .container div {
@@ -22,13 +21,16 @@ header {
     width: 100%;
 }
 
+.container div h1{
+    font-style: italic;
+}
+
 h1 {
-    font-size: clamp(2rem, 8vw, 8rem);
-    font-weight: 700;
+    font-size: 20px;
+    /*font-weight: 700;*/
     color: var(--text-color);
-    text-transform: uppercase;
     letter-spacing: clamp(1px, 0.5vw, 3px);
-    line-height: 1.2;
+    line-height: 1.5;
     word-wrap: break-word;
 }
 
