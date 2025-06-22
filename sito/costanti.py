@@ -31,7 +31,7 @@ INIT_FRASE = '[{"autore":"anonimo","frase":"Ci sono 10 tipi di persone al mondo:
 # DATABASE THINGS
 
 DB_NAME = "database.db"
-DATABASE_LOCATION_URL = f"sqlite:///{path.join(DATA_DIRECTORY_PATH,DB_NAME)}"
+DATABASE_LOCATION_URL = f"sqlite:///{path.join(DATA_DIRECTORY_PATH, DB_NAME)}"
 
 
 # MISC COSTANTS
