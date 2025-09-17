@@ -1,4 +1,3 @@
-import json
 import pandas as pd
 from pathlib import Path
 from os import path
@@ -8,14 +7,11 @@ import datetime
 import sito.database_funcs.point_funcs.modify_points_utils as modfiy_point_utils
 
 from .modelli import User
-from sito.database_funcs.database_queries import user_da_nominativo
 import sito.misc_utils_funcs as mc_utils
 
 from . import db
 
-from .modelli import User, Classi, Cronologia, Info
 import sito.database_funcs as db_funcs
-import sito.auth_funcs as auth_utils
 import sito.excel_funcs.load_excel_helpers as load_excel_helpers
 
 

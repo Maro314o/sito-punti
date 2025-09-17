@@ -21,7 +21,6 @@ from sito.errors_utils import InitPasswordNotSetError
 
 with app.app_context():
     import sito.database_funcs as db_funcs
-import sito.misc_utils_funcs as mc_utils
 from werkzeug.security import generate_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
 import os
