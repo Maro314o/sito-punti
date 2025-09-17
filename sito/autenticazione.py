@@ -102,7 +102,7 @@ def pagina_sign_up() -> str | Response:
         elif password != password_di_conferma:
             flash("La password di conferma non e' corretta", category="error")
         else:
-            user.password = generate_password_hash(password, method="sha256")
+            user.password = generate_password_hash(password, method="pbkdf2:sha256'")
             user.email = email
             user.account_attivo = 1
             db.session.commit()
