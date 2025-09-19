@@ -8,7 +8,6 @@ from flask import (
     flash,
     send_from_directory,
 )
-from pandas.util.version import parse
 from sito.database_funcs import list_database_elements
 import sito.errors_utils as e_utils
 from sito.errors_utils.errors_classes.data_error_classes import InvalidSeasonError
