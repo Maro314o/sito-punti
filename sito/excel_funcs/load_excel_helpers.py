@@ -73,7 +73,7 @@ def processa_riga_classe(numero_riga: int, riga: list[str], nome_classe: str) ->
 
     else:
         nome_classe = squadra
-        error_str = f"{datetime.datetime.now()} | errore alla linea {numero_riga} del foglio {nome_classe} del edatabase : La cella della squadra per questo utente e' vuota.Gli verra' assegnata una squadra provvisoria chiamata \"Nessuna_squadra\"\n"
+        error_str = f"{datetime.datetime.now()} | errore alla linea {numero_riga} del foglio {nome_classe} del database : La cella della squadra per questo utente ({nominativo}) e' vuota.Gli verra' assegnata una squadra provvisoria chiamata \"Nessuna_squadra\"\n"
 
         mc_utils.append_to_file(ERROR_FILE, error_str)
 
