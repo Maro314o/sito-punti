@@ -1,3 +1,6 @@
 [submodule "sito-punti.wiki"]
 	path = sito-punti.wiki
 	url = https://github.com/Maro314o/sito-punti.wiki.git
+[submodule "docs"]
+	path = docs
+	url = https://github.com/Maro314o/sito-punti.wiki.git
