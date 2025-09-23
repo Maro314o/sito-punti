@@ -48,7 +48,7 @@ def crea_user(**kwargs) -> None:
         email=kwargs["email"],
         nominativo=kwargs["nominativo"],
         squadra=kwargs["squadra"],
-        password=generate_password_hash(kwargs["password"], method="sha256"),
+        password=generate_password_hash(kwargs["password"], method="pbkdf2:sha256"),
         punti="0.0",
         account_attivo=kwargs.get("account_attivo", 0),
         admin_user=kwargs.get("admin_user", 0),

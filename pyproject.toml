@@ -1,0 +1,13 @@
+[project]
+name = "sito-punti"
+version = "0.0.20"
+requires-python = ">=3.11"
+dependencies = [
+  "Flask==3.1.2",
+  "Flask-Login==0.6.3",
+  "Flask-SQLAlchemy>=3.1.0,<4.0.0",  # ensure compatible with Flask 3.1
+  "SQLAlchemy==2.0.43",
+  "pandas==2.3.2",
+  "openpyxl==3.1.5",
+  "Werkzeug>=3.1.0,<4.0.0"
+]
