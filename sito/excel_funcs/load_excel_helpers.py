@@ -57,6 +57,12 @@ def reset_database() -> None:
 
 
 def processa_riga_classe(numero_riga: int, riga: list[str], nome_classe: str) -> str:
+    """
+    Dato il nome e la squadra di un utente dal foglio excel, si resettano i campi, venendo creati se non esistenti 
+    Se nella riga non è presente la squadra, all'utente verrà temporaneamente assegnata `Nessuna_squadra`
+    La funzione ritorna il nominativo dello studente
+
+    """
     # la riga dovrebbe essere [nominativo,squadra]
     nominativo = mc_utils.capitalize_all(riga[0])
     utente = db_queries.user_da_nominativo(nominativo)
