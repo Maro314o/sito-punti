@@ -58,8 +58,8 @@ def reset_database() -> None:
 
 def processa_riga_classe(numero_riga: int, riga: list[str], nome_classe: str) -> str:
     # la riga dovrebbe essere [nominativo,squadra]
+    squadra = "Nessuna_squadra"
     nominativo = mc_utils.capitalize_all(riga[0])
-    utente = db_queries.user_da_nominativo(nominativo)
     if len(riga) == 2:
         squadra = riga[1]
         oggetto_squadra = db_queries.squadra_da_nome(squadra)
@@ -71,11 +71,11 @@ def processa_riga_classe(numero_riga: int, riga: list[str], nome_classe: str) ->
             oggetto_squadra.numero_componenti += 1
 
     else:
-        squadra = "Nessuna_squadra"
         error_str = f"{datetime.datetime.now()} | errore alla linea {numero_riga} del foglio {nome_classe} del edatabase : La cella della squadra per questo utente e' vuota.Gli verra' assegnata una squadra provvisoria chiamata \"Nessuna_squadra\"\n"
 
         mc_utils.append_to_file(ERROR_FILE, error_str)
 
+    utente = db_queries.user_da_nominativo(nominativo)
     if utente:
         utente.nominativo = nominativo
         utente.squadra = squadra
