@@ -4,3 +4,6 @@
 [submodule "docs"]
 	path = docs
 	url = https://github.com/Maro314o/sito-punti.wiki.git
+[submodule "wiki"]
+	path = wiki
+	url = https://github.com/Maro314o/sito-punti.wiki.git
