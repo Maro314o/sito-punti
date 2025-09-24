@@ -1,10 +1,12 @@
 body {
   background: linear-gradient(245.59deg, #ffffff 0%, #ffffff 23.53%, #e3e3e3 75.52%);
+  width: 100%;
+  height: 100%;
 }
 
 section {
   padding: 0 20%;
-  width: 100%;
+  width: 100vw;
   height: 93vh;
   position: relative;
   display: grid;
@@ -92,9 +94,98 @@ section {
 .image-grid img:hover {
   transform: scale(1.1);
 }
-/*
-@media (max-width: 768px) {
-  header {
+
+/* Telefoni (fino a 576px) */
+@media (max-width: 576px) {
+  #main-img {
+    display: none;
+  }
+  .text {
+    width: 90vw;
+    text-align: center;
+  }
+
+  section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+  }
+
+  h1 {
+    font-size: 60px;
+  }
+
+  .icons {
+    display: none;
+  }
+  
+  a {
+    margin: 2% 2% 5% 2%;
+  }
+  .text p{
+    margin: 0 0 40px 0;
+  }
+
+  .text a.special {
+    margin: 0;
+  }
+
+  /* 
+
+  h1 {
+    font-size: 40px;
+    text-align: center;
+  }
+
+  h4 {
+    font-size: 14px;
+    text-align: center;
+  }
+
+  p {
+    font-size: 13px;
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  .btn {
+    padding: 8px 15px;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  .scroll-down {
+    bottom: 3%;
+    right: 3%;
+  }
+
+  .scroll-down i {
+    font-size: 18px;
+    padding: 8px;
+  }
+
+  .content {
+    padding: 40px 5%;
+    text-align: center;
+    align-items: center;
+  }
+
+  .immagine {
+    display: none;
+  }
+
+  .bottone-container {
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+  }
+ */
+}
+
+/* Tablet (da 577px a 768px) */
+@media (min-width: 577px) and (max-width: 768px) {
+  /* header {
     flex-direction: column;
     align-items: center;
     padding: 15px 5%;
@@ -213,68 +304,12 @@ section {
 
   .icone {
     display: none;
-  }
-
-
+  }*/
 }
 
-@media (max-width: 480px) {
-  header {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
+/* Tablet grandi / dispositivi medi (da 769px a 992px) */
+@media (min-width: 769px) and (max-width: 992px) {
+  /* Stili per tablet grandi o piccoli laptop */
+}
 
-  h1 {
-    font-size: 40px;
-    text-align: center;
-  }
-
-  h4 {
-    font-size: 14px;
-    text-align: center;
-  }
-
-  p {
-    font-size: 13px;
-    line-height: 1.6;
-    text-align: center;
-  }
-
-  .btn {
-    padding: 8px 15px;
-    font-size: 12px;
-    text-align: center;
-  }
-
-  .scroll-down {
-    bottom: 3%;
-    right: 3%;
-  }
-
-  .scroll-down i {
-    font-size: 18px;
-    padding: 8px;
-  }
-
-  .content {
-    padding: 40px 5%;
-    text-align: center;
-    align-items: center;
-  }
-
-  .immagine {
-    display: none;
-  }
-
-  .bottone-container {
-    flex-direction: column;
-    gap: 10px;
-    align-items: center;
-  }
-
-  .sezione {
-    grid-template-columns: 1fr;
-    text-align: center;
-  }
-} */
+/*

@@ -12,9 +12,9 @@
 
 h1 {
   font-size: 90px;
-  /* line-height: 1;
-  color: black;
-  margin: 0 0 20px; */
+    line-height: 1;
+    color: black;
+    margin: 0 0 20px;
 }
 
 p {
@@ -63,8 +63,25 @@ footer {
   border-bottom: 2px solid black;
 }
 
+/* Telefoni (fino a 576px) */
+@media (max-width: 576px) {
 
+  header{
+    padding: 20px 20px 0 20px;
+  }
 
+  .navbarra {
+    padding-top: 10px;
+  }
+  .navbarra a {
+    margin-left: 15px;
+    font-size: 14px;
+  }
+
+  .logo img {
+    width: 60px;
+  }
+}
 /* 
 
 
