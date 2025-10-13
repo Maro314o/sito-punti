@@ -10,29 +10,61 @@
   text-decoration: none;
 }
 
+h1 {
+  font-size: 90px;
+  line-height: 1;
+  color: black;
+  margin: 0 0 20px;
+}
+
+
+h2 {
+  font-size: 60px;
+  line-height: 1;
+  font-weight: 500;
+  color: black;
+  margin-bottom: 25px;
+}
+
+h3 {
+  font-size: 30px;
+  line-height: 1;
+  font-weight: 600;
+  color: black;
+  margin-bottom: 0.5em;
+}
+
+p {
+  font-size: 15px;
+  line-height: 1.8;
+  margin-bottom: 25px;
+}
+
 a {
   cursor: pointer;
 }
 
 header {
   position: fixed;
-  right: 0;
-  top: 0;
   z-index: 1000;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 5%;
+  padding: 40px 10%;
   background: transparent;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
 
-.logo {
-  font-size: 28px;
-  font-weight: 700;
-  color: black;
+footer {
+  text-align: center;
+  padding: 20px;
+  background: white;
+}
+
+#menuCheckbox{
+  display: none;
 }
 
 .navbarra {
@@ -41,8 +73,8 @@ header {
 
 .navbarra a {
   color: black;
-  margin-left: 40px;
-  font-size: 14px;
+  margin-left: 60px;
+  font-size: 18px;
   font-weight: 600;
   border-bottom: 2px solid transparent;
   transition: all .55s ease;
@@ -51,6 +83,171 @@ header {
 .navbarra a:hover {
   border-bottom: 2px solid black;
 }
+
+/* Telefoni (fino a 576px) */
+@media (max-width: 576px) {
+
+  header{
+    padding: 20px 20px 0 20px;
+  }
+
+  .navbarra {
+    display: inline;
+  }
+  .navbarra a {
+    margin-left: 15px;
+    font-size: 20px;
+  }
+
+  .logo img {
+    width: 60px;
+  }
+
+  h1 {
+    font-size: 60px;
+  }
+  
+  h2{
+    font-size: 40px;
+  }
+  
+  h3{
+    font-size: 20px;
+  }
+
+  #menuToggle
+{
+  display: block;
+  position: relative;
+  z-index: 999999999;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+#menuToggle a
+{
+  text-decoration: none;
+  color: #232323;
+  transition: color 0.3s ease;
+}
+
+#menuToggle a:hover
+{
+  color: tomato;
+}
+
+
+#menuToggle input
+{
+  display: block;
+  width: 40px;
+  height: 32px;
+  position: absolute;
+  top: -7px;
+  left: -5px;
+  
+  cursor: pointer;
+  
+  opacity: 0;
+  z-index: 2;
+  
+  -webkit-touch-callout: none;
+}
+
+#menuToggle span
+{
+  display: block;
+  width: 33px;
+  height: 4px;
+  margin-bottom: 5px;
+  position: relative;
+  background: #000000;
+  border-radius: 3px;
+  z-index: 1;
+  transform-origin: 4px 0px;
+  transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
+              background 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
+              opacity 0.55s ease;
+}
+
+#menuToggle span:first-child
+{
+  transform-origin: 0% 0%;
+}
+
+#menuToggle span:nth-last-child(2)
+{
+  transform-origin: 0% 100%;
+}
+
+#menuToggle input:checked ~ span
+{
+  opacity: 1;
+  transform: rotate(45deg) translate(-2px, -1px);
+  background: #232323;
+}
+
+#menuToggle input:checked ~ span:nth-last-child(3)
+{
+  opacity: 0;
+  transform: rotate(0deg) scale(0.2, 0.2);
+}
+
+#menuToggle input:checked ~ span:nth-last-child(2)
+{
+  transform: rotate(-45deg) translate(0, -1px);
+}
+
+#menu
+{
+  position: absolute;
+  right: -5vw;
+  top: 6vh;
+  width: 100vw;
+  height: 100vh;
+  margin: -100px 0 0 -50px;
+  background:#f9f9f9;
+  padding: 125px  0 0 50px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  list-style-type: none;
+  -webkit-font-smoothing: antialiased;
+  transform-origin: 0% 0%;
+  transform: translate(200%, 0);
+  transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
+  overflow-y: hidden;
+}
+
+#menu li
+{
+  padding: 10px 0;
+  font-size: 22px;
+}
+
+#menu li label
+{
+  cursor: pointer;
+}
+
+#menuToggle input:checked ~ ul
+{
+  transform: none;
+}
+}
+
+/* 
+
+
+
+
+
+
+.logo {
+  font-size: 28px;
+  font-weight: 700;
+  color: black;
+}
+
 
 #menu-icon {
   color: black;
@@ -87,12 +284,7 @@ h5 {
   margin-bottom: 5px;
 }
 
-h1 {
-  font-size: 70px;
-  line-height: 1;
-  color: black;
-  margin: 0 0 20px;
-}
+
 
 h4 {
   font-size: 18px;
@@ -101,12 +293,7 @@ h4 {
   margin-bottom: 10px;
 }
 
-p {
-  color: black;
-  font-size: 15px;
-  line-height: 1.8;
-  margin-bottom: 25px;
-}
+
 
 .btn {
   display: inline-block;
@@ -135,12 +322,6 @@ p {
   max-width: 50%;
 }
 
-.footer {
-  text-align: center;
-  padding: 20px;
-  background: #f9f9f9;
-}
-
 .bottone-container {
   display: flex;
   justify-content: center;
@@ -162,10 +343,6 @@ p {
   .logo {
     font-size: 24px;
     margin-bottom: 15px;
-  }
-
-  .navbarra {
-    display: none;
   }
 
   #menu-icon {
@@ -257,4 +434,4 @@ p {
     flex-direction: column;
     gap: 10px;
   }
-}
+} */

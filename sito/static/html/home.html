@@ -24,11 +24,21 @@
     <body>
         <header>
             <a href="/" class="logo"><img src="{{ url_for('static', filename='images/logo.png') }}" alt=""></a>
-            {% include 'templates/navbar.html' %}
+            <nav role="navigation">
+                <div id="menuToggle">
+                    <input type="checkbox" id="menuCheckbox" />
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <ul id="menu">
+                        {% include 'templates/navbar.html' %}
+                    </ul>  
+                </div>
+            </nav>
         </header>
 
-        <section class="sezione">
-            <div class="testo"> <!---testi sotto i bottoni--->
+        <section>
+            <div class="text"> <!---testi sotto i bottoni--->
                 <h5>&nbspISIS J.M KEYNES</h5>
                 <h1>SITO PUNTI</h1>
                 <p>Guarda informazioni sui tuoi punti, quelli della tua squadra e quelli della classe, tutto alla portata di un
@@ -43,21 +53,23 @@
                 {% else %}
                     <a href="/login">Accedi</a>
                 {% endif %}
-                <a href="/regole" class="bottone"><i class="ri-play-fill"></i>Leggi il regolamento</a>
+                <a href="/regole" class="special"><i class="ri-play-fill"></i>Leggi il regolamento</a>
                 <!---bottoni per il font--->
             </div>
 
-            <div class="immagine"> <!---immagine vicino al testo--->
+            <div id="main-img"> <!---immagine vicino al testo--->
                 <img src="{{ url_for('static', filename='images/immagine_home.png') }}">
             </div>
-        </section>
 
-        <div class="icone"> <!---icone laterali--->
+            <div class="icons"> <!---icone laterali--->
             <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"><i class="ri-map-pin-line"></i></a>
             <a href="https://github.com/Maro314o/sito_punti"><i class="ri-github-line"></i></a>
             <a href="mailto:puntikeynes@gmail.com?subject=&body=Scrivi%20pure%20un%20consiglio%20su%20come%20migliorare%20il%20sito%20oppure%20se%20stai%20riscontrando%20un%20problema%20cerca%20di%20descrivercelo%20in%20dettaglio%20cos%C3%AC%20da%20poter%20aiutarti%20al%20meglio"><i
                     class="ri-mail-send-line"></i></a>
         </div>
+        </section>
+
+        
 
         {% if user.admin_user %}
             <div class="scroll-down"> <!---icona scrolldown--->

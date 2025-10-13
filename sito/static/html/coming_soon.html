@@ -23,8 +23,18 @@
     </head>
     <body>
         <header>
-            <a href="/" class="logo"><img src="{{ url_for('static', filename='images/logo.png')}}" alt=""></a>
-            {% include 'templates/navbar.html' %}
+            <a href="/" class="logo"><img src="{{ url_for('static', filename='images/logo.png') }}" alt=""></a>
+            <nav role="navigation">
+                <div id="menuToggle">
+                    <input type="checkbox" id="menuCheckbox" />
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <ul id="menu">
+                        {% include 'templates/navbar.html' %}
+                    </ul>  
+                </div>
+            </nav>
         </header>
 
         <main class="container">
