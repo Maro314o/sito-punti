@@ -11,10 +11,6 @@ body {
     background: linear-gradient(245.59deg, #ffffff 0%, #ffffff 23.53%, #e3e3e3 75.52%);
 }
 
-header {
-    position: absolute
-}
-
 .container {
     max-width: 1200px;
     margin: auto;
@@ -35,22 +31,6 @@ header {
 .content ul li {
     list-style: disc;
     margin-left: 2.5em;
-    margin-bottom: 0.5em;
-}
-
-h2 {
-    font-size: 90px;
-    line-height: 1;
-    font-weight: 500;
-    color: black;
-    margin-bottom: 25px;
-}
-
-h3 {
-    font-size: 30px;
-    line-height: 1;
-    font-weight: 600;
-    color: black;
     margin-bottom: 0.5em;
 }
 
@@ -84,4 +64,17 @@ section .content {
 
 .images img {
     max-width: 100%;
+}
+
+@media (max-width: 576px) {
+    section{
+        margin: 50px 0 0 0;
+    }
+    
+    section img{
+        display: none;
+    }
+    .content {
+        max-width: none;
+    }
 }
