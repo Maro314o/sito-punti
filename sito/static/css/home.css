@@ -33,7 +33,7 @@ section {
   border-radius: 30px;
   text-transform: uppercase;
   transition: all .55s ease;
-
+  margin: 0 20px 0 0;
 }
 
 .text a:hover{
@@ -44,7 +44,6 @@ section {
 .text a.special{
   background: transparent;
   border: 1px solid black;
-  margin-left: 20px;
 }
 .text i{
   margin-right: 10px;
@@ -102,7 +101,11 @@ section {
   }
   .text {
     width: 90vw;
-    text-align: center;
+    text-align: left;
+  }
+
+  .text a.special{
+    margin: 20px 0 0 0;
   }
 
   section {
@@ -126,11 +129,6 @@ section {
   .text p{
     margin: 0 0 40px 0;
   }
-
-  .text a.special {
-    margin: 0;
-  }
-
   /* 
 
   h1 {
