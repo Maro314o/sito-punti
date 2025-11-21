@@ -3,53 +3,54 @@
 :root {
     --light: #f6f6f9;
     --primary: #158900;
+    --secondary: #0f6400;
     --light-primary: #CFE8FF;
     --grey: #eee;
     --dark-grey: #AAAAAA;
     --dark: #363949;
     --danger: #D32F2F;
-	--light-danger: #FECDD3;
+    --light-danger: #FECDD3;
     --warning: #FBC02D;
     --light-warning: #FFF2C6;
     --success: #388E3C;
     --light-success: #BBF7D0;
 }
 
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
 }
 
-.bx{
+.bx {
     font-size: 1.7rem;
 }
 
-a{
+a {
     text-decoration: none;
 }
 
-li{
+li {
     list-style: none;
 }
 
-html{
+html {
     overflow-x: hidden;
 }
 
-body.dark{
+body.dark {
     --light: #181a1e;
     --grey: #25252c;
     --dark: #fbfbfb
 }
 
-body{
+body {
     background: var(--grey);
     overflow-x: hidden;
 }
 
-.sidebar{
+.sidebar {
     position: fixed;
     top: 0;
     left: 0;
@@ -62,15 +63,15 @@ body{
     transition: all 0.3s ease;
 }
 
-.sidebar::-webkit-scrollbar{
+.sidebar::-webkit-scrollbar {
     display: none;
 }
 
-.sidebar.close{
+.sidebar.close {
     width: 60px;
 }
 
-.sidebar .logo{
+.sidebar .logo {
     font-size: 24px;
     font-weight: 700;
     height: 56px;
@@ -82,23 +83,23 @@ body{
     box-sizing: content-box;
 }
 
-.sidebar .logo .logo-name span{
+.sidebar .logo .logo-name span {
     color: var(--dark);
 }
 
-.sidebar .logo .bx{
+.sidebar .logo .bx {
     min-width: 60px;
     display: flex;
     justify-content: center;
     font-size: 2.2rem;
 }
 
-.sidebar .side-menu{
+.sidebar .side-menu {
     width: 100%;
     margin-top: 48px;
 }
 
-.sidebar .side-menu li{
+.sidebar .side-menu li {
     height: 48px;
     background: transparent;
     margin-left: 6px;
@@ -106,12 +107,12 @@ body{
     padding: 4px;
 }
 
-.sidebar .side-menu li.active{
+.sidebar .side-menu li.active {
     background: var(--grey);
     position: relative;
 }
 
-.sidebar .side-menu li.active::before{
+.sidebar .side-menu li.active::before {
     content: "";
     position: absolute;
     width: 40px;
@@ -123,7 +124,7 @@ body{
     z-index: -1;
 }
 
-.sidebar .side-menu li.active::after{
+.sidebar .side-menu li.active::after {
     content: "";
     position: absolute;
     width: 40px;
@@ -135,7 +136,7 @@ body{
     z-index: -1;
 }
 
-.sidebar .side-menu li a{
+.sidebar .side-menu li a {
     width: 100%;
     height: 100%;
     background: var(--light);
@@ -149,40 +150,40 @@ body{
     transition: all 0.3s ease;
 }
 
-.sidebar .side-menu li.active a{
+.sidebar .side-menu li.active a {
     color: var(--light);
     background-color: var(--success);
 }
 
-.sidebar.close .side-menu li a{
+.sidebar.close .side-menu li a {
     width: calc(48px - (4px * 2));
     transition: all 0.3s ease;
 }
 
-.sidebar .side-menu li a .bx{
+.sidebar .side-menu li a .bx {
     min-width: calc(60px - ((4px + 6px) * 2));
     display: flex;
     font-size: 1.6rem;
     justify-content: center;
 }
 
-.sidebar .side-menu li a.logout{
+.sidebar .side-menu li a.logout {
     color: var(--danger);
 }
 
-.content{
+.content {
     position: relative;
     width: calc(100% - 230px);
     left: 230px;
     transition: all 0.3s ease;
 }
 
-.sidebar.close~.content{
+.sidebar.close~.content {
     width: calc(100% - 60px);
     left: 60px;
 }
 
-.content nav{
+.content nav {
     height: 56px;
     background: var(--light);
     padding: 0 24px 0 0;
@@ -195,7 +196,7 @@ body{
     z-index: 1000;
 }
 
-.content nav::before{
+.content nav::before {
     content: "";
     position: absolute;
     width: 40px;
@@ -206,28 +207,28 @@ body{
     box-shadow: -20px -20px 0 var(--light);
 }
 
-.content nav a{
+.content nav a {
     color: var(--dark);
 }
 
-.content nav .bx.bx-menu{
+.content nav .bx.bx-menu {
     cursor: pointer;
     color: var(--dark);
 }
 
-.content nav form{
+.content nav form {
     max-width: 400px;
     width: 100%;
     margin-right: auto;
 }
 
-.content nav form .form-input{
+.content nav form .form-input {
     display: flex;
     align-items: center;
     height: 36px;
 }
 
-.content nav form .form-input input{
+.content nav form .form-input input {
     flex-grow: 1;
     padding: 0 16px;
     height: 100%;
@@ -239,7 +240,7 @@ body{
     color: var(--dark);
 }
 
-.content nav form .form-input button{
+.content nav form .form-input button {
     width: 80px;
     height: 100%;
     display: flex;
@@ -254,12 +255,12 @@ body{
     cursor: pointer;
 }
 
-.content nav .notif{
+.content nav .notif {
     font-size: 20px;
     position: relative;
 }
 
-.content nav .notif .count{
+.content nav .notif .count {
     position: absolute;
     top: -6px;
     right: -6px;
@@ -276,7 +277,7 @@ body{
     justify-content: center;
 }
 
-.content nav .profile img{
+.content nav .profile img {
     width: 36px;
     height: 36px;
     object-fit: cover;
@@ -284,13 +285,13 @@ body{
 }
 
 
-.content main{
+.content main {
     width: 100%;
     padding: 36px 24px;
     max-height: calc(100vh - 56px);
 }
 
-.content main .header{
+.content main .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -298,34 +299,34 @@ body{
     flex-wrap: wrap;
 }
 
-.content main .header .left h1{
+.content main .header .left h1 {
     font-size: 36px;
     font-weight: 600;
     margin-bottom: 10px;
     color: var(--dark);
 }
 
-.content main .header .left .breadcrumb{
+.content main .header .left .breadcrumb {
     display: flex;
     align-items: center;
     grid-gap: 16px;
 }
 
-.content main .header .left .breadcrumb li{
+.content main .header .left .breadcrumb li {
     color: var(--dark);
 }
 
-.content main .header .left .breadcrumb li a{
+.content main .header .left .breadcrumb li a {
     color: var(--dark-grey);
     pointer-events: none;
 }
 
-.content main .header .left .breadcrumb li a.active{
+.content main .header .left .breadcrumb li a.active {
     color: var(--primary);
     pointer-events: none;
 }
 
-.content main .header .report{
+.content main .header .report {
     height: 36px;
     padding: 0 16px;
     border-radius: 36px;
@@ -338,14 +339,14 @@ body{
     font-weight: 500;
 }
 
-.content main .insights{
+.content main .insights {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     grid-gap: 24px;
     margin-top: 36px;
 }
 
-.content main .insights li{
+.content main .insights li {
     padding: 24px;
     background: var(--light);
     border-radius: 20px;
@@ -355,7 +356,7 @@ body{
     cursor: pointer;
 }
 
-.content main .insights li .bx{
+.content main .insights li .bx {
     width: 80px;
     height: 80px;
     border-radius: 10px;
@@ -365,37 +366,39 @@ body{
     justify-content: center;
 }
 
-.content main .insights a:nth-child(1) .bx{
+.content main .insights a:nth-child(1) .bx {
     background: var(--light-primary);
     color: #1976D2;
 }
 
 
 
-.content main .insights a:nth-child(2) .bx{
+.content main .insights a:nth-child(2) .bx {
     background: var(--light-success);
     color: var(--success);
 }
-.content main .insights a:nth-child(3) .bx{
+
+.content main .insights a:nth-child(3) .bx {
     background: var(--light-warning);
     color: var(--warning);
 }
-.content main .insights a:nth-child(4) .bx{
+
+.content main .insights a:nth-child(4) .bx {
     background: var(--light-danger);
     color: var(--danger);
 }
 
-.content main .insights li .info h3{
+.content main .insights li .info h3 {
     font-size: 24px;
     font-weight: 600;
     color: var(--dark);
 }
 
-.content main .insights li .info p{
+.content main .insights li .info p {
     color: var(--dark);
 }
 
-.content main .bottom-data{
+.content main .bottom-data {
     display: flex;
     flex-wrap: wrap;
     grid-gap: 24px;
@@ -404,75 +407,75 @@ body{
     color: var(--dark);
 }
 
-.content main .bottom-data>div{
+.content main .bottom-data>div {
     border-radius: 20px;
     background: var(--light);
     padding: 24px;
     overflow-x: auto;
 }
 
-.content main .bottom-data .header{
+.content main .bottom-data .header {
     display: flex;
     align-items: center;
     grid-gap: 16px;
     margin-bottom: 24px;
 }
 
-.content main .bottom-data .header h3{
+.content main .bottom-data .header h3 {
     margin-right: auto;
     font-size: 24px;
     font-weight: 600;
 }
 
-.content main .bottom-data .header .bx{
+.content main .bottom-data .header .bx {
     cursor: pointer;
 }
 
-.content main .bottom-data .orders{
+.content main .bottom-data .orders {
     flex-grow: 1;
     flex-basis: 500px;
 }
 
-.content main .bottom-data .orders table{
+.content main .bottom-data .orders table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.content main .bottom-data .orders table th{
+.content main .bottom-data .orders table th {
     padding-bottom: 12px;
     font-size: 13px;
     text-align: left;
     border-bottom: 1px solid var(--grey);
 }
 
-.content main .bottom-data .orders table td{
+.content main .bottom-data .orders table td {
     padding: 16px 0;
 }
 
-.content main .bottom-data .orders table tr td:first-child{
+.content main .bottom-data .orders table tr td:first-child {
     display: flex;
     align-items: center;
     grid-gap: 12px;
     padding-left: 6px;
 }
 
-.content main .bottom-data .orders table td img{
+.content main .bottom-data .orders table td img {
     width: 36px;
     height: 36px;
     border-radius: 50%;
     object-fit: cover;
 }
 
-.content main .bottom-data .orders table tbody tr{
+.content main .bottom-data .orders table tbody tr {
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
-.content main .bottom-data .orders table tbody tr:hover{
+.content main .bottom-data .orders table tbody tr:hover {
     background: var(--grey);
 }
 
-.content main .bottom-data .orders table tr td .status{
+.content main .bottom-data .orders table tr td .status {
     font-size: 10px;
     padding: 6px 16px;
     color: var(--light);
@@ -480,28 +483,28 @@ body{
     font-weight: 700;
 }
 
-.content main .bottom-data .orders table tr td .status.completed{
+.content main .bottom-data .orders table tr td .status.completed {
     background: var(--success);
 }
 
-.content main .bottom-data .orders table tr td .status.process{
+.content main .bottom-data .orders table tr td .status.process {
     background: var(--primary);
 }
 
-.content main .bottom-data .orders table tr td .status.pending{
+.content main .bottom-data .orders table tr td .status.pending {
     background: var(--warning);
 }
 
-.content main .bottom-data .reminders{
+.content main .bottom-data .reminders {
     flex-grow: 1;
     flex-basis: 300px;
 }
 
-.content main .bottom-data .reminders .task-list{
+.content main .bottom-data .reminders .task-list {
     width: 100%;
 }
 
-.content main .bottom-data .reminders .task-list li{
+.content main .bottom-data .reminders .task-list li {
     width: 100%;
     margin-bottom: 16px;
     background: var(--grey);
@@ -512,37 +515,139 @@ body{
     justify-content: space-between;
 }
 
-.content main .bottom-data .reminders .task-list li .task-title{
+.content main .bottom-data .reminders .task-list li .task-title {
     display: flex;
     align-items: center;
 }
 
-.content main .bottom-data .reminders .task-list li .task-title p{
+.content main .bottom-data .reminders .task-list li .task-title p {
     margin-left: 6px;
 }
 
-.content main .bottom-data .reminders .task-list li .bx{
-  cursor: pointer;  
+.content main .bottom-data .reminders .task-list li .bx {
+    cursor: pointer;
 }
 
-.content main .bottom-data .reminders .task-list li.completed{
+.content main .bottom-data .reminders .task-list li.completed {
     border-left: 10px solid var(--success);
 }
 
-.content main .bottom-data .reminders .task-list li.not-completed{
+.content main .bottom-data .reminders .task-list li.not-completed {
     border-left: 10px solid var(--danger);
 }
 
-.content main .bottom-data .reminders .task-list li:last-child{
-   margin-bottom: 0;
+.content main .bottom-data .reminders .task-list li:last-child {
+    margin-bottom: 0;
 }
 
+.btn {
+    cursor: pointer;
+    background: var(--primary);
+    border: none;
+    color: var(--light);
+    padding: 6px 16px;
+    border-radius: 20px;
+    margin: 20px;
+}
+
+.btn-container {
+    text-align: right;
+}
+
+input[type="radio"] {
+    accent-color: var(--primary);
+}
+
+.check input {
+  display: none;
+}
+
+.box {
+  width: 21px;
+  height: 21px;
+  font-weight: normal;
+  background-color: #fff;
+  border: 1px solid #6b6a6a;
+  border-radius: 3px;
+  display: inline-block;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  cursor: pointer;
+  transition: .2s;
+}
+
+/* quando selezionata */
+.check input:checked + .box {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+.check input:checked:hover + .box {
+  background: var(--secondary);
+  border-color: var(--secondary);
+  color: #fff;
+}
+
+
+/*.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 26px;
+}
+
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.3s;
+  border-radius: 26px;
+}
+
+
+.slider::before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+
+.switch input:checked + .slider {
+  background-color: var(--primary);
+}
+
+.switch input:checked + .slider::before {
+  transform: translateX(24px);
+} */
+
+
 @media screen and (max-width: 768px) {
-    .sidebar{
+    .sidebar {
         width: 200px;
     }
 
-    .content{
+    .content {
         width: calc(100% - 60px);
         left: 200px;
     }
@@ -550,12 +655,12 @@ body{
 }
 
 @media screen and (max-width: 576px) {
-    
-    .content nav form .form-input input{
+
+    .content nav form .form-input input {
         display: none;
     }
 
-    .content nav form .form-input button{
+    .content nav form .form-input button {
         width: auto;
         height: auto;
         background: transparent;
@@ -563,12 +668,12 @@ body{
         border-radius: none;
     }
 
-    .content nav form.show .form-input input{
+    .content nav form.show .form-input input {
         display: block;
         width: 100%;
     }
 
-    .content nav form.show .form-input button{
+    .content nav form.show .form-input button {
         width: 36px;
         height: 100%;
         color: var(--light);
@@ -576,7 +681,8 @@ body{
         border-radius: 0 36px 36px 0;
     }
 
-    .content nav form.show~.notif, .content nav form.show~.profile{
+    .content nav form.show~.notif,
+    .content nav form.show~.profile {
         display: none;
     }
 
@@ -584,16 +690,470 @@ body{
         grid-template-columns: 1fr;
     }
 
-    .content main .bottom-data .header{
+    .content main .bottom-data .header {
         min-width: 340px;
     }
 
-    .content main .bottom-data .orders table{
+    .content main .bottom-data .orders table {
         min-width: 340px;
     }
 
-    .content main .bottom-data .reminders .task-list{
+    .content main .bottom-data .reminders .task-list {
         min-width: 340px;
     }
 
+}
+
+/* --- CSS Moved from manage_data.html --- */
+
+.boxelementiadd {
+    padding: 0px;
+    margin: 20px;
+    border-radius: 5px;
+}
+
+.button-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    border-radius: 50px;
+    margin: 40px 40px 50px calc(40px - 65px);
+    /* Adjusted to move it more left */
+    transition: margin-left 0.3s ease;
+    /* Smooth transition when sidebar changes */
+}
+
+.container {
+    margin: 5px;
+    flex: 0 1 calc(35% - 30px);
+    box-sizing: border-box;
+}
+
+.button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: none;
+    background: none;
+    cursor: pointer;
+    text-align: center;
+    padding: 10px;
+}
+
+.button img {
+    max-width: 150%;
+    border-radius: 15px;
+    height: auto;
+}
+
+h1 {
+    margin: 10px 0 0;
+    font-size: 18px;
+    color: black;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+/* Optional: Add a scrollbar if the content overflows */
+.button-list {
+    max-height: 80vh;
+    /* Limit height for scrolling */
+    overflow-y: auto;
+    /* Enable vertical scroll */
+}
+
+h3.custom-heading {
+    font-size: 24px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.file-upload-label {
+    display: block;
+    margin: 0 auto;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+    color: #666;
+    transition: border-color 0.3s;
+}
+
+.file-upload-label:hover {
+    border-color: #28a745;
+}
+
+button.upload-btn {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+button.upload-btn:hover {
+    background-color: #218838;
+}
+
+.error-btn {
+    background-color: #dc3545;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background-color 0.3s ease;
+}
+
+.error-btn:hover {
+    background-color: #c82333;
+}
+
+/* Modal container */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Modal content box */
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 500px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Close button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Form styles */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+.inserisci-form {
+    width: calc(90% - 30px);
+    /* 100% minus padding for both sides (20px + 20px) */
+    max-width: 300px;
+    /* Ensure the form doesn't get too wide */
+    margin: 0 auto;
+    /* Center the form horizontally */
+    display: flex;
+    flex-direction: column;
+}
+
+.inserisci-form {
+    margin-left: 0;
+    /* Ensure the form is aligned to the left */
+    margin-bottom: 10px;
+    /* Decrease space between forms */
+}
+
+.inserisci-form label {
+    font-size: 14px;
+    margin-bottom: 5px;
+    font-weight: 600;
+    text-align: left;
+    /* Align labels to the left */
+}
+
+.inserisci-form input {
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    text-align: left;
+    /* Ensure input text is aligned left */
+}
+
+
+
+
+label {
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+
+textarea {
+    resize: none;
+}
+
+.submit-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: #45a049;
+}
+
+.conferma-frase {
+    margin-left: 10px;
+    padding: 5px 10px;
+    border: none;
+    background-color: green;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.conferma-frase:hover {
+    background-color: #00b315;
+    /* Button hover color */
+}
+
+.rectangle-container {
+    display: flex;
+    justify-content: space-between;
+    /* Adds space between the rectangles */
+    margin-top: 20px;
+    padding-left: 20px;
+    /* Adjust if needed to space from the sidebar */
+}
+
+.rectangle {
+    width: 520px;
+    /* Adjust the width of the rectangle */
+    height: 300px;
+    /* Adjust the height of the rectangle */
+    background-color: #f5f5f5;
+    /* Light grey background */
+    border-radius: 15px;
+    position: relative;
+    /* Allows absolute positioning of the button */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    /* Text color */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Optional shadow */
+}
+
+.download-button {
+    position: absolute;
+    bottom: 190px;
+    /* Adjust this value to control vertical positioning */
+    left: 50%;
+    transform: translateX(-50%);
+    /* Centers the button horizontally */
+    padding: 10px 20px;
+    background-color: green;
+    /* Button background color */
+    color: white;
+    /* Button text color */
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Optional shadow */
+}
+
+.download-button:hover {
+    background-color: #00b315;
+    /* Button hover color */
+}
+
+
+
+@media (max-width: 768px) {
+    .rectangle-container {
+        flex-direction: column;
+        /* Stack vertically on small screens */
+    }
+
+    .rectangle {
+        width: 100%;
+        /* Full width for mobile */
+        margin-bottom: 10px;
+    }
+}
+
+/* Modal Animation */
+@keyframes slideIn {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.rectangle-container {
+    display: flex;
+    flex-wrap: wrap;
+    /* Allows boxes to wrap if they can't fit in one line */
+    justify-content: space-around;
+    gap: 20px;
+    /* Adds space between the rectangles */
+    margin-top: 20px;
+    padding: 20px;
+    /* Optional: add padding for more space around the container */
+}
+
+.rectangle {
+    width: calc(50% - 30px);
+    /* Adjust width and keep spacing consistent */
+    max-width: 520px;
+    /* Ensure max width for large screens */
+    min-width: 300px;
+    /* Minimum width to avoid squishing */
+    height: 300px;
+    margin-bottom: 20px;
+    /* Additional margin to avoid overlap */
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+    .rectangle-container {
+        flex-direction: column;
+        /* Stack vertically on smaller screens */
+    }
+
+    .rectangle {
+        width: 100%;
+        /* Full width for mobile */
+        margin-bottom: 10px;
+    }
+}
+
+/* --- Class Management Styles --- */
+
+.class-selector-container {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.class-selector {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.student-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+    /* Ensure table doesn't get too squashed */
+}
+
+.student-table th,
+.student-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.student-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #333;
+    white-space: nowrap;
+}
+
+.student-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.student-table select {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: white;
+    width: 100%;
+    max-width: 150px;
+}
+
+.student-table input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--primary);
+}
+
+.ansia-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ansia-select {
+    display: none;
+    /* Hidden by default */
+    margin-left: 10px;
+}
+
+.ansia-select.visible {
+    display: inline-block;
 }

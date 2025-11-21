@@ -54,3 +54,93 @@ toggler.addEventListener('change', function () {
         document.body.classList.remove('dark');
     }
 });
+
+/* --- Class Management Logic --- */
+
+const mockStudents = {
+    "3A": [
+        { name: "Rossi Mario" },
+        { name: "Bianchi Luigi" },
+        { name: "Verdi Anna" },
+        { name: "Neri Paolo" },
+        { name: "Gialli Francesca" }
+    ],
+    "4B": [
+        { name: "Ferrari Luca" },
+        { name: "Russo Giulia" },
+        { name: "Esposito Marco" },
+        { name: "Romano Sofia" },
+        { name: "Colombo Alessandro" }
+    ],
+    "5C": [
+        { name: "Ricci Elena" },
+        { name: "Marino Antonio" },
+        { name: "Greco Beatrice" },
+        { name: "Bruno Davide" },
+        { name: "Gallo Chiara" }
+    ]
+};
+
+const classSelector = document.getElementById('classSelector');
+const studentTableBody = document.getElementById('studentTableBody');
+
+if (classSelector && studentTableBody) {
+    classSelector.addEventListener('change', function () {
+        const selectedClass = this.value;
+        const students = mockStudents[selectedClass] || [];
+        renderTable(students);
+    });
+}
+
+function renderTable(students) {
+    studentTableBody.innerHTML = ''; // Clear existing rows
+
+    students.forEach((student, index) => {
+        const row = document.createElement('tr');
+
+        row.innerHTML = `
+            <td>${student.name}</td>
+            <td>
+                <select>
+                    <option value="presente">Presente</option>
+                    <option value="assente">Assente</option>
+                    <option value="strategica">Assenza Strategica</option>
+                </select>
+            </td>
+            <td><input type="checkbox" name="bug_${index}"></td>
+            <td><input type="checkbox" name="telefono_${index}"></td>
+            <td><input type="checkbox" name="multiverso_${index}"></td>
+            <td>
+                <div class="ansia-container">
+                    <input type="checkbox" class="ansia-checkbox" id="ansia_${index}">
+                    <select class="ansia-select" id="ansia_select_${index}">
+                        <option value="passata">Passata</option>
+                        <option value="non_passata">Non passata</option>
+                    </select>
+                </div>
+            </td>
+        `;
+
+        studentTableBody.appendChild(row);
+    });
+
+    // Re-attach event listeners for the new "Domanda Ansia" checkboxes
+    attachAnsiaListeners();
+}
+
+function attachAnsiaListeners() {
+    const ansiaCheckboxes = document.querySelectorAll('.ansia-checkbox');
+    ansiaCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+            const selectId = this.id.replace('ansia_', 'ansia_select_');
+            const selectElement = document.getElementById(selectId);
+            if (selectElement) {
+                if (this.checked) {
+                    selectElement.classList.add('visible');
+                } else {
+                    selectElement.classList.remove('visible');
+                }
+            }
+        });
+    });
+}

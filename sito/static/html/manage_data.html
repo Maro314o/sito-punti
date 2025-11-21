@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,336 +14,6 @@
 </head>
 
 <body>
-  <style>
-    .boxelementiadd {
-        padding: 0px;
-        margin: 20px;
-        border-radius: 5px;
-    }
-
-    .button-list {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-around;
-        border-radius: 50px;
-        margin: 40px 40px 50px calc(40px - 65px); /* Adjusted to move it more left */
-        transition: margin-left 0.3s ease; /* Smooth transition when sidebar changes */
-    }
-
-    .container {
-        margin: 5px;
-        flex: 0 1 calc(35% - 30px); 
-        box-sizing: border-box;
-    }
-
-    .button {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        border: none;
-        background: none;
-        cursor: pointer;
-        text-align: center;
-        padding: 10px;
-    }
-
-    .button img {
-        max-width: 150%;
-        border-radius: 15px;
-        height: auto;
-    }
-
-    h1 {
-        margin: 10px 0 0;
-        font-size: 18px;
-        color: black;
-    }
-
-    input[type="file"] {
-        display: none; 
-    }
-
-    /* Optional: Add a scrollbar if the content overflows */
-    .button-list {
-        max-height: 80vh; /* Limit height for scrolling */
-        overflow-y: auto; /* Enable vertical scroll */
-    }
-
-    h3.custom-heading {
-        font-size: 24px;
-        font-weight: 500;
-        color: #333;
-        margin-bottom: 20px;
-    }
-
-    .file-upload-label {
-        display: block;
-        margin: 0 auto;
-        padding: 10px;
-        background-color: #f0f0f0;
-        border: 2px dashed #ccc;
-        border-radius: 8px;
-        width: 100%;
-        text-align: center;
-        cursor: pointer;
-        color: #666;
-        transition: border-color 0.3s;
-    }
-
-    .file-upload-label:hover {
-        border-color: #28a745;
-    }
-
-    button.upload-btn {
-        background-color: #28a745;
-        color: #fff;
-        border: none;
-        padding: 10px 20px;
-        font-size: 16px;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        margin-top: 20px;
-    }
-
-    button.upload-btn:hover {
-        background-color: #218838;
-    }
-
-    .error-btn {
-        background-color: #dc3545;
-        color: #fff;
-        padding: 10px 20px;
-        font-size: 16px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-top: 15px;
-        transition: background-color 0.3s ease;
-    }
-
-    .error-btn:hover {
-        background-color: #c82333;
-    }
-
-    /* Modal container */
-.modal {
-    display: none; 
-    position: fixed; 
-    z-index: 1; 
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%; 
-    background-color: rgba(0, 0, 0, 0.5); 
-}
-
-/* Modal content box */
-.modal-content {
-    background-color: #fff;
-    margin: 15% auto;
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 500px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    animation: slideIn 0.3s ease-out;
-}
-
-/* Close button */
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.close:hover, .close:focus {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-/* Form styles */
-form {
-    display: flex;
-    flex-direction: column;
-}
-
-.inserisci-form {
-    width: calc(90% - 30px); /* 100% minus padding for both sides (20px + 20px) */
-    max-width: 300px; /* Ensure the form doesn't get too wide */
-    margin: 0 auto; /* Center the form horizontally */
-    display: flex;
-    flex-direction: column;
-}
-
-.inserisci-form {
-    margin-left: 0; /* Ensure the form is aligned to the left */
-    margin-bottom: 10px; /* Decrease space between forms */
-}
-
-.inserisci-form label {
-    font-size: 14px;
-    margin-bottom: 5px;
-    font-weight: 600;
-    text-align: left; /* Align labels to the left */
-}
-
-.inserisci-form input {
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 14px;
-    text-align: left; /* Ensure input text is aligned left */
-}
-
-
-
-
-label {
-    font-weight: bold;
-    margin-top: 10px;
-    margin-bottom: 5px;
-}
-
-
-textarea {
-    resize: none;
-}
-
-.submit-btn {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.submit-btn:hover {
-    background-color: #45a049;
-}
-.conferma-frase {
-    margin-left: 10px; 
-    padding: 5px 10px; 
-    border: none; 
-    background-color: green; 
-    color: white; 
-    padding: 10px 20px; 
-    border-radius: 5px; 
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
-}
-
-.conferma-frase:hover {
-    background-color: #00b315; /* Button hover color */
-}
-
-.rectangle-container {
-    display: flex;
-    justify-content: space-between; /* Adds space between the rectangles */
-    margin-top: 20px;
-    padding-left: 20px; /* Adjust if needed to space from the sidebar */
-}
-
-.rectangle {
-    width: 520px; /* Adjust the width of the rectangle */
-    height: 300px; /* Adjust the height of the rectangle */
-    background-color: #f5f5f5; /* Light grey background */
-    border-radius: 15px;
-    position: relative; /* Allows absolute positioning of the button */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    font-size: 16px;
-    font-weight: bold;
-    color: #333; /* Text color */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional shadow */
-}
-
-.download-button {
-    position: absolute;
-    bottom: 190px; /* Adjust this value to control vertical positioning */
-    left: 50%;
-    transform: translateX(-50%); /* Centers the button horizontally */
-    padding: 10px 20px;
-    background-color: green; /* Button background color */
-    color: white; /* Button text color */
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional shadow */
-}
-
-.download-button:hover {
-    background-color: #00b315; /* Button hover color */
-}
-
-
-
-@media (max-width: 768px) {
-    .rectangle-container {
-        flex-direction: column; /* Stack vertically on small screens */
-    }
-
-    .rectangle {
-        width: 100%; /* Full width for mobile */
-        margin-bottom: 10px;
-    }
-}
-
-/* Modal Animation */
-@keyframes slideIn {
-    from {
-        transform: translateY(-100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-.rectangle-container {
-    display: flex;
-    flex-wrap: wrap; /* Allows boxes to wrap if they can't fit in one line */
-    justify-content: space-around;
-    gap: 20px; /* Adds space between the rectangles */
-    margin-top: 20px;
-    padding: 20px; /* Optional: add padding for more space around the container */
-}
-
-.rectangle {
-    width: calc(50% - 30px); /* Adjust width and keep spacing consistent */
-    max-width: 520px; /* Ensure max width for large screens */
-    min-width: 300px; /* Minimum width to avoid squishing */
-    height: 300px;
-    margin-bottom: 20px; /* Additional margin to avoid overlap */
-    padding: 20px;
-    background-color: #f5f5f5;
-    border-radius: 15px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-@media (max-width: 768px) {
-    .rectangle-container {
-        flex-direction: column; /* Stack vertically on smaller screens */
-    }
-
-    .rectangle {
-        width: 100%; /* Full width for mobile */
-        margin-bottom: 10px;
-    }
-}
-
-  </style>
 
     <div class="sidebar">
         <a href="/admin_dashboard" class="logo">
@@ -353,19 +21,16 @@ textarea {
             <div class="logo-name"><span>ADMIN</span>MENU</div>
         </a>
         <ul class="side-menu">
-            <li><a href="/"><i class='bx bx-home' ></i>Home</a></li>
+            <li><a href="/"><i class='bx bx-home'></i>Home</a></li>
             <li><a href="/admin_dashboard"><i class='bx bx-cog'></i>Dashboard</a></li>
-            <li><a href="/classi"><i class='bx bx-show' ></i>Classi</a></li>
-            <li><a href="/crea_admin"><i class='bx bx-shield-alt-2' ></i>Crea admin</a></li>
-            <li class="active"><a href="/gestione_dati" ><i class='bx bx-data'></i>Gestione dati</a></li>
-
-
-
+            <li><a href="/classi"><i class='bx bx-show'></i>Classi</a></li>
+            <li><a href="/crea_admin"><i class='bx bx-shield-alt-2'></i>Crea admin</a></li>
+            <li class="active"><a href="/gestione_dati"><i class='bx bx-data'></i>Gestione dati</a></li>
         </ul>
         <ul class="side-menu">
             <li>
                 <a href="/logout" class="logout">
-                    <i class='bx bx-log-out' ></i>
+                    <i class='bx bx-log-out'></i>
                     Esci dall' account
                 </a>
             </li>
@@ -389,80 +54,98 @@ textarea {
                 </div>
             </div>
 
-            <div class="boxelementiadd">
-                <h3 class="custom-heading">Carica Database</h3>
 
-                        <form action="{{url_for('pagine_sito.pagina_load_db')}}"method="POST" enctype="multipart/form-data">
-                    <label for="customFileInput" class="file-upload-label" id="fileUploadLabel">
-                        Premi qui per caricare il tuo file CON MERGE                    </label>
-                    <input type="file" id="customFileInput" name="file_db">
 
-                    <!-- Div per l'icona di conferma -->
-                    <div id="upload-icon" style="margin-top:4px;display:none;">
-                        <i class="fas fa-check-circle" style="color: green; font-size: 24px;"></i>
-                        <span id="file-name" style="color: green;"></span>
-                    </div>
+            <!-- Class Management Section -->
+            <div class="boxelementiadd" style="margin-top: 40px;">
+                <h3 class="custom-heading">Gestione Classe</h3>
 
-                    <button class="upload-btn" name="bottone" value="load_database" type="submit">Conferma</button>
-                </form>
-                {% if error %}
-                <button id="upload-btn" class="upload-btn" onclick="location.href='/db_errori'" style="border-radius:15px;background-color:red;">Errori nel dataset, clicca per vederli</button>
-                {% endif %}
-            </div>
-            <div class="rectangle-container">
-                <div class="rectangle" style="padding: 20px;">
-                    <div class="introduzione1rettangolo"> 
-                        <h2 style="margin-left: 20px; margin-bottom: 200px; font-weight: 400; font-size: 20px; text-align: center;">
-                            Scarica il database attuale
-                        </h2>
-                        <a href="{{ url_for('download_file', filename='foglio.xlsx')}}"> 
-                          <button class="download-button">Scarica Ora</button></a>
-                        
-                        <!-- Ultimi Update or Modifica -->
-                        <p style="text-align: left; font-weight: 300; font-size: 15px;">
-                        Ultimo Update: <b>{{ultimo_upload}}</b>
-                        </p>
-                        <p style="text-align: left; font-weight: 300; font-size: 15px;">
-                        Ultimo Modifica: <b>{{ultima_modifica}}</b>
-                        </p>
+                <div class="class-selector-container">
+                    <label for="classSelector">Seleziona Classe:</label>
+                    <select id="classSelector" class="class-selector">
+                        <option value="" disabled selected>Scegli una classe...</option>
+                        <option value="3A">3A</option>
+                        <option value="4B">4B</option>
+                        <option value="5C">5C</option>
+                    </select>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="student-table" id="studentTable">
+                        <thead>
+                            <tr>
+                                <th>Alunno</th>
+                                <th>Presenza</th>
+                                <th>Bug</th>
+                                <th>Telefono</th>
+                                <th>Multiverso</th>
+                                <th>Ansia</th>
+                                <th>Frase del giorno</th>
+                                <th>Voto</th>
+                                <th>Memoria</th>
+                                <th>Lessico</th>
+                                <th>Nota</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentTableBody">
+                            
+                            <tr>
+                                <td>Gianni Morandi</td>
+                                <td>
+                                    <select>
+                                        <option value="presente">Presente</option>
+                                        <option value="assente">Assente</option>
+                                        <option value="strategica">Assenza Strategica</option>
+                                    </select>
+                                </td>
+                                <td><input type="checkbox" name="bug"></td>
+                                <td>
+                                    <label class="check">
+                                        <input type="checkbox" value="telefono+">
+                                        <span class="box">+</span>
+                                    </label>
+
+                                    <label class="check">
+                                        <input type="checkbox" value="telefono-">
+                                        <span class="box">-</span>
+                                    </label>
+                                    <!--<label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider"></span>
+                                    </label>-->
+                                </td>
+                                <td><input type="checkbox" name="multiverso"></td>
+                                <td><input type="checkbox" name="ansia"></td>
+                                <td><input type="text" name="frase_del_giorno" placeholder="Inserisci la frase"></td>
+                                <td>
+                                    <input type="number" min="0 " max="10" name="voto">
+                                    <input type="radio" name="voto" value="verifica">
+                                    <label for="verifica">Verifica</label>
+                                    <input type="radio" name="voto" value="interrogazione">
+                                    <label for="interrogazione">Interrogazione</label>
+                                    <input type="radio" name="voto" value="progetto">
+                                    <label for="progetto">Progetto</label>
+                                </td>
+                                <td><input type="checkbox" name="memoria"></td>
+                                <td><input type="checkbox" name="lessico"></td>
+                                <td><input type="checkbox" name="nota"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="btn-container">
+                        <button class="btn">Salva</button>
                     </div>
                 </div>
-                            
-                
-                           
-                <div class="rectangle" style="padding: 20px;">
-                    <h2 style="text-align: center; margin-bottom: 25px; font-weight: 400; font-size: 20px;">Frase Del Giorno</h2>
-                    <form class="inserisci-form" style="display: flex; flex-direction: column; gap: 5px;" action="{{url_for('pagine_sito.pagina_aggiungi_frase')}}" method="POST">
-                        <label for="frase" style="margin: 0;">Inserisci Frase</label>
-                        <input type="text" id="frase" name="frase" placeholder="Inserisci una frase" required style="margin: 0;">
-                        
-                        <label for="autore" style="margin: 0;">Inserisci il nome del Autore</label>
-                        <input type="text" id="autore" name="autore" placeholder="Nome del Autore" required style="margin: 0;">
-                        
-                            <button type="submit" class="conferma-frase">Conferma</button>
-                    </form>
-  
-                </div>                                                      
-                <div class="rectangle" style="padding: 20px;">
-                    <div style="margin-top: -20px;">
-                        <h2 style="text-align: center; margin-bottom: 20px; font-weight: 400; font-size: 20px; padding: 5% 15px;">Logging System</h2>
-                        <a href="/log_excel"> <button style="display: block; margin: 6px auto; border: none; background-color: #c82333; border-radius: 5px; padding: 10px 20px; font-size: 16px; color: white;">Log caricamento Excel</button></a>
-                        <a href="/versioni"> <button style="display: block; margin: 6px auto; border: none; background-color: #58A953; border-radius: 5px; padding: 10px 20px; font-size: 16px; color: white;">Versioni</button></a>
-                        <!--    <button style="display: block; margin: 6px auto; border: none; background-color: #218838; border-radius: 5px; padding: 10px 20px; font-size: 16px; color: white;">Log Upload</button>
-                        <button style="display: block; margin: 6px auto; border: none; background-color: blueviolet; border-radius: 5px; padding: 10px 20px; font-size: 16px; color: white;">Log Security</button>
-                        <button style="display: block; margin: 6px auto; border: none; background-color: #22769b; border-radius: 5px; padding: 10px 20px; font-size: 16px; color: white;">Log Test</button>-->
-                    </div>
-                </div>                            
-                             
             </div>
+
         </main>
     </div>
 
     <script>
-        document.getElementById('customFileInput').addEventListener('change', function(event) {
+        document.getElementById('customFileInput').addEventListener('change', function (event) {
             var fileInput = event.target;
             var fileName = fileInput.files.length ? fileInput.files[0].name : '';
-            
+
             if (fileName) {
                 // Mostra l'icona e il nome del file selezionato
                 document.getElementById('upload-icon').style.display = 'flex';
@@ -473,8 +156,7 @@ textarea {
             }
         });
     </script>
-        <script src="{{ url_for('static', filename='js/admin_dashboard.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/admin_dashboard.js')}}"></script>
 </body>
 
 </html>
-
