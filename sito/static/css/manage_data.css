@@ -1076,14 +1076,43 @@ textarea {
 
 /* --- Class Management Styles --- */
 
-.class-selector-container {
+#dateSelector {
+  color: transparent;     
+  caret-color: transparent; 
+  cursor: pointer;
+}
+
+#dateSelector::-webkit-datetime-edit,
+#dateSelector::-webkit-inner-spin-button,
+#dateSelector::-webkit-clear-button {
+  display: none;
+}
+
+#dateSelector::-webkit-calendar-picker-indicator {
+  opacity: 1;
+  cursor: pointer;
+}
+
+
+
+.voto {
+    width: 50px;
+}
+
+.classForm {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.classSelector-container {
     margin-bottom: 20px;
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-.class-selector {
+.classSelector {
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #ccc;
@@ -1103,7 +1132,7 @@ textarea {
 
 .student-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
     min-width: 600px;
     /* Ensure table doesn't get too squashed */
 }
