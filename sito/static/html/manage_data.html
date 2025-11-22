@@ -60,24 +60,36 @@
             <div class="boxelementiadd" style="margin-top: 40px;">
                 <h3 class="custom-heading">Gestione Classe</h3>
 
-                <div class="class-selector-container">
-                    <label for="classSelector">Seleziona Classe:</label>
-                    <select id="classSelector" class="class-selector">
-                        <option value="" disabled selected>Scegli una classe...</option>
-                        <option value="3A">3A</option>
-                        <option value="4B">4B</option>
-                        <option value="5C">5C</option>
-                    </select>
-                </div>
+                <form id="classForm" method="POST">
+                    <div class="classSelector-container">
+                        <label for="classSelector">Seleziona Classe:</label>
+                        <select name="classSelector" id="classSelector" class="classSelector">
+                            <option value="" disabled selected>Scegli una classe...</option>
+                            <option value="3A">3A</option>
+                            <option value="4B">4B</option>
+                            <option value="5C">5C</option>
+                        </select>
+
+                    </div>
+
+                </form>
+                <form id="classForm" method="POST">
+                    <div class="classSelector-container">
+                        <label for="dateSelector">Seleziona Data:</label>
+                        <input type="date" name="dateSelector" id="dateSelector" class="classSelector"
+                            value="{{ today }}">
+                    </div>
+
+                </form>
 
                 <div class="table-responsive">
                     <table class="student-table" id="studentTable">
                         <thead>
                             <tr>
                                 <th>Alunno</th>
-                                <th>Presenza</th>
+                                <th>Presenza <input type="checkbox" id="selectAll"></th>
                                 <th>Bug</th>
-                                <th>Telefono</th>
+                                <th>Telefono <input type="checkbox" id="selectAll"></th>
                                 <th>Multiverso</th>
                                 <th>Ansia</th>
                                 <th>Frase del giorno</th>
@@ -88,7 +100,55 @@
                             </tr>
                         </thead>
                         <tbody id="studentTableBody">
-                            
+
+                            <tr>
+                                <td>Gianni Morandi</td>
+                                <td>
+                                    <select>
+                                        <option value="presente">Presente</option>
+                                        <option value="assente">Assente</option>
+                                        <option value="strategica">Assenza Strategica</option>
+                                    </select>
+                                </td>
+                                <td><input type="checkbox" name="bug"></td>
+                                <td>
+                                    <label class="check">
+                                        <input type="checkbox" value="telefono+" class="alunno">
+                                        <span class="box">+</span>
+                                    </label>
+
+                                    <label class="check">
+                                        <input type="checkbox" value="telefono-" class="alunno">
+                                        <span class="box">-</span>
+                                    </label>
+                                    <!--<label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider"></span>
+                                    </label>-->
+                                </td>
+                                <td><input type="checkbox" name="multiverso"></td>
+                                <td><input type="checkbox" name="ansia"></td>
+                                <td><input type="text" name="frase_del_giorno" placeholder="Inserisci la frase"></td>
+                                <td>
+                                    <input type="number" min="0" max="10" name="voto" class="voto">
+                                    <!--<input type="radio" name="voto" value="verifica">
+                                    <label for="verifica">Verifica</label>
+                                    <input type="radio" name="voto" value="interrogazione">
+                                    <label for="interrogazione">Interrogazione</label>
+                                    <input type="radio" name="voto" value="progetto">
+                                    <label for="progetto">Progetto</label>-->
+                                    <select name="voto" id="voto">
+                                        <option value="verifica">Verifica</option>
+                                        <option value="interrogazione">Interrogazione</option>
+                                        <option value="progetto">Progetto</option>
+                                    </select>
+
+
+                                </td>
+                                <td><input type="checkbox" name="memoria"></td>
+                                <td><input type="checkbox" name="lessico"></td>
+                                <td><input type="checkbox" name="nota"></td>
+                            </tr>
                             <tr>
                                 <td>Gianni Morandi</td>
                                 <td>
@@ -118,13 +178,20 @@
                                 <td><input type="checkbox" name="ansia"></td>
                                 <td><input type="text" name="frase_del_giorno" placeholder="Inserisci la frase"></td>
                                 <td>
-                                    <input type="number" min="0 " max="10" name="voto">
-                                    <input type="radio" name="voto" value="verifica">
+                                    <input type="number" min="0" max="10" name="voto" class="voto">
+                                    <!--<input type="radio" name="voto" value="verifica">
                                     <label for="verifica">Verifica</label>
                                     <input type="radio" name="voto" value="interrogazione">
                                     <label for="interrogazione">Interrogazione</label>
                                     <input type="radio" name="voto" value="progetto">
-                                    <label for="progetto">Progetto</label>
+                                    <label for="progetto">Progetto</label>-->
+                                    <select name="voto" id="voto">
+                                        <option value="verifica">Verifica</option>
+                                        <option value="interrogazione">Interrogazione</option>
+                                        <option value="progetto">Progetto</option>
+                                    </select>
+
+
                                 </td>
                                 <td><input type="checkbox" name="memoria"></td>
                                 <td><input type="checkbox" name="lessico"></td>
@@ -132,6 +199,7 @@
                             </tr>
                         </tbody>
                     </table>
+
                     <div class="btn-container">
                         <button class="btn">Salva</button>
                     </div>
@@ -141,22 +209,7 @@
         </main>
     </div>
 
-    <script>
-        document.getElementById('customFileInput').addEventListener('change', function (event) {
-            var fileInput = event.target;
-            var fileName = fileInput.files.length ? fileInput.files[0].name : '';
-
-            if (fileName) {
-                // Mostra l'icona e il nome del file selezionato
-                document.getElementById('upload-icon').style.display = 'flex';
-                document.getElementById('file-name').textContent = fileName;
-            } else {
-                // Nasconde l'icona se non c'è nessun file selezionato
-                document.getElementById('upload-icon').style.display = 'none';
-            }
-        });
-    </script>
-    <script src="{{ url_for('static', filename='js/admin_dashboard.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/manage_data.js')}}"></script>
 </body>
 
 </html>
