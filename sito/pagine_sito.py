@@ -328,19 +328,25 @@ def pagina_elenco_user_display(elenco_type: str) -> str:
     )
 
 
-@pagine_sito.route("/gestione_dati", methods=["GET"])
+@pagine_sito.route("/gestione_dati", 
+    methods=["GET", "POST"]
+)
 @login_required
 @admin_permission_required
 def pagina_gestione_dati() -> str:
-    error = not mc_utils.is_empty(FILE_ERRORE)
-    ultimo_upload = mc_utils.get_item_of_json(GLOBAL_DATA, "ultimo_upload")
-    ultima_modifica = mc_utils.get_item_of_json(GLOBAL_DATA, "ultima_modifica")
+    if request.method == "POST":
+        pass
+
+
+    elenco_classi =[x.classe for x in list_database_elements.elenco_classi_studenti()]
     return render_template(
-        "manage_data.html",
-        error=error,
-        ultimo_upload=ultimo_upload,
-        ultima_modifica=ultima_modifica,
-    )
+    "manage_data.html",elenco_classi=elenco_classi,
+     )
+
+
+
+
+
 
 
 @pagine_sito.route("/load_db", methods=["POST"])

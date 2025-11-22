@@ -64,9 +64,9 @@
                     <label for="classSelector">Seleziona Classe:</label>
                     <select id="classSelector" class="class-selector">
                         <option value="" disabled selected>Scegli una classe...</option>
-                        <option value="3A">3A</option>
-                        <option value="4B">4B</option>
-                        <option value="5C">5C</option>
+						{% for classe in elenco_classi %}
+						<option value="{{ classe }}">{{ classe }}</option>
+						{% endfor %}
                     </select>
                 </div>
 
@@ -93,9 +93,9 @@
                                 <td>Gianni Morandi</td>
                                 <td>
                                     <select>
-                                        <option value="presente">Presente</option>
-                                        <option value="assente">Assente</option>
-                                        <option value="strategica">Assenza Strategica</option>
+                                        <option value="Presente">Presente</option>
+                                        <option value="Assenza">Assenza</option>
+                                        <option value="Assenza+">Assenza+</option>
                                     </select>
                                 </td>
                                 <td><input type="checkbox" name="bug"></td>
@@ -109,16 +109,12 @@
                                         <input type="checkbox" value="telefono-">
                                         <span class="box">-</span>
                                     </label>
-                                    <!--<label class="switch">
-                                        <input type="checkbox">
-                                        <span class="slider"></span>
-                                    </label>-->
                                 </td>
                                 <td><input type="checkbox" name="multiverso"></td>
                                 <td><input type="checkbox" name="ansia"></td>
                                 <td><input type="text" name="frase_del_giorno" placeholder="Inserisci la frase"></td>
                                 <td>
-                                    <input type="number" min="0 " max="10" name="voto">
+                                    <input type="number" min="0" max="10" name="voto">
                                     <input type="radio" name="voto" value="verifica">
                                     <label for="verifica">Verifica</label>
                                     <input type="radio" name="voto" value="interrogazione">
