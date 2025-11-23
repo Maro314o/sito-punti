@@ -97,6 +97,7 @@
                                 <th>Memoria</th>
                                 <th>Lessico</th>
                                 <th>Nota</th>
+                                <th>Extra</th>
                             </tr>
                         </thead>
                         <tbody id="studentTableBody">
@@ -131,9 +132,9 @@
                                 <td><input type="checkbox" name="multiverso"></td>
                                 <td><input type="checkbox" name="ansia"></td>
                                 <td><input type="text" name="frase_del_giorno" placeholder="Inserisci la frase"
-                                        class="frase_del_giorno"></td>
+                                        class="text-box"></td>
                                 <td>
-                                    <input type="number" min="0" max="10" name="voto" class="voto">
+                                    <input type="number" min="0" max="10" name="voto" class="number-box">
                                     <!--<input type="radio" name="voto" value="verifica">
                                     <label for="verifica">Verifica</label>
                                     <input type="radio" name="voto" value="interrogazione">
@@ -151,6 +152,10 @@
                                 <td><input type="checkbox" name="memoria"></td>
                                 <td><input type="checkbox" name="lessico"></td>
                                 <td><input type="checkbox" name="nota"></td>
+                                <td>
+                                    <input type="number" name="extra_points" placeholder="Punti Extra" class="number-box-extra" min="0" max="100" default="0">
+                                    <input type="text" name="extra_text" placeholder="Inserisci Motivazione" class="text-box">
+                                </td>
                             </tr>
                             <tr>
                                 <td>Gianni Morandi</td>
@@ -179,9 +184,9 @@
                                 </td>
                                 <td><input type="checkbox" name="multiverso"></td>
                                 <td><input type="checkbox" name="ansia"></td>
-                                <td><input type="text" name="frase_del_giorno" placeholder="Inserisci la frase" class="frase_del_giorno"></td>
+                                <td><input type="text" name="frase_del_giorno" placeholder="Inserisci la frase" class="text-box"></td>
                                 <td>
-                                    <input type="number" min="0" max="10" name="voto" class="voto">
+                                    <input type="number" min="0" max="10" name="voto" class="number-box">
                                     <!--<input type="radio" name="voto" value="verifica">
                                     <label for="verifica">Verifica</label>
                                     <input type="radio" name="voto" value="interrogazione">
@@ -199,6 +204,10 @@
                                 <td><input type="checkbox" name="memoria"></td>
                                 <td><input type="checkbox" name="lessico"></td>
                                 <td><input type="checkbox" name="nota"></td>
+                                <td>
+                                    <input type="number" name="extra_points" placeholder="Punti Extra" class="number-box-extra" min="0" max="100" default="0">
+                                    <input type="text" name="extra_text" placeholder="Inserisci Motivazione" class="text-box">
+                                </td>
                             </tr>
                         </tbody>
                     </table>
