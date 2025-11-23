@@ -87,9 +87,9 @@
                         <thead>
                             <tr>
                                 <th>Alunno</th>
-                                <th>Presenza <input type="checkbox" id="selectAll"></th>
+                                <th>Presenza <input type="checkbox" class="selectAllPresenza"></th>
                                 <th>Bug</th>
-                                <th>Telefono <input type="checkbox" id="selectAll"></th>
+                                <th>Telefono<input type="checkbox" id="selectAllTelefono"></th>
                                 <th>Multiverso</th>
                                 <th>Ansia</th>
                                 <th>Frase del giorno</th>
@@ -104,21 +104,23 @@
                             <tr>
                                 <td>Gianni Morandi</td>
                                 <td>
-                                    <select>
+                                    <select class="stato">
                                         <option value="presente">Presente</option>
                                         <option value="assente">Assente</option>
-                                        <option value="strategica">Assenza Strategica</option>
+                                        <option value="strategica">Assenza+</option>
                                     </select>
                                 </td>
                                 <td><input type="checkbox" name="bug"></td>
                                 <td>
+
                                     <label class="check">
-                                        <input type="checkbox" value="telefono+" class="alunno">
+                                        <input type="checkbox" value="telefono+" class="plus">
                                         <span class="box">+</span>
                                     </label>
 
+
                                     <label class="check">
-                                        <input type="checkbox" value="telefono-" class="alunno">
+                                        <input type="checkbox" value="telefono-" class="minus">
                                         <span class="box">-</span>
                                     </label>
                                     <!--<label class="switch">
@@ -128,7 +130,8 @@
                                 </td>
                                 <td><input type="checkbox" name="multiverso"></td>
                                 <td><input type="checkbox" name="ansia"></td>
-                                <td><input type="text" name="frase_del_giorno" placeholder="Inserisci la frase"></td>
+                                <td><input type="text" name="frase_del_giorno" placeholder="Inserisci la frase"
+                                        class="frase_del_giorno"></td>
                                 <td>
                                     <input type="number" min="0" max="10" name="voto" class="voto">
                                     <!--<input type="radio" name="voto" value="verifica">
@@ -152,7 +155,7 @@
                             <tr>
                                 <td>Gianni Morandi</td>
                                 <td>
-                                    <select>
+                                    <select class="stato">
                                         <option value="presente">Presente</option>
                                         <option value="assente">Assente</option>
                                         <option value="strategica">Assenza Strategica</option>
@@ -161,12 +164,12 @@
                                 <td><input type="checkbox" name="bug"></td>
                                 <td>
                                     <label class="check">
-                                        <input type="checkbox" value="telefono+">
+                                        <input type="checkbox" value="telefono+" class="plus">
                                         <span class="box">+</span>
                                     </label>
 
                                     <label class="check">
-                                        <input type="checkbox" value="telefono-">
+                                        <input type="checkbox" value="telefono-" class="minus">
                                         <span class="box">-</span>
                                     </label>
                                     <!--<label class="switch">
@@ -176,7 +179,7 @@
                                 </td>
                                 <td><input type="checkbox" name="multiverso"></td>
                                 <td><input type="checkbox" name="ansia"></td>
-                                <td><input type="text" name="frase_del_giorno" placeholder="Inserisci la frase"></td>
+                                <td><input type="text" name="frase_del_giorno" placeholder="Inserisci la frase" class="frase_del_giorno"></td>
                                 <td>
                                     <input type="number" min="0" max="10" name="voto" class="voto">
                                     <!--<input type="radio" name="voto" value="verifica">

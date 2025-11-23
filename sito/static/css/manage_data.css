@@ -554,41 +554,44 @@ body {
     text-align: right;
 }
 
-input[type="radio"] {
-    accent-color: var(--primary);
+.check {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    margin: 0 5px;
+    vertical-align: middle;
 }
 
 .check input {
-  display: none;
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
 }
 
-.box {
-  width: 21px;
-  height: 21px;
-  font-weight: normal;
-  background-color: #fff;
-  border: 1px solid #6b6a6a;
-  border-radius: 3px;
-  display: inline-block;
-  text-align: center;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  cursor: pointer;
-  transition: .2s;
+.check .box {
+    width: 20px;
+    height: 20px;
+    border: 1px solid #5a5a5a;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 0;
+    user-select: none;
 }
 
-/* quando selezionata */
-.check input:checked + .box {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: #fff;
+.check input:checked+.box {
+    background: var(--primary);
+    color: var(--light);
+    border-color: var(--primary);
 }
 
-.check input:checked:hover + .box {
-  background: var(--secondary);
-  border-color: var(--secondary);
-  color: #fff;
+.check input:checked:hover+.box {
+    background: var(--secondary);
+    border-color: var(--secondary);
+    color: #fff;
 }
 
 
@@ -660,11 +663,13 @@ input[type="radio"] {
         display: none;
     }
 
+
     .content nav form .form-input button {
         width: auto;
         height: auto;
         background: transparent;
         color: var(--dark);
+
         border-radius: none;
     }
 
@@ -1076,27 +1081,21 @@ textarea {
 
 /* --- Class Management Styles --- */
 
-#dateSelector {
-  color: transparent;     
-  caret-color: transparent; 
-  cursor: pointer;
+.frase_del_giorno {
+    width: 180px;
+    margin-right: 10px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
-
-#dateSelector::-webkit-datetime-edit,
-#dateSelector::-webkit-inner-spin-button,
-#dateSelector::-webkit-clear-button {
-  display: none;
-}
-
-#dateSelector::-webkit-calendar-picker-indicator {
-  opacity: 1;
-  cursor: pointer;
-}
-
 
 
 .voto {
-    width: 50px;
+    width: 60px;
+    margin-right: 10px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
 .classForm {
@@ -1125,8 +1124,7 @@ textarea {
     width: 100%;
     overflow-x: auto;
     background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
     padding: 20px;
 }
 
@@ -1140,8 +1138,14 @@ textarea {
 .student-table th,
 .student-table td {
     padding: 12px 15px;
-    text-align: left;
+    text-align: center;
+    vertical-align: middle;
     border-bottom: 1px solid #eee;
+}
+
+.student-table th:first-child,
+.student-table td:first-child {
+    text-align: left;
 }
 
 .student-table th {
