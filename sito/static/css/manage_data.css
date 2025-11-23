@@ -50,6 +50,11 @@ body {
     overflow-x: hidden;
 }
 
+table{
+    border-collapse: collapse ;
+    border-spacing: 0;
+}
+
 .sidebar {
     position: fixed;
     top: 0;
@@ -325,9 +330,10 @@ body {
 }
 
 .check .box {
+    background-color: white;
     width: 20px;
     height: 20px;
-    border: 1px solid #5a5a5a;
+    border: 1px solid var(--dark);
     border-radius: 3px;
     display: flex;
     align-items: center;
@@ -446,7 +452,7 @@ h3.custom-heading {
 .table-responsive {
     width: 100%;
     overflow-x: auto;
-    background-color: white;
+    background-color: var(--light);
     border-radius: 20px;
     padding: 20px;
 }
@@ -467,13 +473,21 @@ h3.custom-heading {
 
 .student-table th:first-child,
 .student-table td:first-child {
-    text-align: left;
+    text-align: center;
+}
+
+.student-table th:first-child {
+    border-top-left-radius: 12px;
+}
+
+.student-table th:last-child {
+    border-top-right-radius: 12px;
 }
 
 .student-table th {
-    background-color: #f8f9fa;
+    background-color: var(--primary);
     font-weight: 600;
-    color: #333;
+    color: var(--light);
     white-space: nowrap;
 }
 
