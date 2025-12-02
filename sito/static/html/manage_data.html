@@ -87,10 +87,11 @@
                     <table class="student-table" id="studentTable">
                         <thead>
                             <tr>
+                                <th>N.</th>
                                 <th>Alunno</th>
-                                <th>Presenza <input type="checkbox" id="selectAll"></th>
+                                <th>Presenza <input type="checkbox" class="selectAllPresenza"></th>
                                 <th>Bug</th>
-                                <th>Telefono <input type="checkbox" id="selectAll"></th>
+                                <th>Telefono<input type="checkbox" id="selectAllTelefono"></th>
                                 <th>Multiverso</th>
                                 <th>Ansia</th>
                                 <th>Frase del giorno</th>
@@ -98,28 +99,32 @@
                                 <th>Memoria</th>
                                 <th>Lessico</th>
                                 <th>Nota</th>
+                                <th>Extra</th>
                             </tr>
                         </thead>
                         <tbody id="studentTableBody">
 
                             <tr>
+                                <td>1</td>
                                 <td>Gianni Morandi</td>
                                 <td>
-                                    <select>
+                                    <select class="stato">
                                         <option value="presente">Presente</option>
                                         <option value="assente">Assente</option>
-                                        <option value="strategica">Assenza Strategica</option>
+                                        <option value="strategica">Assenza+</option>
                                     </select>
                                 </td>
                                 <td><input type="checkbox" name="bug"></td>
                                 <td>
+
                                     <label class="check">
-                                        <input type="checkbox" value="telefono+" class="alunno">
+                                        <input type="checkbox" value="telefono+" class="plus">
                                         <span class="box">+</span>
                                     </label>
 
+
                                     <label class="check">
-                                        <input type="checkbox" value="telefono-" class="alunno">
+                                        <input type="checkbox" value="telefono-" class="minus">
                                         <span class="box">-</span>
                                     </label>
                                     <!--<label class="switch">
@@ -129,9 +134,10 @@
                                 </td>
                                 <td><input type="checkbox" name="multiverso"></td>
                                 <td><input type="checkbox" name="ansia"></td>
-                                <td><input type="text" name="frase_del_giorno" placeholder="Inserisci la frase"></td>
+                                <td><input type="text" name="frase_del_giorno" placeholder="Inserisci la frase"
+                                        class="text-box"></td>
                                 <td>
-                                    <input type="number" min="0" max="10" name="voto" class="voto">
+                                    <input type="number" min="0" max="10" name="voto" class="number-box" placeholder="0">
                                     <!--<input type="radio" name="voto" value="verifica">
                                     <label for="verifica">Verifica</label>
                                     <input type="radio" name="voto" value="interrogazione">
@@ -149,33 +155,38 @@
                                 <td><input type="checkbox" name="memoria"></td>
                                 <td><input type="checkbox" name="lessico"></td>
                                 <td><input type="checkbox" name="nota"></td>
+                                <td>
+                                    <input type="number" name="extra_points" placeholder="Punti Extra" class="number-box-extra" min="0" max="100" default="0">
+                                    <input type="text" name="extra_text" placeholder="Inserisci Motivazione" class="text-box">
+                                </td>
                             </tr>
                             <tr>
-                                <td>Gianni Morandi</td>
+                                <td>2</td>
+                                <td>Marotto Maximilian</td>
                                 <td>
-                                    <select>
-                                        <option value="Presente">Presente</option>
-                                        <option value="Assenza">Assenza</option>
-                                        <option value="Assenza+">Assenza+</option>
+                                    <select class="stato">
+                                        <option value="presente">Presente</option>
+                                        <option value="assente">Assente</option>
+                                        <option value="strategica">Assenza Strategica</option>
                                     </select>
                                 </td>
                                 <td><input type="checkbox" name="bug"></td>
                                 <td>
                                     <label class="check">
-                                        <input type="checkbox" value="telefono+">
+                                        <input type="checkbox" value="telefono+" class="plus">
                                         <span class="box">+</span>
                                     </label>
 
                                     <label class="check">
-                                        <input type="checkbox" value="telefono-">
+                                        <input type="checkbox" value="telefono-" class="minus">
                                         <span class="box">-</span>
                                     </label>
                                 </td>
                                 <td><input type="checkbox" name="multiverso"></td>
                                 <td><input type="checkbox" name="ansia"></td>
-                                <td><input type="text" name="frase_del_giorno" placeholder="Inserisci la frase"></td>
+                                <td><input type="text" name="frase_del_giorno" placeholder="Inserisci la frase" class="text-box"></td>
                                 <td>
-                                    <input type="number" min="0" max="10" name="voto" class="voto">
+                                    <input type="number" min="0" max="10" name="voto" class="number-box">
                                     <!--<input type="radio" name="voto" value="verifica">
                                     <label for="verifica">Verifica</label>
                                     <input type="radio" name="voto" value="interrogazione">
@@ -193,6 +204,10 @@
                                 <td><input type="checkbox" name="memoria"></td>
                                 <td><input type="checkbox" name="lessico"></td>
                                 <td><input type="checkbox" name="nota"></td>
+                                <td>
+                                    <input type="number" name="extra_points" placeholder="Punti Extra" class="number-box-extra" min="0" max="100" default="0">
+                                    <input type="text" name="extra_text" placeholder="Inserisci Motivazione" class="text-box">
+                                </td>
                             </tr>
                         </tbody>
                     </table>
