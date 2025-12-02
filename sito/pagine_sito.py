@@ -328,19 +328,30 @@ def pagina_elenco_user_display(elenco_type: str) -> str:
     )
 
 
-@pagine_sito.route("/gestione_dati", 
+@pagine_sito.route("/gestione_dati/<classe_name>/<data_str>", 
     methods=["GET", "POST"]
 )
 @login_required
 @admin_permission_required
-def pagina_gestione_dati() -> str:
-    if request.method == "POST":
-        pass
-
-
+def pagina_gestione_dati(classe_name:str,data_str:str) -> str:
     elenco_classi =[x.classe for x in list_database_elements.elenco_classi_studenti()]
+    if request.method == "POST":
+        returned_form = request.form
+        form_id = returned_form.get("form_id")
+        if form_id == "classSelector":
+            pass
+
+        elif form_id == "dateSelector":
+            pass
+        elif form_id == "students_data":
+            pass
+        else:
+            print("wtf")
+
+
+
     return render_template(
-    "manage_data.html",elenco_classi=elenco_classi,
+    "manage_data.html",elenco_classi=elenco_classi,data=datetime.datetime.today().strftime('%Y-%m-%d')
      )
 
 

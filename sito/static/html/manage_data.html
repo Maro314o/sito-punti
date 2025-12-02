@@ -25,7 +25,7 @@
             <li><a href="/admin_dashboard"><i class='bx bx-cog'></i>Dashboard</a></li>
             <li><a href="/classi"><i class='bx bx-show'></i>Classi</a></li>
             <li><a href="/crea_admin"><i class='bx bx-shield-alt-2'></i>Crea admin</a></li>
-            <li class="active"><a href="/gestione_dati"><i class='bx bx-data'></i>Gestione dati</a></li>
+            <li class="active"><a href="/gestione_dati/none/none"><i class='bx bx-data'></i>Gestione dati</a></li>
         </ul>
         <ul class="side-menu">
             <li>
@@ -61,6 +61,7 @@
                 <h3 class="custom-heading">Gestione Classe</h3>
 
                 <form id="classForm" method="POST">
+					<input type="hidden" name="form_id" value="classSelector"> <!-- identifica il form ritornato NON RIMUOVERE -->
                     <div class="classSelector-container">
                         <label for="classSelector">Seleziona Classe:</label>
                         <select name="classSelector" id="classSelector" class="classSelector">
@@ -74,10 +75,10 @@
 
                 </form>
                 <form id="classForm" method="POST">
+					<input type="hidden" name="form_id" value="dateSelector"> <!-- identifica il form ritornato NON RIMUOVERE -->
                     <div class="classSelector-container">
                         <label for="dateSelector">Seleziona Data:</label>
-                        <input type="date" name="dateSelector" id="dateSelector" class="classSelector"
-                            value="{{ today }}">
+						<input type="date" name="dateSelector" id="dateSelector" class="classSelector" value="{{ data }}">
                     </div>
 
                 </form>
@@ -174,13 +175,8 @@
                                 <td><input type="checkbox" name="ansia"></td>
                                 <td><input type="text" name="frase_del_giorno" placeholder="Inserisci la frase"></td>
                                 <td>
-<<<<<<< HEAD
-                                    <input type="number" min="0" max="10" name="voto">
-                                    <input type="radio" name="voto" value="verifica">
-=======
                                     <input type="number" min="0" max="10" name="voto" class="voto">
                                     <!--<input type="radio" name="voto" value="verifica">
->>>>>>> aggiunta_dashboard
                                     <label for="verifica">Verifica</label>
                                     <input type="radio" name="voto" value="interrogazione">
                                     <label for="interrogazione">Interrogazione</label>
@@ -202,6 +198,8 @@
                     </table>
 
                     <div class="btn-container">
+						<input type="hidden" name="form_id" value="students_data"> <!-- identifica il form ritornato NON RIMUOVERE -->
+
                         <button class="btn">Salva</button>
                     </div>
                 </div>

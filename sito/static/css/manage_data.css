@@ -1076,23 +1076,6 @@ textarea {
 
 /* --- Class Management Styles --- */
 
-#dateSelector {
-  color: transparent;     
-  caret-color: transparent; 
-  cursor: pointer;
-}
-
-#dateSelector::-webkit-datetime-edit,
-#dateSelector::-webkit-inner-spin-button,
-#dateSelector::-webkit-clear-button {
-  display: none;
-}
-
-#dateSelector::-webkit-calendar-picker-indicator {
-  opacity: 1;
-  cursor: pointer;
-}
-
 
 
 .voto {
