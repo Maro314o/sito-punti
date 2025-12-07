@@ -328,30 +328,53 @@ def pagina_elenco_user_display(elenco_type: str) -> str:
     )
 
 
+@pagine_sito.route("/gestione_dati/<classe_name>/", 
+    methods=["GET", "POST"]
+)
+@login_required
+@admin_permission_required
+def pagina_gestione_dati_r(classe_name:str) -> str:
+    return redirect(url_for("pagine_sito.pagina_gestione_dati",classe_name=classe_name,data_str='none'))
+
 @pagine_sito.route("/gestione_dati/<classe_name>/<data_str>", 
     methods=["GET", "POST"]
 )
 @login_required
 @admin_permission_required
 def pagina_gestione_dati(classe_name:str,data_str:str) -> str:
+    data_str = datetime.datetime.today().strftime('%Y-%m-%d') if not data_str else data_str
     elenco_classi =[x.classe for x in list_database_elements.elenco_classi_studenti()]
     if request.method == "POST":
         returned_form = request.form
         form_id = returned_form.get("form_id")
         if form_id == "classSelector":
-            pass
-
+            classe_name= returned_form.get("classSelector")
+            return redirect(url_for("pagine_sito.pagina_gestione_dati",classe_name=classe_name,data_str=data_str))
         elif form_id == "dateSelector":
-            pass
+            data_str = returned_form.get("dateSelector")
+
+            return redirect(url_for("pagine_sito.pagina_gestione_dati",classe_name=classe_name,data_str=data_str))
+
         elif form_id == "students_data":
             pass
         else:
             print("wtf")
-
-
+    if classe_name=="admin":
+        classe_name="none"
+    if classe_name != "none":
+        lista_studenti_v=[[x,dict()] for x in db_funcs.studenti_da_classe(db_funcs.classe_da_nome(classe_name))]
+        lista_studenti_v.sort(key=lambda x: x[0].nominativo)
+        if Cronologia.query.filter_by(data=data_str).first() is not None:
+            for ind,(studente,_) in enumerate(lista_studenti_v):
+                cron = filter(lambda x: x.data==data_str,studente.cronologia_studente)
+                for j in cron:
+                    print(j.attivita)
+                    lista_studenti_v[ind][1][j.attivita]=1
+    else:
+        lista_studenti_v=None
 
     return render_template(
-    "manage_data.html",elenco_classi=elenco_classi,data=datetime.datetime.today().strftime('%Y-%m-%d')
+    "manage_data.html",classe_name=classe_name,elenco_classi=elenco_classi,data=data_str,lista_studenti_v=lista_studenti_v
      )
 
 

@@ -2,7 +2,7 @@ document.getElementById("classSelector").addEventListener("change", () => {
     document.getElementById("classForm").submit();
 });
 document.getElementById("dateSelector").addEventListener("change", () => {
-    document.getElementById("classForm").submit();
+    document.getElementById("dataForm").submit();
 });
 
 
@@ -23,7 +23,7 @@ document.querySelector('.selectAllPresenza').addEventListener('change', function
     const allSelects = document.querySelectorAll('.stato');
 
     allSelects.forEach(sel => {
-        sel.value = this.checked ? 'presente' : 'assente';
+        sel.value = this.checked ? 'Presente' : 'Assenza';
     });
 });
 
