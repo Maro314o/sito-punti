@@ -8,6 +8,7 @@ from flask import (
     flash,
     send_from_directory,
 )
+from sito.costanti import COEFFICIENTI_VOTI
 from sito.database_funcs import list_database_elements
 import sito.errors_utils as e_utils
 from sito.errors_utils.errors_classes.data_error_classes import InvalidSeasonError
@@ -368,8 +369,11 @@ def pagina_gestione_dati(classe_name:str,data_str:str) -> str:
             for ind,(studente,_) in enumerate(lista_studenti_v):
                 cron = filter(lambda x: x.data==data_str,studente.cronologia_studente)
                 for j in cron:
-                    print(j.attivita)
-                    lista_studenti_v[ind][1][j.attivita]=1
+                    v = 1
+                    if j.attivita in COEFFICIENTI_VOTI:
+                        v = j.modifica_punti/COEFFICIENTI_VOTI[j.attivita]
+                        lista_studenti_v[ind][1]['Voto']=v
+                    lista_studenti_v[ind][1][j.attivita]=v
     else:
         lista_studenti_v=None
 

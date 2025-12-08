@@ -49,8 +49,7 @@ MESI = {
     "novembre": 11,
     "dicembre": 12,
 }
-
-
+COEFFICIENTI_VOTI ={"Verifica" : 3,"Interrogazione":2,"Progetto":2}
 VUOTO = ""
 ERROR = True
 NO_ERROR = False
