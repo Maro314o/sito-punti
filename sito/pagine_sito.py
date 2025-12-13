@@ -349,7 +349,7 @@ def pagina_gestione_dati(classe_name:str,data_str:str) -> str:
         returned_form = request.form
         form_id = returned_form.get("form_id")
         if form_id == "classSelector":
-            classe_name= returned_form.get("classSelector")
+            classe_name = returned_form.get("classSelector")
             return redirect(url_for("pagine_sito.pagina_gestione_dati",classe_name=classe_name,data_str=data_str))
         elif form_id == "dateSelector":
             data_str = returned_form.get("dateSelector")
@@ -357,9 +357,9 @@ def pagina_gestione_dati(classe_name:str,data_str:str) -> str:
             return redirect(url_for("pagine_sito.pagina_gestione_dati",classe_name=classe_name,data_str=data_str))
 
         elif form_id == "students_data":
-            pass
+            pass  
         else:
-            print("wtf")
+            print("you alone in this one lil blud")
     if classe_name=="admin":
         classe_name="none"
     if classe_name != "none":
@@ -368,12 +368,12 @@ def pagina_gestione_dati(classe_name:str,data_str:str) -> str:
         if Cronologia.query.filter_by(data=data_str).first() is not None:
             for ind,(studente,_) in enumerate(lista_studenti_v):
                 cron = filter(lambda x: x.data==data_str,studente.cronologia_studente)
-                for j in cron:
+                for evento in cron:
                     v = 1
-                    if j.attivita in COEFFICIENTI_VOTI:
-                        v = j.modifica_punti/COEFFICIENTI_VOTI[j.attivita]
+                    if evento.attivita in COEFFICIENTI_VOTI:
+                        v = evento.modifica_punti/COEFFICIENTI_VOTI[evento.attivita]
                         lista_studenti_v[ind][1]['Voto']=v
-                    lista_studenti_v[ind][1][j.attivita]=v
+                    lista_studenti_v[ind][1][evento.attivita]=v
     else:
         lista_studenti_v=None
 

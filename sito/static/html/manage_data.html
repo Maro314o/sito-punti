@@ -93,154 +93,151 @@
 					</form>
 
 					{% if classe_name != 'none' and data != 'none'%}
-					<div class="table-responsive">
-						<table class="student-table" id="studentTable">
-							<thead>
-								<tr>
-									<th>N.</th>
-									<th>Alunno</th>
-									<th>Presenza <input type="checkbox" class="selectAllPresenza"></th>
-									<th>Bug</th>
-									<th>Telefono<input type="checkbox" id="selectAllTelefono"></th>
-									<th>Multiverso</th>
-									<th>Ansia</th>
-								<th>Frase del giorno</th>
-									<th>Voto</th>
-									<th>Memoria</th>
-									<th>Lessico</th>
-									<th>Nota</th>
-									<th>Extra</th>
-								</tr>
-							</thead>
-							<tbody id="studentTableBody">
+          <form id="students_data" method="POST">
+					  <div class="table-responsive">
+              <table class="student-table" id="studentTable">
+                <thead>
+                  <tr>
+                    <th>N.</th>
+                    <th>Alunno</th>
+                    <th>Presenza <input type="checkbox" class="selectAllPresenza"></th>
+                    <th>Bug</th>
+                    <th>Telefono<input type="checkbox" id="selectAllTelefono"></th>
+                    <th>Multiverso</th>
+                    <th>Ansia</th>
+                    <th>Frase del giorno</th>
+                    <th>Voto</th>
+                    <th>Memoria</th>
+                    <th>Lessico</th>
+                    <th>Nota</th>
+                  </tr>
+                </thead>
+                <tbody id="studentTableBody">
 
-								{% for studente_t in lista_studenti_v %}
-								<tr>
-									<td>{{ loop.index }}</td>
-									<td>{{ studente_t[0].nominativo }}</td>
-									<td>
-										<select class="stato">
-											<option value="Presente" >Presente</option>
+                  {% for studente_t in lista_studenti_v %}
+                  <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ studente_t[0].nominativo }}</td>
+                    <td>
+                      <select class="stato" name="{{studente_t.id}}_Stato">
+                        <option value="Presente" >Presente</option>
 
-											<option value="Assenza"
+                        <option value="Assenza"
 
-										   {% if studente_t[1].get("Assenza",0) !=0 %} 
-															   selected
-										   {% endif %}
-											>Assenza</option>
-											<option value="Assenza+"
+                         {% if studente_t[1].get("Assenza",0) !=0 %} 
+                                   selected
+                         {% endif %}
+                        >Assenza</option>
+                        <option value="Assenza+"
 
-										   {% if studente_t[1].get("Assenza+",0) !=0 %} 
-															   selected
-										   {% endif %}
-											>Assenza+</option>
+                         {% if studente_t[1].get("Assenza+",0) !=0 %} 
+                                   selected
+                         {% endif %}
+                        >Assenza+</option>
 
-										</select>
-									</td>
-									<td><input type="checkbox" name="bug" 
-															   {% if studente_t[1].get("Bug",0) !=0 %} 
-															   checked
-															   {% endif %}
-															   ></td>
-									<td>
+                      </select>
+                    </td>
+                    <td><input type="checkbox" name="{{studente_t.id}}_Bug" 
+                                   {% if studente_t[1].get("Bug",0) !=0 %} 
+                                   checked
+                                   {% endif %}
+                                   ></td>
+                    <td>
 
-										<label class="check">
-											<input type="checkbox" value="Cellulare"
-					
-															   {% if studente_t[1].get("Cellulare",0) !=0 %} 
-															   checked
-															   {% endif %}
-											 class="plus">
-											<span class="box">+</span>
-										</label>
-
-
-										<label class="check">
-											<input type="checkbox" value="telefono-" class="minus">
-											<span class="box">-</span>
-										</label>
-									</td>
-									<td><input type="checkbox" name="multiverso"
-
-															   {% if studente_t[1].get("Multiverso",0) !=0 %} 
-															   checked
-															   {% endif %}
-															   ></td>
-									<td><input type="checkbox" name="ansia"
-															   {% if studente_t[1].get("Ansia",0) !=0 %} 
-															   checked
-															   {% endif %}
-
-															   ></td>
-									<td><input type="text" name="frase_del_giorno" placeholder="Inserisci la frase"
-																				   class="text-box"></td>
-									<td>
-										<input type="number" min="0" max="10" name="voto" class="number-box" placeholder="{{ studente_t[1].get("Voto",0) }}">
-										<!--<input type="radio" name="voto" value="verifica">
-											<label for="verifica">Verifica</label>
-											<input type="radio" name="voto" value="interrogazione">
-											<label for="interrogazione">Interrogazione</label>
-											<input type="radio" name="voto" value="progetto">
-											<label for="progetto">Progetto</label>-->
-											<select name="voto" id="voto">
-												<option value="Verifica"
-															   {% if studente_t[1].get("Verifica",0) !=0 %} 
-																 selected
-															   {% endif %}
+                      <label class="check">
+                        <input type="checkbox" value="Cellulare" name="{{studente_t.id}}_Cellulare"
+            
+                                   {% if studente_t[1].get("Cellulare",0) !=0 %} 
+                                   checked
+                                   {% endif %}
+                         class="plus">
+                        <span class="box">+</span>
+                      </label>
 
 
-												>Verifica</option>
-												<option value="Interrogazione"
+                      <label class="check">
+                        <input type="checkbox" value="telefono-" class="minus" name="{{studente_t.id}}_Cellulare_minus">
+                        <span class="box">-</span>
+                      </label>
+                    </td>
+                    <td><input type="checkbox" name="{{studente_t.id}}_Multiverso"
 
-															   {% if studente_t[1].get("Interrogazione",0) !=0 %} 
-																 selected
-															   {% endif %}
-												>Interrogazione</option>
-												<option value="Progetto"
+                                   {% if studente_t[1].get("Multiverso",0) !=0 %} 
+                                   checked
+                                   {% endif %}
+                                   ></td>
+                    <td><input type="checkbox" name="{{studente_t.id}}_Ansia"
+                                   {% if studente_t[1].get("Ansia",0) !=0 %} 
+                                   checked
+                                   {% endif %}
 
-															   {% if studente_t[1].get("Progetto",0) !=0 %} 
-																 selected
-															   {% endif %}
+                                   ></td>
+                    <td><input type="text" name="{{studente_t.id}}_frase_del_giorno" placeholder="Inserisci la frase"
+                                             class="text-box"></td>
+                    <td>
+                      <input type="number" min="0" max="10" name="{{studente_t.id}}_Voto" class="number-box" placeholder="{{ studente_t[1].get("Voto",0) }}">
+                      <!--<input type="radio" name="voto" value="verifica">
+                        <label for="verifica">Verifica</label>
+                        <input type="radio" name="voto" value="interrogazione">
+                        <label for="interrogazione">Interrogazione</label>
+                        <input type="radio" name="voto" value="progetto">
+                        <label for="progetto">Progetto</label>-->
+                        <select name="{{studente_t.id}}_tipo_voto" id="voto">
+                          <option value="Verifica"
+                                   {% if studente_t[1].get("Verifica",0) !=0 %} 
+                                   selected
+                                   {% endif %}
 
-												>Progetto</option>
-											</select>
+
+                          >Verifica</option>
+                          <option value="Interrogazione"
+
+                                   {% if studente_t[1].get("Interrogazione",0) !=0 %} 
+                                   selected
+                                   {% endif %}
+                          >Interrogazione</option>
+                          <option value="Progetto"
+
+                                   {% if studente_t[1].get("Progetto",0) !=0 %} 
+                                   selected
+                                   {% endif %}
+
+                          >Progetto</option>
+                        </select>
 
 
-									</td>
-									<td><input type="checkbox" name="memoria"
-															   {% if studente_t[1].get("Memoria",0) !=0 %} 
-															   checked
-															   {% endif %}
+                    </td>
+                    <td><input type="checkbox" name="{{studente_t.id}}_Memoria"
+                                   {% if studente_t[1].get("Memoria",0) !=0 %} 
+                                   checked
+                                   {% endif %}
 
-															   ></td>
-									<td><input type="checkbox" name="lessico"
-															   {% if studente_t[1].get("Lessico",0) !=0 %} 
-															   checked
-															   {% endif %}
+                                   ></td>
+                    <td><input type="checkbox" name="{{studente_t.id}}_Lessico"
+                                   {% if studente_t[1].get("Lessico",0) !=0 %} 
+                                   checked
+                                   {% endif %}
 
-															   ></td>
-									<td><input type="checkbox" name="nota"
+                                   ></td>
+                    <td><input type="checkbox" name="{{studente_t.id}}_Nota"
 
-															   {% if studente_t[1].get("Nota",0) !=0 %} 
-															   checked
-															   {% endif %}
+                                   {% if studente_t[1].get("Nota",0) !=0 %} 
+                                   checked
+                                   {% endif %}
 
-															   ></td>
-									<td>
-										<input type="number" name="extra_points" placeholder="Punti Extra" class="number-box-extra" min="0" max="100" default="0">
-										<input type="text" name="extra_text" placeholder="Inserisci Motivazione" class="text-box">
-									</td>
-								</tr>
-								{% endfor %}
-							</tbody>
-						</table>
+                                   ></td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
 
-						<div class="btn-container">
-							<input type="hidden" name="form_id" value="students_data"> <!-- identifica il form ritornato NON RIMUOVERE -->
+              <div class="btn-container">
+                <input type="hidden" name="form_id" value="students_data"> <!-- identifica il form ritornato NON RIMUOVERE -->
 
-							<button class="btn">Salva</button>
-						</div>
-					</div>
+                <button class="btn">Salva</button>
+              </div>
+            </div>
+          </form>
 				{% endif %}
 				</div>
 
