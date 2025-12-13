@@ -109,7 +109,7 @@
 									<th>Memoria</th>
 									<th>Lessico</th>
 									<th>Nota</th>
-									<th>Extra</th>
+									<!--<th>Extra</th>-->
 								</tr>
 							</thead>
 							<tbody id="studentTableBody">
@@ -172,8 +172,7 @@
 															   {% endif %}
 
 															   ></td>
-									<td><input type="text" name="frase_del_giorno" placeholder="Inserisci la frase"
-																				   class="text-box"></td>
+									<td><input type="text" name="frase_del_giorno" value="{{studente_t[1].get("frase","")}}" placeholder="Inserisci la frase" class="text-box"></td>
 									<td>
 										<input type="number" min="0" max="10" name="voto" class="number-box" placeholder="{{ studente_t[1].get("Voto",0) }}">
 										<!--<input type="radio" name="voto" value="verifica">
@@ -226,10 +225,13 @@
 															   {% endif %}
 
 															   ></td>
+									<!--
 									<td>
+
 										<input type="number" name="extra_points" placeholder="Punti Extra" class="number-box-extra" min="0" max="100" default="0">
 										<input type="text" name="extra_text" placeholder="Inserisci Motivazione" class="text-box">
 									</td>
+									-->
 								</tr>
 								{% endfor %}
 							</tbody>

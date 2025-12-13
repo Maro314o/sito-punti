@@ -1,6 +1,8 @@
 import json
 import random
 
+from sito.costanti import FRASI_PATH
+
 ALLOWED_EXTENSIONS = set(["xlsx"])
 
 
@@ -47,6 +49,21 @@ def get_item_of_json(file_path: str, field: str) -> str | int:
         data = json.load(file)
     return data[field]
 
+def query_json_by_nominativo_and_date(nominativo : str,data : str) -> str | None:
+    """
+    cerca una frase dal file delle frasi dato un nominativo e una data (in stringa)
+    se non è presente ritorna None
+    """
+    with open(FRASI_PATH, "r") as file:
+        json_data = json.load(file)
+    frase = None
+    for elemento in json_data:
+
+        if elemento["autore"]==nominativo and elemento["data"]==data:
+            frase = elemento["frase"] 
+            break
+    return frase
+    
 
 def set_item_of_json(file_path: str, field: str, data: str) -> None:
     """

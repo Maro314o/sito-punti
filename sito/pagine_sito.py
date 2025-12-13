@@ -13,6 +13,7 @@ from sito.database_funcs import list_database_elements
 import sito.errors_utils as e_utils
 from sito.errors_utils.errors_classes.data_error_classes import InvalidSeasonError
 from sito.misc_utils_funcs import parse_utils
+from sito.misc_utils_funcs.misc_utils import query_json_by_nominativo_and_date
 from . import db, app
 
 with app.app_context():
@@ -365,8 +366,12 @@ def pagina_gestione_dati(classe_name:str,data_str:str) -> str:
     if classe_name != "none":
         lista_studenti_v=[[x,dict()] for x in db_funcs.studenti_da_classe(db_funcs.classe_da_nome(classe_name))]
         lista_studenti_v.sort(key=lambda x: x[0].nominativo)
+
         if Cronologia.query.filter_by(data=data_str).first() is not None:
             for ind,(studente,_) in enumerate(lista_studenti_v):
+                frase = query_json_by_nominativo_and_date(studente.nominativo,data_str)
+                if frase is not None:
+                    lista_studenti_v[ind][1]["frase"]=frase
                 cron = filter(lambda x: x.data==data_str,studente.cronologia_studente)
                 for j in cron:
                     v = 1
