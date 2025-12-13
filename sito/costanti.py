@@ -50,6 +50,7 @@ MESI = {
     "dicembre": 12,
 }
 COEFFICIENTI_VOTI ={"Verifica" : 3,"Interrogazione":2,"Progetto":2}
+NOME_EVENTI = ["Bug", "Cellulare", "Cellulare_minus", "Multiverso", "Ansia", "Memoria", "Lessico", "Nota"]
 VUOTO = ""
 ERROR = True
 NO_ERROR = False
