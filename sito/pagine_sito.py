@@ -9,7 +9,6 @@ from flask import (
     send_from_directory,
 )
 from sito.costanti import COEFFICIENTI_VOTI
-from sito.costanti import NOME_EVENTI
 from sito.database_funcs import list_database_elements
 import sito.errors_utils as e_utils
 from sito.errors_utils.errors_classes.data_error_classes import InvalidSeasonError
