@@ -50,7 +50,7 @@ MESI = {
     "dicembre": 12,
 }
 COEFFICIENTI_VOTI ={"Verifica" : 3,"Interrogazione":2,"Progetto":2}
-NOME_EVENTI = ["Bug", "Cellulare", "Cellulare_minus", "Multiverso", "Ansia", "Memoria", "Lessico", "Nota"]
+NOMI_CHECKBOX= {"Bug":1, "Cellulare":1, "Cellulare_minus":-1, "Multiverso":3, "Ansia":-3, "Memoria":2, "Lessico":1, "Nota":1}
 VUOTO = ""
 ERROR = True
 NO_ERROR = False

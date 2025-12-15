@@ -359,12 +359,40 @@ def pagina_gestione_dati(classe_name:str,data_str:str) -> str:
             return redirect(url_for("pagine_sito.pagina_gestione_dati",classe_name=classe_name,data_str=data_str))
 
         elif form_id == "students_data":
-            lista_studenti = db_funcs.studenti_da_classe(db_funcs.classe_da_nome(classe_name))
-            #for studente in lista_studenti:
-                #cron = filter(lambda x: x.data==data_str, studente.cronologia_studente)
-                #for evento in cron:
-                    #stringa = str(studente.id) + NOME_EVENTI[]
-                    #NOME_EVENTI[]
+            valori_ritornati={str(x.id):{"USER":x} for x in db_funcs.studenti_da_classe(db_funcs.classe_da_nome(classe_name))}
+
+            for identificativo,valore in returned_form.items():
+                if identificativo == "form_id": continue
+                print(identificativo)
+                Uid,tipo=identificativo.split('_')
+                valori_ritornati[Uid][tipo] = valore
+            for Uid,value_dict in valori_ritornati.items():
+                user = value_dict["USER"]
+                eventi_da_eliminare = [
+                    evento
+                    for evento in user.cronologia_studente
+                    if evento.data == data_str
+                ]
+
+                for evento in eventi_da_eliminare:
+                    db.session.delete(evento)
+
+
+
+
+
+
+
+                #RICHIAMA IL RICALCOLO DEI PUNTI DOPO PLS
+
+                db.session.commit()
+
+
+
+
+
+                
+
         else:
             print("you alone in this one lil blud")
     if classe_name=="admin":
