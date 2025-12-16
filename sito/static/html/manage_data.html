@@ -1,249 +1,219 @@
 <!DOCTYPE html>
 <html lang="en">
 
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="icon" href="{{ url_for('static',filename='images/logo.png')}}" type="image/icon">
-		<link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-		<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-		<link rel="icon" href="{{ url_for('static',filename='images/logo.png')}}" type="image/icon type">
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/manage_data.css') }}">
-		<title>Gestisci dati</title>
-	</head>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="{{ url_for('static',filename='images/logo.png')}}" type="image/icon">
+  <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link rel="icon" href="{{ url_for('static',filename='images/logo.png')}}" type="image/icon type">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/manage_data.css') }}">
+  <title>Gestisci dati</title>
+</head>
 
-	<body>
+<body>
 
-		<div class="sidebar">
-			<a href="/admin_dashboard" class="logo">
-				<i class='bx bx-code-alt'></i>
-				<div class="logo-name"><span>ADMIN</span>MENU</div>
-			</a>
-			<ul class="side-menu">
-				<li><a href="/"><i class='bx bx-home'></i>Home</a></li>
-				<li><a href="/admin_dashboard"><i class='bx bx-cog'></i>Dashboard</a></li>
-				<li><a href="/classi"><i class='bx bx-show'></i>Classi</a></li>
-				<li><a href="/crea_admin"><i class='bx bx-shield-alt-2'></i>Crea admin</a></li>
-				<li class="active"><a href="/gestione_dati/none/none"><i class='bx bx-data'></i>Gestione dati</a></li>
-			</ul>
-			<ul class="side-menu">
-				<li>
-					<a href="/logout" class="logout">
-						<i class='bx bx-log-out'></i>
-						Esci dall' account
-					</a>
-				</li>
-			</ul>
-		</div>
+  <div class="sidebar">
+    <a href="/admin_dashboard" class="logo">
+      <i class='bx bx-code-alt'></i>
+      <div class="logo-name"><span>ADMIN</span>MENU</div>
+    </a>
+    <ul class="side-menu">
+      <li><a href="/"><i class='bx bx-home'></i>Home</a></li>
+      <li><a href="/admin_dashboard"><i class='bx bx-cog'></i>Dashboard</a></li>
+      <li><a href="/classi"><i class='bx bx-show'></i>Classi</a></li>
+      <li><a href="/crea_admin"><i class='bx bx-shield-alt-2'></i>Crea admin</a></li>
+      <li class="active"><a href="/gestione_dati/none/none"><i class='bx bx-data'></i>Gestione dati</a></li>
+    </ul>
+    <ul class="side-menu">
+      <li>
+        <a href="/logout" class="logout">
+          <i class='bx bx-log-out'></i>
+          Esci dall' account
+        </a>
+      </li>
+    </ul>
+  </div>
 
-		<div class="content">
-			<nav>
-				<i class='bx bx-menu'></i>
-				<form action="#"></form>
-			</nav>
+  <div class="content">
+    <nav>
+      <i class='bx bx-menu'></i>
+      <form action="#"></form>
+    </nav>
 
-			<main>
-				<div class="header">
-					<div class="left">
-						<h1>Dashboard</h1>
-						<ul class="breadcrumb">
-							<li><a href="#">Admin Menu</a></li> /
-							<li><a href="#" class="active">Gestione dati</a></li>
-						</ul>
-					</div>
-				</div>
-
-
-
-				<!-- Class Management Section -->
-				<div class="boxelementiadd" style="margin-top: 40px;">
-					<h3 class="custom-heading">Gestione Classe</h3>
-
-					<form id="classForm" method="POST">
-						<input type="hidden" name="form_id" value="classSelector"> <!-- identifica il form ritornato NON RIMUOVERE -->
-						<div class="classSelector-container">
-							<label for="classSelector">Seleziona Classe:</label>
-							<select name="classSelector" id="classSelector" class="classSelector">
-								<option value="" disabled {% if classe_name!= none %} 
-								selected
-								{% endif %}
-								>
-								Scegli una classe...</option>
-								{% for classe in elenco_classi %}
-								<option value="{{ classe }}"
-										{% if classe == classe_name %}
-										 selected
-										{% endif %}
-
-								>{{ classe }}</option>
-								{% endfor %}
-							</select>
-
-						</div>
-
-					</form>
-					<form id="dataForm" method="POST">
-						<input type="hidden" name="form_id" value="dateSelector"> <!-- identifica il form ritornato NON RIMUOVERE -->
-						<div class="classSelector-container">
-							<label for="dateSelector">Seleziona Data:</label>
-							<input type="date" name="dateSelector" id="dateSelector" class="classSelector" value="{{ data }}">
-						</div>
-
-					</form>
-
-					{% if classe_name != 'none' and data != 'none'%}
-          <form id="students_data" method="POST">
-					  <div class="table-responsive">
-              <table class="student-table" id="studentTable">
-                <thead>
-                  <tr>
-                    <th>N.</th>
-                    <th>Alunno</th>
-                    <th>Presenza <input type="checkbox" class="selectAllPresenza"></th>
-                    <th>Bug</th>
-                    <th>Telefono<input type="checkbox" id="selectAllTelefono"></th>
-                    <th>Multiverso</th>
-                    <th>Ansia</th>
-                    <th>Frase del giorno</th>
-                    <th>Voto</th>
-                    <th>Memoria</th>
-                    <th>Lessico</th>
-                    <th>Nota</th>
-                  </tr>
-                </thead>
-                <tbody id="studentTableBody">
-
-                  {% for studente_t in lista_studenti_v %}
-                  <tr>
-                    <td>{{ loop.index }}</td>
-                    <td>{{ studente_t[0].nominativo }}</td>
-                    <td>
-                      <select class="stato" name="{{studente_t[0].id}}_Stato">
-                        <option value="Presente" >Presente</option>
-
-                        <option value="Assenza"
-
-                         {% if studente_t[1].get("Assenza",0) !=0 %} 
-                                   selected
-                         {% endif %}
-                        >Assenza</option>
-                        <option value="Assenza+"
-
-                         {% if studente_t[1].get("Assenza+",0) !=0 %} 
-                                   selected
-                         {% endif %}
-                        >Assenza+</option>
-
-                      </select>
-                    </td>
-                    <td><input type="checkbox" name="{{studente_t[0].id}}_Bug" 
-                                   {% if studente_t[1].get("Bug",0) !=0 %} 
-                                   checked
-                                   {% endif %}
-                                   ></td>
-                    <td>
-
-                      <label class="check">
-                        <input type="checkbox" value="Cellulare" name="{{studente_t[0].id}}_Cellulare"
-            
-                                   {% if studente_t[1].get("Cellulare",0) !=0 %} 
-                                   checked
-                                   {% endif %}
-                         class="plus">
-                        <span class="box">+</span>
-                      </label>
+    <main>
+      <div class="header">
+        <div class="left">
+          <h1>Dashboard</h1>
+          <ul class="breadcrumb">
+            <li><a href="#">Admin Menu</a></li> /
+            <li><a href="#" class="active">Gestione dati</a></li>
+          </ul>
+        </div>
+      </div>
 
 
-                      <label class="check">
-                        <input type="checkbox" value="telefono-" class="minus" name="{{studente_t[0].id}}_Cellulare_minus">
-                        <span class="box">-</span>
-                      </label>
-                    </td>
-                    <td><input type="checkbox" name="{{studente_t[0].id}}_Multiverso"
 
-                                   {% if studente_t[1].get("Multiverso",0) !=0 %} 
-                                   checked
-                                   {% endif %}
-                                   ></td>
-                    <td><input type="checkbox" name="{{studente_t[0].id}}_Ansia"
-                                   {% if studente_t[1].get("Ansia",0) !=0 %} 
-                                   checked
-                                   {% endif %}
+      <!-- Class Management Section -->
+      <div class="boxelementiadd" style="margin-top: 40px;">
+        <h3 class="custom-heading">Gestione Classe</h3>
 
-															   ></td>
-					<td><input type="text" name="{{studente_t[0].id}}_frase-del-giorno" value="{{studente_t[1].get("frase","")}}" placeholder="Inserisci la frase" class="text-box"></td>
-                    <td>
-                      <input type="number" min="0" max="10"  step="0.5" name="{{studente_t[0].id}}_Voto" class="number-box" value="{{ studente_t[1].get("Voto","")}}" placeholder="0">
-                      <!--<input type="radio" name="voto" value="verifica">
-                        <label for="verifica">Verifica</label>
-                        <input type="radio" name="voto" value="interrogazione">
-                        <label for="interrogazione">Interrogazione</label>
-                        <input type="radio" name="voto" value="progetto">
-                        <label for="progetto">Progetto</label>-->
-                        <select name="{{studente_t[0].id}}_tipo-voto" id="voto">
-                          <option value="Verifica"
-                                   {% if studente_t[1].get("Verifica",0) !=0 %} 
-                                   selected
-                                   {% endif %}
+        <form id="classForm" method="POST">
+          <input type="hidden" name="form_id" value="classSelector"> <!-- identifica il form ritornato NON RIMUOVERE -->
+          <div class="classSelector-container">
+            <label for="classSelector">Seleziona Classe:</label>
+            <select name="classSelector" id="classSelector" class="classSelector">
+              <option value="" disabled {% if classe_name!=none %} selected {% endif %}>
+                Scegli una classe...</option>
+              {% for classe in elenco_classi %}
+              <option value="{{ classe }}" {% if classe==classe_name %} selected {% endif %}>{{ classe }}</option>
+              {% endfor %}
+            </select>
+
+          </div>
+
+        </form>
+        <form id="dataForm" method="POST">
+          <input type="hidden" name="form_id" value="dateSelector"> <!-- identifica il form ritornato NON RIMUOVERE -->
+          <div class="classSelector-container">
+            <label for="dateSelector">Seleziona Data:</label>
+            <input type="date" name="dateSelector" id="dateSelector" class="classSelector" value="{{ data }}">
+          </div>
+
+        </form>
+
+        {% if classe_name != 'none' and data != 'none'%}
+        <form id="students_data" method="POST">
+          <div class="table-responsive">
+            <table class="student-table" id="studentTable">
+              <thead>
+                <tr>
+                  <th>N.</th>
+                  <th>Alunno</th>
+                  <th>Presenza <input type="checkbox" class="selectAllPresenza"></th>
+                  <th>Bug</th>
+                  <th>Telefono<input type="checkbox" id="selectAllTelefono"></th>
+                  <th>Multiverso</th>
+                  <th>Ansia</th>
+                  <th>Frase del giorno</th>
+                  <th>Voto</th>
+                  <th>Memoria</th>
+                  <th>Lessico</th>
+                  <th>Nota</th>
+                </tr>
+              </thead>
+              <tbody id="studentTableBody">
+
+                {% for studente_t in lista_studenti_v %}
+                <tr>
+                  <td>{{ loop.index }}</td>
+                  <td>{{ studente_t[0].nominativo }}</td>
+                  <td>
+                    <select class="stato" name="{{studente_t[0].id}}_Stato">
+                      <option value="Presente">Presente</option>
+
+                      <option value="Assenza" {% if studente_t[1].get("Assenza",0) !=0 %} selected {% endif %}>Assenza
+                      </option>
+                      <option value="Assenza+" {% if studente_t[1].get("Assenza+",0) !=0 %} selected {% endif %}>
+                        Assenza+</option>
+
+                    </select>
+                  </td>
+                  <td><input type="checkbox" name="{{studente_t[0].id}}_Bug" {% if studente_t[1].get("Bug",0) !=0 %}
+                      checked {% endif %}></td>
+                  <td>
+
+                    <label class="check">
+                      <input type="checkbox" value="Cellulare" name="{{studente_t[0].id}}_Cellulare" {% if
+                        studente_t[1].get("Cellulare",0) !=0 %} checked {% endif %} class="plus">
+                      <span class="box">+</span>
+                    </label>
 
 
-                          >Verifica</option>
-                          <option value="Interrogazione"
+                    <label class="check">
+                      <input type="checkbox" value="telefono-" class="minus"
+                        name="{{studente_t[0].id}}_Cellulare_minus">
+                      <span class="box">-</span>
+                    </label>
+                  </td>
+                  <td><input type="checkbox" name="{{studente_t[0].id}}_Multiverso" {% if
+                      studente_t[1].get("Multiverso",0) !=0 %} checked {% endif %}></td>
+                  <td><input type="checkbox" name="{{studente_t[0].id}}_Ansia" {% if studente_t[1].get("Ansia",0) !=0 %}
+                      checked {% endif %}></td>
+                  <td><input type="text" name="{{studente_t[0].id}}_frase-del-giorno" value="{{studente_t[1].get("
+                      frase","")}}" placeholder="Inserisci la frase" class="text-box"></td>
+                  <td>
+                    <button type="button" class="btn open-modal-btn">Voti</button>
+                  </td>
+                  <td><input type="checkbox" name="{{studente_t[0].id}}_Memoria" {% if studente_t[1].get("Memoria",0)
+                      !=0 %} checked {% endif %}></td>
+                  <td><input type="checkbox" name="{{studente_t[0].id}}_Lessico" {% if studente_t[1].get("Lessico",0)
+                      !=0 %} checked {% endif %}></td>
+                  <td><input type="checkbox" name="{{studente_t[0].id}}_Nota" {% if studente_t[1].get("Nota",0) !=0 %}
+                      checked {% endif %}></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
 
-                                   {% if studente_t[1].get("Interrogazione",0) !=0 %} 
-                                   selected
-                                   {% endif %}
-                          >Interrogazione</option>
-                          <option value="Progetto"
+            <div class="btn-container">
+              <input type="hidden" name="form_id" value="students_data">
+              <!-- identifica il form ritornato NON RIMUOVERE -->
 
-                                   {% if studente_t[1].get("Progetto",0) !=0 %} 
-                                   selected
-                                   {% endif %}
-
-                          >Progetto</option>
-                        </select>
-
-
-                    </td>
-                    <td><input type="checkbox" name="{{studente_t[0].id}}_Memoria"
-                                   {% if studente_t[1].get("Memoria",0) !=0 %} 
-                                   checked
-                                   {% endif %}
-
-                                   ></td>
-                    <td><input type="checkbox" name="{{studente_t[0].id}}_Lessico"
-                                   {% if studente_t[1].get("Lessico",0) !=0 %} 
-                                   checked
-                                   {% endif %}
-
-                                   ></td>
-                    <td><input type="checkbox" name="{{studente_t[0].id}}_Nota"
-
-                                   {% if studente_t[1].get("Nota",0) !=0 %} 
-                                   checked
-                                   {% endif %}
-
-                                   ></td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-
-              <div class="btn-container">
-                <input type="hidden" name="form_id" value="students_data"> <!-- identifica il form ritornato NON RIMUOVERE -->
-
-                <button class="btn">Salva</button>
-              </div>
+              <button class="btn">Salva</button>
             </div>
-          </form>
-				{% endif %}
-				</div>
+          </div>
+        </form>
+        {% endif %}
+      </div>
 
-			</main>
-		</div>
+    </main>
+  </div>
 
-		<script src="{{ url_for('static', filename='js/manage_data.js')}}"></script>
-	</body>
+  <!-- Overlay voti -->
+  <div id="overlay" class="overlay">
+    <div class="modal">
+      <h2>Inserisci i voti</h2>
+      <div class="modal-content">
+        <!-- Qui andrà il contenuto futuro -->
+        <table>
+          <thead>
+            <tr>
+
+              <th>N.</th>
+              <th>Alunno</th>
+              <th>Voto</th>
+              <th>Nota</th>
+              <th class="actions-header"></th>
+            </tr>
+          </thead>
+          <tbody id="voteTableBody">
+            <tr>
+              <td>1</td>
+              <td>Alunno</td>
+              <td><input type="number" name="voto" min="0" max="10" class="input-modern" placeholder="Voto"></td>
+              <td><input type="text" name="nota" class="input-modern" placeholder="Nota opzionale"></td>
+              <td class="action-cell">
+                <div class="action-buttons">
+                  <button type="button" class="btn round-btn remove-vote-row"><i class='bx bx-minus'></i></button>
+                  <button type="button" class="btn round-btn add-vote-row"><i class='bx bx-plus'></i></button>
+                </div>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-actions">
+        <button type="button" id="cancelBtn" class="btn cancel">Annulla</button>
+        <button type="button" id="confirmBtn" class="btn confirm">Conferma</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/manage_data.js')}}"></script>
+</body>
 
 </html>
