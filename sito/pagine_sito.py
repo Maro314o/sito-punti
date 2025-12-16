@@ -8,12 +8,12 @@ from flask import (
     flash,
     send_from_directory,
 )
-from sito.costanti import COEFFICIENTI_VOTI
+from sito.costanti import COEFFICIENTI_ASSENZE, COEFFICIENTI_VOTI, NOMI_CHECKBOX
 from sito.database_funcs import list_database_elements
 import sito.errors_utils as e_utils
 from sito.errors_utils.errors_classes.data_error_classes import InvalidSeasonError
 from sito.misc_utils_funcs import parse_utils
-from sito.misc_utils_funcs.misc_utils import query_json_by_nominativo_and_date
+from sito.misc_utils_funcs.misc_utils import aggiungi_frase, query_json_by_nominativo_and_date, rimuovi_frase
 from . import db, app
 
 with app.app_context():
@@ -365,27 +365,42 @@ def pagina_gestione_dati(classe_name:str,data_str:str) -> str:
                 print(identificativo)
                 Uid,tipo=identificativo.split('_')
                 valori_ritornati[Uid][tipo] = valore
+            stagione = list_database_elements.get_last_season()
+
             for Uid,value_dict in valori_ritornati.items():
                 user = value_dict["USER"]
-                eventi_da_eliminare = [
-                    evento
-                    for evento in user.cronologia_studente
-                    if evento.data == data_str
-                ]
-
+                eventi_da_eliminare = [evento for evento in user.cronologia_studente if evento.data == data_str]
+                rimuovi_frase(user.nominativo,data_str)
                 for evento in eventi_da_eliminare:
                     db.session.delete(evento)
-
-
-
-
-
-
-
-                #RICHIAMA IL RICALCOLO DEI PUNTI DOPO PLS
-
-                db.session.commit()
-
+                for tipo,valore in value_dict.items():
+                    attivita = None
+                    punti = None
+                    if tipo in NOMI_CHECKBOX:
+                        attivita=tipo
+                        punti = float(NOMI_CHECKBOX[tipo])
+                    elif tipo == "Stato" and valore != "Presente":
+                            attivita=valore
+                            punti=float(COEFFICIENTI_ASSENZE[valore])
+                    elif tipo=="tipo-voto" and value_dict["Voto"]!="":
+                        attivita=valore
+                        punti=float(value_dict["Voto"])*COEFFICIENTI_VOTI[valore]
+                    elif tipo == "frase-del-giorno" and valore !="":
+                        aggiungi_frase(user.nominativo,valore,data_str)
+                        attivita="Frase"
+                        punti=1.0
+                    if attivita and punti:
+                        db.session.add(
+                                    Cronologia(
+                                        data= data_str,
+                                        stagione = stagione,
+                                        attivita=attivita,
+                                        modifica_punti=punti,
+                                        punti_cumulativi=0.0,
+                                        utente_id=user.id
+                                        ))
+                db.session.commit()                 
+                db_funcs.aggiorna_punti_composto(user) # inefficiente perchè ricacola subito anche i punti di tutta la squadra,
 
 
 

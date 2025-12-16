@@ -156,7 +156,12 @@
 
 
                       <label class="check">
-                        <input type="checkbox" value="telefono-" class="minus" name="{{studente_t[0].id}}_Cellulare_minus">
+                        <input type="checkbox" value="Cellulare-minus" class="minus" name="{{studente_t[0].id}}_Cellulare-minus"
+
+                                   {% if studente_t[1].get("Cellulare-minus",0) !=0 %} 
+                                   checked
+                                   {% endif %}
+						>
                         <span class="box">-</span>
                       </label>
                     </td>
