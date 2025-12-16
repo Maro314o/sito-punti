@@ -67,45 +67,45 @@ if (voteTableBody) {
         const removeBtn = e.target.closest('.remove-vote-row');
 
         if (addBtn) {
-            addVoteRow();
+            addVoteRow(addBtn);
         } else if (removeBtn) {
             removeVoteRow(removeBtn);
         }
     });
 }
 
-function addVoteRow() {
-    const tbody = document.getElementById('voteTableBody');
-    const rowCount = tbody.rows.length + 1;
-    const newRow = document.createElement('tr');
+function addVoteRow(btn) {
+    const row = btn.closest('tr');
+    const studentId = row.dataset.studentId;
+    const votesContainer = row.querySelector('.votes-container');
 
-    // Create the new row HTML structure. 
-    // Note: 'Alunno' is hardcoded as per the existing pattern.
+    const newRow = document.createElement('div');
+    newRow.classList.add('vote-row');
     newRow.innerHTML = `
-        <td>${rowCount}</td>
-        <td>Alunno</td>
-        <td><input type="number" name="voto" min="0" max="10" class="input-modern" placeholder="Voto"></td>
-        <td><input type="text" name="nota" class="input-modern" placeholder="Nota opzionale"></td>
-        <td class="action-cell">
-            <div class="action-buttons">
-                <button type="button" class="btn round-btn remove-vote-row"><i class='bx bx-minus'></i></button>
-                <button type="button" class="btn round-btn add-vote-row"><i class='bx bx-plus'></i></button>
-            </div>
-        </td>
+        <input type="number" name="voto_${studentId}" min="0" max="10" class="input-modern vote-input" placeholder="Voto">
+        <select name="nota_${studentId}" class="input-modern note-input">
+            <option value="Verifica">Verifica</option>
+            <option value="Interrogazione">Interrogazione</option>
+            <option value="Progetto">Progetto</option>
+        </select>
+        <div class="action-buttons">
+            <button type="button" class="btn round-btn remove-vote-row"><i class='bx bx-minus'></i></button>
+            <button type="button" class="btn round-btn add-vote-row"><i class='bx bx-plus'></i></button>
+        </div>
     `;
 
-    tbody.appendChild(newRow);
+    votesContainer.appendChild(newRow);
 }
 
 function removeVoteRow(btn) {
-    const row = btn.closest('tr');
-    if (row) {
-        row.remove();
+    const voteRow = btn.closest('.vote-row');
+    const container = voteRow.parentElement;
 
-        // Re-index rows
-        const tbody = document.getElementById('voteTableBody');
-        Array.from(tbody.rows).forEach((row, index) => {
-            row.cells[0].textContent = index + 1;
-        });
+    if (container.children.length > 1) {
+        voteRow.remove();
+    } else {
+        // If it's the last row, just clear the values
+        const inputs = voteRow.querySelectorAll('input, select');
+        inputs.forEach(input => input.value = '');
     }
 }

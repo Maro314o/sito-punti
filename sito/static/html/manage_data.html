@@ -181,28 +181,35 @@
         <table>
           <thead>
             <tr>
-
               <th>N.</th>
               <th>Alunno</th>
-              <th>Voto</th>
-              <th>Nota</th>
-              <th class="actions-header"></th>
+              <th>Voti</th>
             </tr>
           </thead>
           <tbody id="voteTableBody">
-            <tr>
-              <td>1</td>
-              <td>Alunno</td>
-              <td><input type="number" name="voto" min="0" max="10" class="input-modern" placeholder="Voto"></td>
-              <td><input type="text" name="nota" class="input-modern" placeholder="Nota opzionale"></td>
-              <td class="action-cell">
-                <div class="action-buttons">
-                  <button type="button" class="btn round-btn remove-vote-row"><i class='bx bx-minus'></i></button>
-                  <button type="button" class="btn round-btn add-vote-row"><i class='bx bx-plus'></i></button>
+            {% for studente_t in lista_studenti_v %}
+            <tr data-student-id="{{ studente_t[0].id }}">
+              <td>{{ loop.index }}</td>
+              <td class="student-name">{{ studente_t[0].nominativo }}</td>
+              <td class="vote-container-td">
+                <div class="votes-container">
+                  <div class="vote-row">
+                    <input type="number" name="voto_{{ studente_t[0].id }}" min="0" max="10"
+                      class="input-modern vote-input" placeholder="Voto">
+                    <select name="nota_{{ studente_t[0].id }}" class="input-modern note-input">
+                      <option value="Verifica">Verifica</option>
+                      <option value="Interrogazione">Interrogazione</option>
+                      <option value="Progetto">Progetto</option>
+                    </select>
+                    <div class="action-buttons">
+                      <button type="button" class="btn round-btn remove-vote-row"><i class='bx bx-minus'></i></button>
+                      <button type="button" class="btn round-btn add-vote-row"><i class='bx bx-plus'></i></button>
+                    </div>
+                  </div>
                 </div>
               </td>
             </tr>
-
+            {% endfor %}
           </tbody>
         </table>
       </div>

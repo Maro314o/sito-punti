@@ -537,13 +537,18 @@ h3.custom-heading {
     background-color: var(--light);
     padding: 30px;
     border-radius: 20px;
-    width: 650px;
+    width: 800px;
+    max-height: 80vh;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
     gap: 20px;
     transform: translateY(-20px);
     transition: all 0.3s ease;
+}
+
+.modal-content {
+    overflow-y: auto;
 }
 
 .overlay.open .modal {
@@ -690,3 +695,43 @@ h3.custom-heading {
 }
 
 /* Hide default cancel/confirm but since they are outside table they are handled by .modal-actions */
+
+/* Dynamic Vote Rows */
+.votes-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.vote-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.vote-row .input-modern {
+    width: auto;
+    flex-grow: 1;
+}
+
+.vote-row .vote-input {
+    width: 80px;
+    /* Smaller width for grade */
+    flex-grow: 0;
+}
+
+.vote-row .note-input {
+    flex-grow: 1;
+}
+
+.student-name {
+    text-align: left;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.vote-container-td {
+    display: flex;
+}
