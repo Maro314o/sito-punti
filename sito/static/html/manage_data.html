@@ -96,6 +96,7 @@
         
 
         <form id="students_data" method="POST">
+          
           <div class="table-responsive">
             <table class="student-table" id="studentTable">
               <thead>
@@ -175,14 +176,7 @@
               <button class="btn">Salva</button>
             </div>
           </div>
-        </form>
-      </div>
-
-    </main>
-  </div>
-
-  <!-- Overlay voti -->
-  <div id="overlay" class="overlay">
+            <div id="overlay" class="overlay">
 	  <div class="modal">
 		  <h2>Inserisci i voti</h2>
 		  <div class="modal-content">
@@ -223,12 +217,21 @@
 			  </table>
 		  </div>
 		  <div class="modal-actions">
-			  <button type="button" id="cancelBtn" class="btn cancel">Annulla</button>
-			  <button type="button" id="confirmBtn" class="btn confirm">Conferma</button>
+			  <button type="button" id="closeBtn" class="btn cancel">Chiudi</button>
+
 		  </div>
 	  </div>
   </div>
+        </form>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Overlay voti -->
+
           {% endif %}
+ 
 
 
   <script src="{{ url_for('static', filename='js/manage_data.js')}}"></script>

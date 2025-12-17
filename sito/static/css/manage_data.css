@@ -469,6 +469,7 @@ h3.custom-heading {
     text-align: center;
     vertical-align: middle;
     border-bottom: 1px solid #eee;
+	border-left: 1px solid #eee;
 }
 
 .student-table th:first-child,
@@ -489,6 +490,7 @@ h3.custom-heading {
     font-weight: 600;
     color: var(--light);
     white-space: nowrap;
+	border-left: none;
 }
 
 .student-table tr:hover {

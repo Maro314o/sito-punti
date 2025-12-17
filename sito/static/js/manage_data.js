@@ -37,8 +37,8 @@ document.querySelector('.selectAllPresenza').addEventListener('change', function
 // overlay
 
 const overlay = document.getElementById('overlay');
-const cancelBtn = document.getElementById('cancelBtn');
-const confirmBtn = document.getElementById('confirmBtn');
+const cancelBtn = document.getElementById('closeBtn');
+
 const openModalBtns = document.querySelectorAll('.open-modal-btn');
 
 openModalBtns.forEach(btn => {
@@ -54,7 +54,7 @@ function closeModal() {
 }
 
 cancelBtn.addEventListener('click', closeModal);
-confirmBtn.addEventListener('click', closeModal);
+
 
 // Close overlay if clicked outside the modal
 overlay.addEventListener('click', (e) => {
