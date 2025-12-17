@@ -50,8 +50,8 @@ body {
     overflow-x: hidden;
 }
 
-table{
-    border-collapse: collapse ;
+table {
+    border-collapse: collapse;
     border-spacing: 0;
 }
 
@@ -453,7 +453,7 @@ h3.custom-heading {
     width: 100%;
     overflow-x: auto;
     background-color: var(--light);
-    border-radius: 20px;
+    border-radius: 20px 0px 20px 20px;
     padding: 20px;
 }
 
@@ -510,3 +510,254 @@ h3.custom-heading {
     cursor: pointer;
     accent-color: var(--primary);
 }
+
+.selectAllPresenza,
+#selectAllTelefono {
+    transform: translateY(20%);
+    margin-left: 5px;
+}
+
+/* --- Overlay Styles --- */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.overlay.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal {
+    background-color: var(--light);
+    padding: 30px;
+    border-radius: 20px;
+    width: 800px;
+    max-height: 80vh;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    transform: translateY(-20px);
+    transition: all 0.3s ease;
+}
+
+.modal-content {
+    overflow-y: auto;
+}
+
+.overlay.open .modal {
+    transform: translateY(0);
+}
+
+.modal h2 {
+    color: var(--dark);
+    font-size: 24px;
+    text-align: center;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: auto;
+}
+
+.modal-actions .btn {
+    margin: 0;
+}
+
+.modal-actions .cancel {
+    background-color: var(--danger);
+    color: var(--light);
+}
+
+.modal-actions .confirm {
+    background-color: var(--success);
+    color: var(--light);
+}
+
+/* Overlay Table Styles */
+.modal-content table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 5px;
+    /* Adds spacing between rows if we want detached look, or keep 0 for connected */
+    margin-top: 15px;
+}
+
+.modal-content th {
+    padding: 15px;
+    background-color: var(--primary);
+    color: var(--light);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    border: none;
+}
+
+.modal-content th:first-child {
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+
+.modal-content th:last-child {
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+.modal-content td {
+    padding: 10px;
+    background: #fff;
+    vertical-align: middle;
+    text-align: center;
+    border-bottom: 1px solid var(--grey);
+}
+
+.modal-content tr:last-child td {
+    border-bottom: none;
+}
+
+/* Modern Inputs */
+.input-modern {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--grey);
+    border-radius: 50px;
+    /* Fully rounded inputs */
+    background: #fdfdfd;
+    font-size: 14px;
+    color: var(--dark);
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.input-modern:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--light-primary);
+    background: #fff;
+}
+
+/* Actions Column & Buttons */
+.action-cell {
+    width: 110px;
+    vertical-align: middle;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    /* Close together */
+}
+
+/* Reset generic modal btn styles for these specific ones */
+.modal-content .btn.round-btn {
+    margin: 0;
+    padding: 0;
+    width: 36px;
+    /* Perfectly round */
+    height: 36px;
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.3rem;
+    /* Icon size */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.modal-content .btn.round-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.modal-content .btn.round-btn:active {
+    transform: scale(0.95);
+}
+
+.add-vote-row {
+    background-color: var(--success);
+    color: white;
+}
+
+.remove-vote-row {
+    background-color: var(--danger);
+    color: white;
+}
+
+/* Hide default cancel/confirm but since they are outside table they are handled by .modal-actions */
+
+/* Dynamic Vote Rows */
+.votes-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.vote-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.vote-row .input-modern {
+    width: auto;
+    flex-grow: 1;
+}
+
+.vote-row .vote-input {
+    width: 80px;
+    /* Smaller width for grade */
+    flex-grow: 0;
+}
+
+.vote-row .note-input {
+    flex-grow: 1;
+}
+
+.student-name {
+    text-align: left;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.vote-container-td {
+    display: flex;
+}
+
+.alunno{
+    /* font-size: small; */
+    min-width: auto;
+}
+
+.data-voti-block{
+    display: flex;
+}
+
+.block-voti{
+    margin-left: auto;
+    background-color: var(--light);
+    border-radius: 20px 20px 0px 0px;
+}
+
+.block-voti-btn{
+    z-index: 1000;   
+}
+

@@ -362,7 +362,6 @@ def pagina_gestione_dati(classe_name:str,data_str:str) -> str:
 
             for identificativo,valore in returned_form.items():
                 if identificativo == "form_id": continue
-                print(identificativo)
                 Uid,tipo=identificativo.split('_')
                 valori_ritornati[Uid][tipo] = valore
             stagione = list_database_elements.get_last_season()
@@ -427,6 +426,7 @@ def pagina_gestione_dati(classe_name:str,data_str:str) -> str:
                         v = evento.modifica_punti/COEFFICIENTI_VOTI[evento.attivita]
                         lista_studenti_v[ind][1]['Voto']=v
                     lista_studenti_v[ind][1][evento.attivita]=v
+                
     else:
         lista_studenti_v=None
 
