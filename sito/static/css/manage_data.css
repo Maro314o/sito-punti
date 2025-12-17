@@ -511,6 +511,12 @@ h3.custom-heading {
     accent-color: var(--primary);
 }
 
+.selectAllPresenza,
+#selectAllTelefono {
+    transform: translateY(20%);
+    margin-left: 5px;
+}
+
 /* --- Overlay Styles --- */
 .overlay {
     position: fixed;
