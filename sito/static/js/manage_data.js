@@ -1,3 +1,10 @@
+const menuBar = document.querySelector('.content nav .bx.bx-menu');
+const sideBar = document.querySelector('.sidebar');
+
+menuBar.addEventListener('click', () => {
+    sideBar.classList.toggle('close');
+});
+
 document.getElementById("classSelector").addEventListener("change", () => {
     document.getElementById("classForm").submit();
 });

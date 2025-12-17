@@ -453,7 +453,7 @@ h3.custom-heading {
     width: 100%;
     overflow-x: auto;
     background-color: var(--light);
-    border-radius: 20px;
+    border-radius: 20px 0px 20px 20px;
     padding: 20px;
 }
 
@@ -741,3 +741,23 @@ h3.custom-heading {
 .vote-container-td {
     display: flex;
 }
+
+.alunno{
+    /* font-size: small; */
+    min-width: auto;
+}
+
+.data-voti-block{
+    display: flex;
+}
+
+.block-voti{
+    margin-left: auto;
+    background-color: var(--light);
+    border-radius: 20px 20px 0px 0px;
+}
+
+.block-voti-btn{
+    z-index: 1000;   
+}
+

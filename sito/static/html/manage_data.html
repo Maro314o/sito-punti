@@ -75,7 +75,8 @@
           </div>
 
         </form>
-        <form id="dataForm" method="POST">
+        <div class="data-voti-block">
+          <form id="dataForm" method="POST">
           <input type="hidden" name="form_id" value="dateSelector"> <!-- identifica il form ritornato NON RIMUOVERE -->
           <div class="classSelector-container">
             <label for="dateSelector">Seleziona Data:</label>
@@ -83,6 +84,12 @@
           </div>
 
         </form>
+        <div class="block-voti">
+          <button type="button" class="btn open-modal-btn block-voti-btn">Voti</button>
+        </div>
+        
+        </div>
+        
 
         {% if classe_name != 'none' and data != 'none'%}
         <form id="students_data" method="POST">
@@ -98,7 +105,6 @@
                   <th>Multiverso</th>
                   <th>Ansia</th>
                   <th>Frase del giorno</th>
-                  <th>Voto</th>
                   <th>Memoria</th>
                   <th>Lessico</th>
                   <th>Nota</th>
@@ -109,7 +115,7 @@
                 {% for studente_t in lista_studenti_v %}
                 <tr>
                   <td>{{ loop.index }}</td>
-                  <td>{{ studente_t[0].nominativo }}</td>
+                  <td class="alunno">{{ studente_t[0].nominativo }}</td>
                   <td>
                     <select class="stato" name="{{studente_t[0].id}}_Stato">
                       <option value="Presente">Presente</option>
@@ -144,9 +150,6 @@
                       checked {% endif %}></td>
                   <td><input type="text" name="{{studente_t[0].id}}_frase-del-giorno" value="{{studente_t[1].get("
                       frase","")}}" placeholder="Inserisci la frase" class="text-box"></td>
-                  <td>
-                    <button type="button" class="btn open-modal-btn">Voti</button>
-                  </td>
                   <td><input type="checkbox" name="{{studente_t[0].id}}_Memoria" {% if studente_t[1].get("Memoria",0)
                       !=0 %} checked {% endif %}></td>
                   <td><input type="checkbox" name="{{studente_t[0].id}}_Lessico" {% if studente_t[1].get("Lessico",0)
