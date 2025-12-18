@@ -87,18 +87,24 @@ function addVoteRow(btn) {
     const votesContainer = row.querySelector('.votes-container');
 
     const newRow = document.createElement('div');
+	const voteRow = btn.closest('.vote-row');
+    const container = voteRow.parentElement;
+
+    const i=container.children.length;
     newRow.classList.add('vote-row');
+
     newRow.innerHTML = `
-        <input type="number" name="voto_${studentId}" min="0" max="10" class="input-modern vote-input" placeholder="Voto">
-        <select name="nota_${studentId}" class="input-modern note-input">
-            <option value="Verifica">Verifica</option>
-            <option value="Interrogazione">Interrogazione</option>
-            <option value="Progetto">Progetto</option>
-        </select>
-        <div class="action-buttons">
-            <button type="button" class="btn round-btn remove-vote-row"><i class='bx bx-minus'></i></button>
-            <button type="button" class="btn round-btn add-vote-row"><i class='bx bx-plus'></i></button>
-        </div>
+									  <input type="number" name="${studentId}_Voto_${i}" min="0" max="10" step="0.5"
+																									  class="input-modern vote-input" placeholder="Voto">
+									  <select name="${studentId}_tipo-Voto_${i}" class="input-modern note-input">
+										  <option value="Verifica">Verifica</option>
+										  <option value="Interrogazione">Interrogazione</option>
+										  <option value="Progetto">Progetto</option>
+									  </select>
+									  <div class="action-buttons">
+										  <button type="button" class="btn round-btn remove-vote-row"><i class='bx bx-minus'></i></button>
+										  <button type="button" class="btn round-btn add-vote-row"><i class='bx bx-plus'></i></button>
+									  </div>
     `;
 
     votesContainer.appendChild(newRow);

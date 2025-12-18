@@ -362,7 +362,17 @@ def pagina_gestione_dati(classe_name:str,data_str:str) -> str:
 
             for identificativo,valore in returned_form.items():
                 if identificativo == "form_id": continue
-                Uid,tipo=identificativo.split('_')
+                Uid,tipo,*numero_identificativo=identificativo.split('_')
+                if tipo == "Voto" or tipo == "tipo-Voto":
+                    numero_identificativo = numero_identificativo[0]
+                    if "Voto" not in valori_ritornati[Uid]:
+                        valori_ritornati[Uid]["Voto"]={}
+                    if  numero_identificativo not in valori_ritornati[Uid]["Voto"]:
+                        valori_ritornati[Uid]["Voto"][numero_identificativo]={}
+                    valori_ritornati[Uid]["Voto"][numero_identificativo][tipo]=valore
+                    continue
+
+
                 valori_ritornati[Uid][tipo] = valore
             stagione = list_database_elements.get_last_season()
 
@@ -381,9 +391,19 @@ def pagina_gestione_dati(classe_name:str,data_str:str) -> str:
                     elif tipo == "Stato" and valore != "Presente":
                             attivita=valore
                             punti=float(COEFFICIENTI_ASSENZE[valore])
-                    elif tipo=="tipo-voto" and value_dict["Voto"]!="":
-                        attivita=valore
-                        punti=float(value_dict["Voto"])*COEFFICIENTI_VOTI[valore]
+                    elif tipo=="Voto" :
+                        for _,valutazione in valore.items(): 
+                            if valutazione["Voto"]== "": continue
+                            db.session.add(
+                                    Cronologia(
+                                        data= data_str,
+                                        stagione = stagione,
+                                        attivita=valutazione["tipo-Voto"],
+                                        modifica_punti=COEFFICIENTI_VOTI[valutazione["tipo-Voto"]]*float(valutazione["Voto"]),
+                                        punti_cumulativi=0.0,
+                                        utente_id=user.id
+                                        ))
+                        continue
                     elif tipo == "frase-del-giorno" and valore !="":
                         aggiungi_frase(user.nominativo,valore,data_str)
                         attivita="Frase"
@@ -424,7 +444,11 @@ def pagina_gestione_dati(classe_name:str,data_str:str) -> str:
                     v = 1
                     if evento.attivita in COEFFICIENTI_VOTI:
                         v = evento.modifica_punti/COEFFICIENTI_VOTI[evento.attivita]
-                        lista_studenti_v[ind][1]['Voto']=v
+                        if 'Voto' in lista_studenti_v[ind][1]:
+                            lista_studenti_v[ind][1]['Voto'].append((evento.attivita,v))
+                        else:
+                            lista_studenti_v[ind][1]['Voto']=[(evento.attivita,v)]
+                        continue
                     lista_studenti_v[ind][1][evento.attivita]=v
                 
     else:

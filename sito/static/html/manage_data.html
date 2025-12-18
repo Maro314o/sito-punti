@@ -196,10 +196,44 @@
 						  <td class="student-name">{{ studente_t[0].nominativo }}</td>
 						  <td class="vote-container-td">
 							  <div class="votes-container">
-								  <div class="vote-row">
-									  <input type="number" name="voto_{{ studente_t[0].id }}" min="0" max="10"
+								  {% if "Voto" in studente_t[1] %}
+								  {% for Voto_t in studente_t[1].get("Voto","" ) %}
+									  <div class="vote-row">
+									  <input type="number" name="{{ studente_t[0].id }}_Voto_{{loop.index0}}" min="0" max="10" step="0.5"  value={{Voto_t[1]}} class="input-modern vote-input" placeholder="Voto">
+									  <select name="{{ studente_t[0].id }}_tipo-Voto_{{loop.index0}}" class="input-modern note-input">
+							  <option value="Verifica"
+									   {% if Voto_t[0]=="Verifica"  %} 
+									   selected
+									   {% endif %}
+
+
+							  >Verifica</option>
+							  <option value="Interrogazione"
+
+									   {% if Voto_t[0]=="Interrogazione" %} 
+									   selected
+									   {% endif %}
+							  >Interrogazione</option>
+							  <option value="Progetto"
+
+									   {% if Voto_t[0]=="Progetto" %} 
+									   selected
+									   {% endif %}
+
+							  >Progetto</option>
+									  </select>
+									  <div class="action-buttons">
+										  <button type="button" class="btn round-btn remove-vote-row"><i class='bx bx-minus'></i></button>
+										  <button type="button" class="btn round-btn add-vote-row"><i class='bx bx-plus'></i></button>
+									  </div>
+								  </div>
+								  	{% endfor %}
+									  {% else %}
+
+									  <div class="vote-row">
+									  <input type="number" name="{{ studente_t[0].id }}_Voto_0" min="0" max="10" step="0.5"
 																									  class="input-modern vote-input" placeholder="Voto">
-									  <select name="nota_{{ studente_t[0].id }}" class="input-modern note-input">
+									  <select name="{{ studente_t[0].id }}_tipo-Voto_0" class="input-modern note-input">
 										  <option value="Verifica">Verifica</option>
 										  <option value="Interrogazione">Interrogazione</option>
 										  <option value="Progetto">Progetto</option>
@@ -208,7 +242,9 @@
 										  <button type="button" class="btn round-btn remove-vote-row"><i class='bx bx-minus'></i></button>
 										  <button type="button" class="btn round-btn add-vote-row"><i class='bx bx-plus'></i></button>
 									  </div>
+
 								  </div>
+									  {% endif %}
 							  </div>
 						  </td>
 					  </tr>
