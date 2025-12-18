@@ -3,53 +3,59 @@
 :root {
     --light: #f6f6f9;
     --primary: #158900;
+    --secondary: #0f6400;
     --light-primary: #CFE8FF;
     --grey: #eee;
     --dark-grey: #AAAAAA;
     --dark: #363949;
     --danger: #D32F2F;
-	--light-danger: #FECDD3;
+    --light-danger: #FECDD3;
     --warning: #FBC02D;
     --light-warning: #FFF2C6;
     --success: #388E3C;
     --light-success: #BBF7D0;
 }
 
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
 }
 
-.bx{
+.bx {
     font-size: 1.7rem;
 }
 
-a{
+a {
     text-decoration: none;
 }
 
-li{
+li {
     list-style: none;
 }
 
-html{
+html {
     overflow-x: hidden;
 }
 
-body.dark{
+body.dark {
     --light: #181a1e;
     --grey: #25252c;
     --dark: #fbfbfb
 }
 
-body{
+body {
     background: var(--grey);
     overflow-x: hidden;
 }
 
-.sidebar{
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.sidebar {
     position: fixed;
     top: 0;
     left: 0;
@@ -62,15 +68,15 @@ body{
     transition: all 0.3s ease;
 }
 
-.sidebar::-webkit-scrollbar{
+.sidebar::-webkit-scrollbar {
     display: none;
 }
 
-.sidebar.close{
+.sidebar.close {
     width: 60px;
 }
 
-.sidebar .logo{
+.sidebar .logo {
     font-size: 24px;
     font-weight: 700;
     height: 56px;
@@ -82,23 +88,23 @@ body{
     box-sizing: content-box;
 }
 
-.sidebar .logo .logo-name span{
+.sidebar .logo .logo-name span {
     color: var(--dark);
 }
 
-.sidebar .logo .bx{
+.sidebar .logo .bx {
     min-width: 60px;
     display: flex;
     justify-content: center;
     font-size: 2.2rem;
 }
 
-.sidebar .side-menu{
+.sidebar .side-menu {
     width: 100%;
     margin-top: 48px;
 }
 
-.sidebar .side-menu li{
+.sidebar .side-menu li {
     height: 48px;
     background: transparent;
     margin-left: 6px;
@@ -106,12 +112,12 @@ body{
     padding: 4px;
 }
 
-.sidebar .side-menu li.active{
+.sidebar .side-menu li.active {
     background: var(--grey);
     position: relative;
 }
 
-.sidebar .side-menu li.active::before{
+.sidebar .side-menu li.active::before {
     content: "";
     position: absolute;
     width: 40px;
@@ -123,7 +129,7 @@ body{
     z-index: -1;
 }
 
-.sidebar .side-menu li.active::after{
+.sidebar .side-menu li.active::after {
     content: "";
     position: absolute;
     width: 40px;
@@ -135,7 +141,7 @@ body{
     z-index: -1;
 }
 
-.sidebar .side-menu li a{
+.sidebar .side-menu li a {
     width: 100%;
     height: 100%;
     background: var(--light);
@@ -149,40 +155,40 @@ body{
     transition: all 0.3s ease;
 }
 
-.sidebar .side-menu li.active a{
+.sidebar .side-menu li.active a {
     color: var(--light);
     background-color: var(--success);
 }
 
-.sidebar.close .side-menu li a{
+.sidebar.close .side-menu li a {
     width: calc(48px - (4px * 2));
     transition: all 0.3s ease;
 }
 
-.sidebar .side-menu li a .bx{
+.sidebar .side-menu li a .bx {
     min-width: calc(60px - ((4px + 6px) * 2));
     display: flex;
     font-size: 1.6rem;
     justify-content: center;
 }
 
-.sidebar .side-menu li a.logout{
+.sidebar .side-menu li a.logout {
     color: var(--danger);
 }
 
-.content{
+.content {
     position: relative;
     width: calc(100% - 230px);
     left: 230px;
     transition: all 0.3s ease;
 }
 
-.sidebar.close~.content{
+.sidebar.close~.content {
     width: calc(100% - 60px);
     left: 60px;
 }
 
-.content nav{
+.content nav {
     height: 56px;
     background: var(--light);
     padding: 0 24px 0 0;
@@ -195,7 +201,7 @@ body{
     z-index: 1000;
 }
 
-.content nav::before{
+.content nav::before {
     content: "";
     position: absolute;
     width: 40px;
@@ -206,28 +212,28 @@ body{
     box-shadow: -20px -20px 0 var(--light);
 }
 
-.content nav a{
+.content nav a {
     color: var(--dark);
 }
 
-.content nav .bx.bx-menu{
+.content nav .bx.bx-menu {
     cursor: pointer;
     color: var(--dark);
 }
 
-.content nav form{
+.content nav form {
     max-width: 400px;
     width: 100%;
     margin-right: auto;
 }
 
-.content nav form .form-input{
+.content nav form .form-input {
     display: flex;
     align-items: center;
     height: 36px;
 }
 
-.content nav form .form-input input{
+.content nav form .form-input input {
     flex-grow: 1;
     padding: 0 16px;
     height: 100%;
@@ -239,7 +245,7 @@ body{
     color: var(--dark);
 }
 
-.content nav form .form-input button{
+.content nav form .form-input button {
     width: 80px;
     height: 100%;
     display: flex;
@@ -254,43 +260,13 @@ body{
     cursor: pointer;
 }
 
-.content nav .notif{
-    font-size: 20px;
-    position: relative;
-}
-
-.content nav .notif .count{
-    position: absolute;
-    top: -6px;
-    right: -6px;
-    width: 20px;
-    height: 20px;
-    background: var(--danger);
-    border-radius: 50%;
-    color: var(--light);
-    border: 2px solid var(--light);
-    font-weight: 700;
-    font-size: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.content nav .profile img{
-    width: 36px;
-    height: 36px;
-    object-fit: cover;
-    border-radius: 50%;
-}
-
-
-.content main{
+.content main {
     width: 100%;
     padding: 36px 24px;
     max-height: calc(100vh - 56px);
 }
 
-.content main .header{
+.content main .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -298,264 +274,105 @@ body{
     flex-wrap: wrap;
 }
 
-.content main .header .left h1{
+.content main .header .left h1 {
     font-size: 36px;
     font-weight: 600;
     margin-bottom: 10px;
     color: var(--dark);
 }
 
-.content main .header .left .breadcrumb{
+.content main .header .left .breadcrumb {
     display: flex;
     align-items: center;
     grid-gap: 16px;
 }
 
-.content main .header .left .breadcrumb li{
+.content main .header .left .breadcrumb li {
     color: var(--dark);
 }
 
-.content main .header .left .breadcrumb li a{
+.content main .header .left .breadcrumb li a {
     color: var(--dark-grey);
     pointer-events: none;
 }
 
-.content main .header .left .breadcrumb li a.active{
+.content main .header .left .breadcrumb li a.active {
     color: var(--primary);
     pointer-events: none;
 }
 
-.content main .header .report{
-    height: 36px;
-    padding: 0 16px;
-    border-radius: 36px;
+.btn {
+    cursor: pointer;
     background: var(--primary);
+    border: none;
     color: var(--light);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    grid-gap: 10px;
-    font-weight: 500;
-}
-
-.content main .insights{
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    grid-gap: 24px;
-    margin-top: 36px;
-}
-
-.content main .insights li{
-    padding: 24px;
-    background: var(--light);
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    grid-gap: 24px;
-    cursor: pointer;
-}
-
-.content main .insights li .bx{
-    width: 80px;
-    height: 80px;
-    border-radius: 10px;
-    font-size: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.content main .insights a:nth-child(1) .bx{
-    background: var(--light-primary);
-    color: #1976D2;
-}
-
-
-
-.content main .insights a:nth-child(2) .bx{
-    background: var(--light-success);
-    color: var(--success);
-}
-.content main .insights a:nth-child(3) .bx{
-    background: var(--light-warning);
-    color: var(--warning);
-}
-.content main .insights a:nth-child(4) .bx{
-    background: var(--light-danger);
-    color: var(--danger);
-}
-
-.content main .insights li .info h3{
-    font-size: 24px;
-    font-weight: 600;
-    color: var(--dark);
-}
-
-.content main .insights li .info p{
-    color: var(--dark);
-}
-
-.content main .bottom-data{
-    display: flex;
-    flex-wrap: wrap;
-    grid-gap: 24px;
-    margin-top: 24px;
-    width: 100%;
-    color: var(--dark);
-}
-
-.content main .bottom-data>div{
-    border-radius: 20px;
-    background: var(--light);
-    padding: 24px;
-    overflow-x: auto;
-}
-
-.content main .bottom-data .header{
-    display: flex;
-    align-items: center;
-    grid-gap: 16px;
-    margin-bottom: 24px;
-}
-
-.content main .bottom-data .header h3{
-    margin-right: auto;
-    font-size: 24px;
-    font-weight: 600;
-}
-
-.content main .bottom-data .header .bx{
-    cursor: pointer;
-}
-
-.content main .bottom-data .orders{
-    flex-grow: 1;
-    flex-basis: 500px;
-}
-
-.content main .bottom-data .orders table{
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.content main .bottom-data .orders table th{
-    padding-bottom: 12px;
-    font-size: 13px;
-    text-align: left;
-    border-bottom: 1px solid var(--grey);
-}
-
-.content main .bottom-data .orders table td{
-    padding: 16px 0;
-}
-
-.content main .bottom-data .orders table tr td:first-child{
-    display: flex;
-    align-items: center;
-    grid-gap: 12px;
-    padding-left: 6px;
-}
-
-.content main .bottom-data .orders table td img{
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-.content main .bottom-data .orders table tbody tr{
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.content main .bottom-data .orders table tbody tr:hover{
-    background: var(--grey);
-}
-
-.content main .bottom-data .orders table tr td .status{
-    font-size: 10px;
     padding: 6px 16px;
-    color: var(--light);
     border-radius: 20px;
-    font-weight: 700;
+    margin: 20px;
 }
 
-.content main .bottom-data .orders table tr td .status.completed{
-    background: var(--success);
+.btn-container {
+    text-align: right;
 }
 
-.content main .bottom-data .orders table tr td .status.process{
+.check {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    margin: 0 5px;
+    vertical-align: middle;
+}
+
+.check input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.check .box {
+    background-color: white;
+    width: 20px;
+    height: 20px;
+    border: 1px solid var(--dark);
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 0;
+    user-select: none;
+}
+
+.check input:checked+.box {
     background: var(--primary);
+    color: var(--light);
+    border-color: var(--primary);
 }
 
-.content main .bottom-data .orders table tr td .status.pending{
-    background: var(--warning);
-}
-
-.content main .bottom-data .reminders{
-    flex-grow: 1;
-    flex-basis: 300px;
-}
-
-.content main .bottom-data .reminders .task-list{
-    width: 100%;
-}
-
-.content main .bottom-data .reminders .task-list li{
-    width: 100%;
-    margin-bottom: 16px;
-    background: var(--grey);
-    padding: 14px 10px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.content main .bottom-data .reminders .task-list li .task-title{
-    display: flex;
-    align-items: center;
-}
-
-.content main .bottom-data .reminders .task-list li .task-title p{
-    margin-left: 6px;
-}
-
-.content main .bottom-data .reminders .task-list li .bx{
-  cursor: pointer;  
-}
-
-.content main .bottom-data .reminders .task-list li.completed{
-    border-left: 10px solid var(--success);
-}
-
-.content main .bottom-data .reminders .task-list li.not-completed{
-    border-left: 10px solid var(--danger);
-}
-
-.content main .bottom-data .reminders .task-list li:last-child{
-   margin-bottom: 0;
+.check input:checked:hover+.box {
+    background: var(--secondary);
+    border-color: var(--secondary);
+    color: #fff;
 }
 
 @media screen and (max-width: 768px) {
-    .sidebar{
+    .sidebar {
         width: 200px;
     }
 
-    .content{
+    .content {
         width: calc(100% - 60px);
         left: 200px;
     }
-
 }
 
 @media screen and (max-width: 576px) {
-    
-    .content nav form .form-input input{
+    .content nav form .form-input input {
         display: none;
     }
 
-    .content nav form .form-input button{
+    .content nav form .form-input button {
         width: auto;
         height: auto;
         background: transparent;
@@ -563,37 +380,386 @@ body{
         border-radius: none;
     }
 
-    .content nav form.show .form-input input{
+    .content nav form.show .form-input input {
         display: block;
         width: 100%;
     }
 
-    .content nav form.show .form-input button{
+    .content nav form.show .form-input button {
         width: 36px;
         height: 100%;
         color: var(--light);
         background: var(--danger);
         border-radius: 0 36px 36px 0;
     }
-
-    .content nav form.show~.notif, .content nav form.show~.profile{
-        display: none;
-    }
-
-    .content main .insights {
-        grid-template-columns: 1fr;
-    }
-
-    .content main .bottom-data .header{
-        min-width: 340px;
-    }
-
-    .content main .bottom-data .orders table{
-        min-width: 340px;
-    }
-
-    .content main .bottom-data .reminders .task-list{
-        min-width: 340px;
-    }
-
 }
+
+.boxelementiadd {
+    padding: 0px;
+    margin: 20px;
+    border-radius: 5px;
+}
+
+h3.custom-heading {
+    font-size: 24px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* --- Class Management Styles --- */
+
+.text-box {
+    width: 180px;
+    margin-right: 10px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.number-box {
+    width: 60px;
+    margin-right: 10px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.number-box-extra {
+    width: 120px;
+    margin-right: 10px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.classSelector-container {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.classSelector {
+    padding: 10px;
+    border-radius: 100px;
+    border: 1px solid #fff;
+    font-size: 16px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    background-color: var(--light);
+    border-radius: 20px 0px 20px 20px;
+    padding: 20px;
+}
+
+.student-table {
+    width: 100%;
+    border-collapse: separate;
+    min-width: 600px;
+}
+
+.student-table th,
+.student-table td {
+    padding: 12px 15px;
+    text-align: center;
+    vertical-align: middle;
+    border-bottom: 1px solid #eee;
+	border-left: 1px solid #eee;
+}
+
+.student-table th:first-child,
+.student-table td:first-child {
+    text-align: center;
+}
+
+.student-table th:first-child {
+    border-top-left-radius: 12px;
+}
+
+.student-table th:last-child {
+    border-top-right-radius: 12px;
+}
+
+.student-table th {
+    background-color: var(--primary);
+    font-weight: 600;
+    color: var(--light);
+    white-space: nowrap;
+	border-left: none;
+}
+
+.student-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.student-table select {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: white;
+    width: 100%;
+    max-width: 150px;
+}
+
+.student-table input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--primary);
+}
+
+.selectAllPresenza,
+#selectAllTelefono {
+    transform: translateY(20%);
+    margin-left: 5px;
+}
+
+/* --- Overlay Styles --- */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.overlay.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal {
+    background-color: var(--light);
+    padding: 30px;
+    border-radius: 20px;
+    width: 800px;
+    max-height: 80vh;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    transform: translateY(-20px);
+    transition: all 0.3s ease;
+}
+
+.modal-content {
+    overflow-y: auto;
+}
+
+.overlay.open .modal {
+    transform: translateY(0);
+}
+
+.modal h2 {
+    color: var(--dark);
+    font-size: 24px;
+    text-align: center;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: auto;
+}
+
+.modal-actions .btn {
+    margin: 0;
+}
+
+.modal-actions .cancel {
+    background-color: var(--danger);
+    color: var(--light);
+}
+
+.modal-actions .confirm {
+    background-color: var(--success);
+    color: var(--light);
+}
+
+/* Overlay Table Styles */
+.modal-content table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 5px;
+    /* Adds spacing between rows if we want detached look, or keep 0 for connected */
+    margin-top: 15px;
+}
+
+.modal-content th {
+    padding: 15px;
+    background-color: var(--primary);
+    color: var(--light);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    border: none;
+}
+
+.modal-content th:first-child {
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+
+.modal-content th:last-child {
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+.modal-content td {
+    padding: 10px;
+    background: #fff;
+    vertical-align: middle;
+    text-align: center;
+    border-bottom: 1px solid var(--grey);
+}
+
+.modal-content tr:last-child td {
+    border-bottom: none;
+}
+
+/* Modern Inputs */
+.input-modern {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--grey);
+    border-radius: 50px;
+    /* Fully rounded inputs */
+    background: #fdfdfd;
+    font-size: 14px;
+    color: var(--dark);
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.input-modern:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--light-primary);
+    background: #fff;
+}
+
+/* Actions Column & Buttons */
+.action-cell {
+    width: 110px;
+    vertical-align: middle;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    /* Close together */
+}
+
+/* Reset generic modal btn styles for these specific ones */
+.modal-content .btn.round-btn {
+    margin: 0;
+    padding: 0;
+    width: 36px;
+    /* Perfectly round */
+    height: 36px;
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.3rem;
+    /* Icon size */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.modal-content .btn.round-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.modal-content .btn.round-btn:active {
+    transform: scale(0.95);
+}
+
+.add-vote-row {
+    background-color: var(--success);
+    color: white;
+}
+
+.remove-vote-row {
+    background-color: var(--danger);
+    color: white;
+}
+
+/* Hide default cancel/confirm but since they are outside table they are handled by .modal-actions */
+
+/* Dynamic Vote Rows */
+.votes-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.vote-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.vote-row .input-modern {
+    width: auto;
+    flex-grow: 1;
+}
+
+.vote-row .vote-input {
+    width: 80px;
+    /* Smaller width for grade */
+    flex-grow: 0;
+}
+
+.vote-row .note-input {
+    flex-grow: 1;
+}
+
+.student-name {
+    text-align: left;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.vote-container-td {
+    display: flex;
+}
+
+.alunno{
+    /* font-size: small; */
+    min-width: auto;
+}
+
+.data-voti-block{
+    display: flex;
+}
+
+.block-voti{
+    margin-left: auto;
+    background-color: var(--light);
+    border-radius: 20px 20px 0px 0px;
+}
+
+.block-voti-btn{
+    z-index: 1000;   
+}
+

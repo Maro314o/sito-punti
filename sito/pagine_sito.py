@@ -8,10 +8,12 @@ from flask import (
     flash,
     send_from_directory,
 )
+from sito.costanti import COEFFICIENTI_ASSENZE, COEFFICIENTI_VOTI, NOMI_CHECKBOX
 from sito.database_funcs import list_database_elements
 import sito.errors_utils as e_utils
 from sito.errors_utils.errors_classes.data_error_classes import InvalidSeasonError
 from sito.misc_utils_funcs import parse_utils
+from sito.misc_utils_funcs.misc_utils import aggiungi_frase, query_json_by_nominativo_and_date, rimuovi_frase
 from . import db, app
 
 with app.app_context():
@@ -328,19 +330,130 @@ def pagina_elenco_user_display(elenco_type: str) -> str:
     )
 
 
-@pagine_sito.route("/gestione_dati", methods=["GET"])
+@pagine_sito.route("/gestione_dati/<classe_name>/", 
+    methods=["GET", "POST"]
+)
 @login_required
 @admin_permission_required
-def pagina_gestione_dati() -> str:
-    error = not mc_utils.is_empty(FILE_ERRORE)
-    ultimo_upload = mc_utils.get_item_of_json(GLOBAL_DATA, "ultimo_upload")
-    ultima_modifica = mc_utils.get_item_of_json(GLOBAL_DATA, "ultima_modifica")
+def pagina_gestione_dati_r(classe_name:str) -> str:
+    return redirect(url_for("pagine_sito.pagina_gestione_dati",classe_name=classe_name,data_str='none'))
+
+@pagine_sito.route("/gestione_dati/<classe_name>/<data_str>", 
+    methods=["GET", "POST"]
+)
+@login_required
+@admin_permission_required
+def pagina_gestione_dati(classe_name:str,data_str:str) -> str:
+    data_str = datetime.datetime.today().strftime('%Y-%m-%d') if data_str=="none" else data_str
+    elenco_classi =[x.classe for x in list_database_elements.elenco_classi_studenti()]
+    if request.method == "POST":
+        returned_form = request.form
+        form_id = returned_form.get("form_id")
+        if form_id == "classSelector":
+            classe_name = returned_form.get("classSelector")
+            return redirect(url_for("pagine_sito.pagina_gestione_dati",classe_name=classe_name,data_str=data_str))
+        elif form_id == "dateSelector":
+            data_str = returned_form.get("dateSelector")
+
+            return redirect(url_for("pagine_sito.pagina_gestione_dati",classe_name=classe_name,data_str=data_str))
+
+        elif form_id == "students_data":
+            valori_ritornati={str(x.id):{"USER":x} for x in db_funcs.studenti_da_classe(db_funcs.classe_da_nome(classe_name))}
+
+            for identificativo,valore in returned_form.items():
+                if identificativo == "form_id": continue
+                Uid,tipo,*numero_identificativo=identificativo.split('_')
+                if tipo == "Voto" or tipo == "tipo-Voto":
+                    numero_identificativo = numero_identificativo[0]
+                    if "Voto" not in valori_ritornati[Uid]:
+                        valori_ritornati[Uid]["Voto"]={}
+                    if  numero_identificativo not in valori_ritornati[Uid]["Voto"]:
+                        valori_ritornati[Uid]["Voto"][numero_identificativo]={}
+                    valori_ritornati[Uid]["Voto"][numero_identificativo][tipo]=valore
+                    continue
+
+
+                valori_ritornati[Uid][tipo] = valore
+            stagione = list_database_elements.get_last_season()
+
+            for Uid,value_dict in valori_ritornati.items():
+                user = value_dict["USER"]
+                eventi_da_eliminare = [evento for evento in user.cronologia_studente if evento.data == data_str]
+                rimuovi_frase(user.nominativo,data_str)
+                for evento in eventi_da_eliminare:
+                    db.session.delete(evento)
+                for tipo,valore in value_dict.items():
+                    attivita = None
+                    punti = None
+                    if tipo in NOMI_CHECKBOX:
+                        attivita=tipo
+                        punti = float(NOMI_CHECKBOX[tipo])
+                    elif tipo == "Stato" and valore != "Presente":
+                            attivita=valore
+                            punti=float(COEFFICIENTI_ASSENZE[valore])
+                    elif tipo=="Voto" :
+                        for _,valutazione in valore.items(): 
+                            if valutazione["Voto"]== "": continue
+                            db.session.add(
+                                    Cronologia(
+                                        data= data_str,
+                                        stagione = stagione,
+                                        attivita=valutazione["tipo-Voto"],
+                                        modifica_punti=COEFFICIENTI_VOTI[valutazione["tipo-Voto"]]*float(valutazione["Voto"]),
+                                        punti_cumulativi=0.0,
+                                        utente_id=user.id
+                                        ))
+                        continue
+                    elif tipo == "frase-del-giorno" and valore !="":
+                        aggiungi_frase(user.nominativo,valore,data_str)
+                        attivita="Frase"
+                        punti=1.0
+                    if attivita and punti:
+                        db.session.add(
+                                    Cronologia(
+                                        data= data_str,
+                                        stagione = stagione,
+                                        attivita=attivita,
+                                        modifica_punti=punti,
+                                        punti_cumulativi=0.0,
+                                        utente_id=user.id
+                                        ))
+                db.session.commit()                 
+                db_funcs.aggiorna_punti_composto(user) # inefficiente perchè ricacola subito anche i punti di tutta la squadra,
+        else:
+            print("you alone in this one lil blud")
+    if classe_name=="admin":
+        classe_name="none"
+    if classe_name != "none":
+        lista_studenti_v=[[x,dict()] for x in db_funcs.studenti_da_classe(db_funcs.classe_da_nome(classe_name))]
+        lista_studenti_v.sort(key=lambda x: x[0].nominativo)
+
+        if Cronologia.query.filter_by(data=data_str).first() is not None:
+            for ind,(studente,_) in enumerate(lista_studenti_v):
+                frase = query_json_by_nominativo_and_date(studente.nominativo,data_str)
+                if frase is not None:
+                    lista_studenti_v[ind][1]["frase"]=frase
+                cron = filter(lambda x: x.data==data_str,studente.cronologia_studente)
+                for evento in cron:
+                    v = 1
+                    if evento.attivita in COEFFICIENTI_VOTI:
+                        v = evento.modifica_punti/COEFFICIENTI_VOTI[evento.attivita]
+                        if 'Voto' in lista_studenti_v[ind][1]:
+                            lista_studenti_v[ind][1]['Voto'].append((evento.attivita,v))
+                        else:
+                            lista_studenti_v[ind][1]['Voto']=[(evento.attivita,v)]
+                        continue
+                    lista_studenti_v[ind][1][evento.attivita]=v
+                
+    else:
+        lista_studenti_v=None
+
     return render_template(
-        "manage_data.html",
-        error=error,
-        ultimo_upload=ultimo_upload,
-        ultima_modifica=ultima_modifica,
-    )
+    "manage_data.html",classe_name=classe_name,elenco_classi=elenco_classi,data=data_str,lista_studenti_v=lista_studenti_v
+     )
+
+
+
 
 
 @pagine_sito.route("/load_db", methods=["POST"])

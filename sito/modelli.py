@@ -7,7 +7,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(150), unique=True)
     nominativo = db.Column(
         db.String(150), unique=True
-    )  # nome e cognome con la prima lettera maiuscola
+    )  #cognome e nome  con la prima lettera maiuscola
     squadra = db.Column(db.String(150))
     password = db.Column(db.String(150))
     punti = db.Column(db.String(150))

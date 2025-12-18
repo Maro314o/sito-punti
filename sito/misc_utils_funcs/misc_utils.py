@@ -1,6 +1,8 @@
 import json
 import random
 
+from sito.costanti import FRASI_PATH
+
 ALLOWED_EXTENSIONS = set(["xlsx"])
 
 
@@ -47,13 +49,50 @@ def get_item_of_json(file_path: str, field: str) -> str | int:
         data = json.load(file)
     return data[field]
 
+def query_json_by_nominativo_and_date(nominativo : str,data : str) -> str | None:
+    """
+    cerca una frase dal file delle frasi dato un nominativo e una data (in stringa)
+    se non è presente ritorna None
+    """
+    with open(FRASI_PATH, "r") as file:
+        json_data = json.load(file)
+    frase = None
+    for elemento in json_data:
+
+        if elemento["autore"]==nominativo and elemento["data"]==data:
+            frase = elemento["frase"] 
+            break
+    return frase
+    
+
+def aggiungi_frase(autore:str,frase:str,data:str) -> None:
+    with open(FRASI_PATH, "r") as file:
+        json_data = json.load(file)
+    json_data.append(
+            {
+                "autore": autore,
+                "frase":frase,
+                "data": data,
+                }
+            )
+    with open(FRASI_PATH, "w") as file:
+        json.dump(json_data, file, indent=4)
+def rimuovi_frase(autore:str,data:str)-> bool:
+    with open(FRASI_PATH, "r") as file:
+        json_data = json.load(file)
+    s = len(json_data)
+    json_data = [x for x in json_data if not x["autore"]==autore or  not x["data"]==data]
+
+    with open(FRASI_PATH, "w") as file:
+        json.dump(json_data, file, indent=4)
+    return s!=len(json_data)
 
 def set_item_of_json(file_path: str, field: str, data: str) -> None:
     """
     imposta il campo di un file json ad un certo dato
     """
     with open(file_path, "r") as file:
-        json_data = json.load(file)
+       json_data = json.load(file)
     json_data[field] = data
     with open(file_path, "w") as file:
         json.dump(json_data, file, indent=4)

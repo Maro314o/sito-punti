@@ -10,6 +10,7 @@ import sito.misc_utils_funcs as mc_utils
 from pathlib import Path
 from os import path
 import pandas as pd
+import math
 import sito.database_funcs.database_queries as db_queries
 import datetime
 import sito.auth_funcs as auth_utils
@@ -34,7 +35,7 @@ def riga_nulla(riga: list[str]) -> bool:
     controlla se la riga che stiamo analizzando e' nulla (quindi composta da valori nan)
     """
 
-    return all(str(valore).lower() == "nan" for valore in riga)
+    return all(str(valore).lower() in ("nan","nat") for valore in riga)
 
 
 def reset_database() -> None:
@@ -58,9 +59,9 @@ def reset_database() -> None:
 
 def processa_riga_classe(numero_riga: int, riga: list[str], nome_classe: str) -> str:
     # la riga dovrebbe essere [nominativo,squadra]
+    squadra = "Nessuna_squadra"
     nominativo = mc_utils.capitalize_all(riga[0])
-    utente = db_queries.user_da_nominativo(nominativo)
-    if len(riga) == 2:
+    if type(riga[1])is not float:
         squadra = riga[1]
         oggetto_squadra = db_queries.squadra_da_nome(squadra)
         if not oggetto_squadra:
@@ -71,11 +72,12 @@ def processa_riga_classe(numero_riga: int, riga: list[str], nome_classe: str) ->
             oggetto_squadra.numero_componenti += 1
 
     else:
-        squadra = "Nessuna_squadra"
-        error_str = f"{datetime.datetime.now()} | errore alla linea {numero_riga} del foglio {nome_classe} del edatabase : La cella della squadra per questo utente e' vuota.Gli verra' assegnata una squadra provvisoria chiamata \"Nessuna_squadra\"\n"
+        nome_classe = squadra
+        error_str = f"{datetime.datetime.now()} | errore alla linea {numero_riga} del foglio {nome_classe} del database : La cella della squadra per questo utente ({nominativo}) e' vuota.Gli verra' assegnata una squadra provvisoria chiamata \"Nessuna_squadra\"\n"
 
         mc_utils.append_to_file(ERROR_FILE, error_str)
 
+    utente = db_queries.user_da_nominativo(nominativo)
     if utente:
         utente.nominativo = nominativo
         utente.squadra = squadra
@@ -142,6 +144,10 @@ def processa_riga_dataset(
     # 3 alunno
     # 4 attivita'
     # 5 punti
+    if riga_nulla(riga):
+        error_str = f"{datetime.datetime.now()} | errore alla linea {numero_riga} del database : La riga corrente e' vuota\n"
+        mc_utils.append_to_file(ERROR_FILE, error_str)
+        return 0, ERROR
     data, _ = str(
         riga[0]
     ).split()  # la seconda parte dello split dovrebbe essere l'ora,che non e' usata e solitamente e' 00:00:00
@@ -150,11 +156,7 @@ def processa_riga_dataset(
     nominativo: str = mc_utils.capitalize_all(riga[3])
     attivita: str = riga[4]
     punti: float = riga[5]
-    if riga_nulla(riga):
-        error_str = f"{datetime.datetime.now()} | errore alla linea {numero_riga} del database : La riga corrente e' vuota\n"
-        mc_utils.append_to_file(ERROR_FILE, error_str)
-        return 0, ERROR
-    elif not db_funcs.user_da_nominativo(nominativo):
+    if not db_funcs.user_da_nominativo(nominativo):
         error_str = f"{datetime.datetime.now()} | errore alla linea {numero_riga} del database : non è stato possibile modificare i punti dell' utente {nominativo} della classe {nome_classe}. Controlla se ci sono errori nella scrittura del suo nome o se non è stato aggiunto ad una classe nel corrispettivo foglio .xlsx\n"
         mc_utils.append_to_file(ERROR_FILE, error_str)
         return stagione, ERROR
