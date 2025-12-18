@@ -344,7 +344,7 @@ def pagina_gestione_dati_r(classe_name:str) -> str:
 @login_required
 @admin_permission_required
 def pagina_gestione_dati(classe_name:str,data_str:str) -> str:
-    data_str = datetime.datetime.today().strftime('%Y-%m-%d') if not data_str else data_str
+    data_str = datetime.datetime.today().strftime('%Y-%m-%d') if data_str=="none" else data_str
     elenco_classi =[x.classe for x in list_database_elements.elenco_classi_studenti()]
     if request.method == "POST":
         returned_form = request.form
@@ -420,12 +420,6 @@ def pagina_gestione_dati(classe_name:str,data_str:str) -> str:
                                         ))
                 db.session.commit()                 
                 db_funcs.aggiorna_punti_composto(user) # inefficiente perchè ricacola subito anche i punti di tutta la squadra,
-
-
-
-
-                
-
         else:
             print("you alone in this one lil blud")
     if classe_name=="admin":
