@@ -7,20 +7,6 @@ from ...modelli import Info, Squadra, User
 import sito.database_funcs as db_funcs
 
 
-def aggiorna_punti_cumulativi_eventi(studente: User) -> None:
-    """
-    per ogni evento di un utente assegna dei punti 'cumulativi'
-    i puntunti cumulativi sono la somma dei punti di quell'evento e di tutti quelli precedenti cronologicamente
-    """
-    punti_cumulativi = 0.0
-    season = 1
-    for evento in cronologia_user(studente):
-        if season != evento.stagione:
-            punti_cumulativi = 0.0
-            season = evento.stagione
-        punti_cumulativi += evento.modifica_punti
-        evento.punti_cumulativi = punti_cumulativi
-    db.session.commit()
 
 
 def aggiorna_punti_squadra(utente: User) -> None:
@@ -95,7 +81,6 @@ def aggiorna_punti_composto(studente: User) -> None:
     """
     aggiorna tutti i punti dell'utente e della sua squadra
     """
-    aggiorna_punti_cumulativi_eventi(studente)
     aggiorna_punti(studente)
     aggiorna_punti_squadra(studente)
     compensa_punti_squadra(db_queries.squadra_da_id(studente.squadra_id))

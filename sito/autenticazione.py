@@ -56,8 +56,8 @@ def pagina_init_admin_starter() -> Response:
 def pagina_login() -> str | Response:
     if request.method == "POST":
         dati = request.form
-        email = dati.get("email")
-        password = dati.get("password")
+        email = dati["email"]
+        password = dati["password"]
         try:
             auth_utils.login(email, password)
             return e_utils.redirect_home()
@@ -74,8 +74,8 @@ def pagina_sign_up() -> str | Response:
     if request.method == "POST":
         dati = request.form
 
-        email = dati.get("email").strip().lower()
-        nominativo = dati.get("nominativo").strip()
+        email = dati["email"].strip().lower()
+        nominativo = dati["nominativo"].strip()
         password = dati.get("password")
         password_di_conferma = dati.get("password_di_conferma")
         nominativo = mc_utils.capitalize_all(nominativo)

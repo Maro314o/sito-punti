@@ -51,7 +51,6 @@ def load_data(current_user: User) -> None:
     squadre = db_funcs.elenco_squadre_studenti()
     classi_studenti = db_funcs.elenco_classi_studenti()
     for studente in studenti:
-        db_funcs.aggiorna_punti_cumulativi_eventi(studente)
         db_funcs.aggiorna_punti(studente)
         db_funcs.aggiorna_punti_squadra(studente)
     for classe in classi_studenti:

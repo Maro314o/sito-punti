@@ -47,6 +47,7 @@ with app.app_context():
             )
             for squadra in elenco_squadre
         }
+        print(punti_squadre)
 
         return dict(
             sorted(punti_squadre.items(), key=lambda item: item[1], reverse=True)

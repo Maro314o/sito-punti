@@ -143,7 +143,7 @@
                     labels: {{ elenco_date(cronologia_da_user(studente), stagione_corrente) | safe }},
                     datasets: [{
                         label: "Punti di {{ studente.nominativo | safe }}",
-                        data: {{ elenco_punti_cumulativi(cronologia_da_user(studente), stagione_corrente) | safe }},
+                        //data: {{ "hi" | safe }},
                         fill: false,
                         borderColor: "rgb{{ calcola_valore_rgb(studente.squadra) }}",
                         backgroundColor: "rgb{{ calcola_valore_rgb(studente.squadra) }}",

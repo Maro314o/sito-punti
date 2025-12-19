@@ -167,7 +167,6 @@ def processa_riga_dataset(
             stagione=stagione,
             attivita=attivita,
             modifica_punti=punti,
-            punti_cumulativi=0.0,
             utente_id=db_funcs.user_da_nominativo(nominativo).id,
         )
     )

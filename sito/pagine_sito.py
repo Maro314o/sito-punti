@@ -102,7 +102,6 @@ def pagina_classe(
         get_season_points=parse_utils.get_season_points,
         cronologia_da_user=db_funcs.cronologia_user,
         elenco_date=ct_funcs.elenco_date,
-        elenco_punti_cumulativi=ct_funcs.elenco_punti_cumulativi,
         calcola_valore_rgb=mc_utils.calcola_valore_rgb,
         zip=zip,
         url_name=mc_utils.insert_underscore_name,
@@ -137,7 +136,6 @@ def pagina_info_studente(
         cronologia_da_user=db_funcs.cronologia_user,
         elenco_date=ct_funcs.elenco_date,
         calcola_valore_rgb=mc_utils.calcola_valore_rgb,
-        elenco_punti_cumulativi=ct_funcs.elenco_punti_cumulativi,
         elenco_attivita=ct_funcs.elenco_attivita,
         cronologia_stagione=db_funcs.cronologia_user_di_una_stagione,
         zip=zip,
@@ -246,7 +244,6 @@ def pagina_create_event(classe_name: str, studente_id: int, stagione: int) -> Re
         data=data,
         attivita=attivita,
         modifica_punti=modifica_punti,
-        punti_cumulativi=0,
     )
 
     db.session.add(nuovo_evento)
@@ -400,7 +397,6 @@ def pagina_gestione_dati(classe_name:str,data_str:str) -> str:
                                         stagione = stagione,
                                         attivita=valutazione["tipo-Voto"],
                                         modifica_punti=COEFFICIENTI_VOTI[valutazione["tipo-Voto"]]*float(valutazione["Voto"]),
-                                        punti_cumulativi=0.0,
                                         utente_id=user.id
                                         ))
                         continue
@@ -415,7 +411,6 @@ def pagina_gestione_dati(classe_name:str,data_str:str) -> str:
                                         stagione = stagione,
                                         attivita=attivita,
                                         modifica_punti=punti,
-                                        punti_cumulativi=0.0,
                                         utente_id=user.id
                                         ))
                 db.session.commit()                 

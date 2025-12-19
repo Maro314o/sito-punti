@@ -1,11 +1,11 @@
 class InvalidEventId(Exception):
     """
-    errore di id di un evento non esistente
+    errore nel trovare un evento
     """
-
-    def __init__(self, message):
-        self.message = message
-        super().__init__(self.message)
+    def __init__(self, identifier, by="id"):
+        super().__init__(f"evento non trovato per {by}: {identifier}")
+        self.identifier = identifier
+        self.by = by
 
 
 

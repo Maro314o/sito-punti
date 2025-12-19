@@ -81,9 +81,3 @@ def elenco_squadre_da_classe(classe: Classi) -> List[Squadra]:
     return classe.squadre
 
 
-def get_last_season() -> int:
-    """
-    Restituisce il numero della stagione più recente.
-    """
-    info = Info.query.first()
-    return info.last_season if info else 1
