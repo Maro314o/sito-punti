@@ -1,7 +1,8 @@
+from sito.modelli.cronologia import Cronologia
 from .. import db
 from sqlalchemy import func
 from flask_login import UserMixin
-class User(db.Model, UserMixin):
+class Utente(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(150), unique=True)
     nominativo = db.Column(
@@ -16,13 +17,13 @@ class User(db.Model, UserMixin):
     squadra_id = db.Column(db.Integer, db.ForeignKey("squadra.id"))
 
     @classmethod
-    def da_id(cls,id:int) -> "User":
-        return User.query.filter_by(id=id).one()
+    def da_id(cls,id:int) -> "Utente":
+        return Utente.query.filter_by(id=id).one()
     @classmethod
-    def da_nominativo(cls,nominativo: str) -> "User":
-        return User.query.filter_by(nominativo=nominativo).one()
+    def da_nominativo(cls,nominativo: str) -> "Utente":
+        return Utente.query.filter_by(nominativo=nominativo).one()
     @classmethod
-    def user_da_email(cls,email: str) -> "User":
+    def da_email(cls,email: str) -> "Utente":
         return cls.query.filter_by(email=email).one()
 
     def punti_stagione(self,stagione:int) -> float:
@@ -31,4 +32,45 @@ class User(db.Model, UserMixin):
             db.select(func.coalesce(func.sum(Cronologia.modifica_punti), 0))
             .where(Cronologia.utente_id== self.id,Cronologia.stagione == stagione)
             )
+    from .cronologia import Cronologia
+    def elenco_cronologia_stagione(self,stagione:int) -> list["Cronologia"]:
+        return self.cronologia_studente.filter_by(stagione=stagione).all()
+    @classmethod
+    def elenco_utenti(cls) -> list["Utente"]:
+        """
+        Restituisce l'elenco di tutti gli utenti.
+        """
+        return cls.query.all()
+
+
+    @classmethod
+    def elenco_studenti(cls) -> list["Utente"]:
+        """
+        Restituisce l'elenco di tutti gli studenti.
+        """
+        return cls.query.filter_by(admin_user=False).all()
+
+
+    @classmethod
+    def elenco_admin(cls) -> list["Utente"]:
+        """
+        Restituisce l'elenco di tutti gli admin.
+        """
+        return cls.query.filter_by(admin_user=True).all()
+
+
+    @classmethod
+    def elenco_studenti_registrati(cls) -> list["Utente"]:
+        """
+        Restituisce l'elenco di tutti gli studenti registrati.
+        """
+        return cls.query.filter_by(admin_user=False, account_attivo=True).all()
+
+
+    @classmethod
+    def elenco_studenti_non_registrati(cls) -> list["Utente"]:
+        """
+        Restituisce l'elenco di tutti gli studenti non registrati.
+        """
+        return cls.query.filter_by(admin_user=False, account_attivo=False).all()
 

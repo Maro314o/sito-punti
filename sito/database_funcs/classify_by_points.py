@@ -1,6 +1,6 @@
 from sito.database_funcs import database_queries as db_queries, list_database_elements
 from sito.misc_utils_funcs import parse_utils
-from ..modelli import User, Classi
+from ..modelli import Utente, Classe
 
 from .. import app
 

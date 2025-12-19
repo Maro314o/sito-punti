@@ -22,8 +22,8 @@ def capitalize_all(stringa: str) -> str:
     """
     data una stringa la restituisce facendo diventare maiuscole la prima lettera di ogni parola separata da uno spazio
     """
-    stringa = stringa.split()
-    stringa = [parola.capitalize() for parola in stringa]
+    stringa_list = stringa.split()
+    stringa_list = [parola.capitalize() for parola in stringa_list]
     stringa = " ".join(stringa)
     return stringa
 

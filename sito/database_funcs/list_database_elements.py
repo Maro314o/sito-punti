@@ -4,40 +4,6 @@ from ..modelli import Squadra, User, Classi, Info
 NOT_AVALIDABLE = ["admin", "Nessuna_squadra"]
 
 
-def elenco_utenti() -> List[User]:
-    """
-    Restituisce l'elenco di tutti gli utenti.
-    """
-    return User.query.all()
-
-
-def elenco_studenti() -> List[User]:
-    """
-    Restituisce l'elenco di tutti gli studenti.
-    """
-    return User.query.filter_by(admin_user=False).all()
-
-
-def elenco_admin() -> List[User]:
-    """
-    Restituisce l'elenco di tutti gli admin.
-    """
-    return User.query.filter_by(admin_user=True).all()
-
-
-def elenco_studenti_registrati() -> List[User]:
-    """
-    Restituisce l'elenco di tutti gli studenti registrati.
-    """
-    return User.query.filter_by(admin_user=False, account_attivo=True).all()
-
-
-def elenco_studenti_non_registrati() -> List[User]:
-    """
-    Restituisce l'elenco di tutti gli studenti non registrati.
-    """
-    return User.query.filter_by(admin_user=False, account_attivo=False).all()
-
 
 def elenco_tutte_le_classi() -> List[Classi]:
     """

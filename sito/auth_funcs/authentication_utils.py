@@ -1,7 +1,6 @@
-import werkzeug
 from werkzeug.security import generate_password_hash
 
-from ..modelli import User
+from ..modelli import Utente,Squadra,Classe
 from ..errors_utils import FailedSignUpError
 from werkzeug.security import check_password_hash
 from flask_login import login_user
@@ -17,7 +16,7 @@ def login(email: str, password: str) -> None:
     """
     data un email ed una password fa il login di un account
     """
-    user = db_funcs.user_da_email(email)
+    user = Utente.da_email(email)
     if not user:
         raise FailedLoginError("Questo utente non esiste")
     if not user.account_attivo:
@@ -39,21 +38,20 @@ def crea_user(**kwargs) -> None:
     -nome della classe
     crea un utente
     """
-    user = db_funcs.user_da_email(kwargs["email"]) or db_funcs.user_da_nominativo(
+    user = Utente.da_email(kwargs["email"]) or Utente.da_nominativo(
         kwargs["nominativo"]
     )
     if user:
         raise FailedSignUpError("Questo utente esiste già")
-    nuovo_utente = User(
+    nuovo_utente = Utente(
         email=kwargs["email"],
         nominativo=kwargs["nominativo"],
         squadra=kwargs["squadra"],
         password=generate_password_hash(kwargs["password"], method="pbkdf2:sha256"),
-        punti="0.0",
         account_attivo=kwargs.get("account_attivo", 0),
         admin_user=kwargs.get("admin_user", 0),
-        squadra_id=db_funcs.squadra_da_nome(kwargs["squadra"]).id,
-        classe_id=db_funcs.classe_da_nome(kwargs["classe_name"]).id,
+        squadra_id=Squadra.da_nome(kwargs["squadra"]).id,
+        classe_id=Classe.da_nome(kwargs["classe_name"]).id,
     )
     db.session.add(nuovo_utente)
     db.session.commit()
