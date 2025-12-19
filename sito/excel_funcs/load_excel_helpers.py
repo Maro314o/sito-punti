@@ -1,17 +1,14 @@
 from typing import Dict, Tuple
 
 
-from sito.database_funcs import list_database_elements
 from sito.database_funcs.manage_tables_rows import crea_squadra
 from .. import db
-from ..modelli import Cronologia, Info, Classi, Squadra, User
+from ..modelli import Cronologia, Info, Classe, Squadra, Utente
 import sito.database_funcs as db_funcs
 import sito.misc_utils_funcs as mc_utils
 from pathlib import Path
 from os import path
 import pandas as pd
-import math
-import sito.database_funcs.database_queries as db_queries
 import datetime
 import sito.auth_funcs as auth_utils
 
@@ -25,7 +22,7 @@ def elimina_studenti_non_presenti(nominativi_trovati: set[str]) -> None:
     """
     elimina tutti gli studenti che non fanno parte della lista degli studenti passati nel file excel
     """
-    for utente in db_funcs.elenco_studenti():
+    for utente in Utente.elenco_studenti():
         if utente.nominativo not in nominativi_trovati:
             db.session.delete(utente)
 
@@ -44,8 +41,8 @@ def reset_database() -> None:
     """
     db.session.query(Cronologia).delete()
     db.session.query(Info).delete()
-    User.query.filter_by(account_attivo=0).delete()
-    db.session.query(Classi).delete()
+    Utente.query.filter_by(account_attivo=0).delete()
+    db.session.query(Classe).delete()
     db.session.query(Squadra).delete()
     db_funcs.crea_classe("admin")
     db_funcs.crea_classe("Nessuna_squadra")
@@ -63,7 +60,7 @@ def processa_riga_classe(numero_riga: int, riga: list[str], nome_classe: str) ->
     nominativo = mc_utils.capitalize_all(riga[0])
     if type(riga[1])is not float:
         squadra = riga[1]
-        oggetto_squadra = db_queries.squadra_da_nome(squadra)
+        oggetto_squadra = Squadra.da_nome(squadra)
         if not oggetto_squadra:
             crea_squadra(
                 nome_squadra=squadra, numero_componenti=1, classe_name=nome_classe
@@ -77,13 +74,12 @@ def processa_riga_classe(numero_riga: int, riga: list[str], nome_classe: str) ->
 
         mc_utils.append_to_file(ERROR_FILE, error_str)
 
-    utente = db_queries.user_da_nominativo(nominativo)
+    utente = Utente.da_nominativo(nominativo)
     if utente:
         utente.nominativo = nominativo
         utente.squadra = squadra
-        utente.punti = "0.0"
-        utente.classe_id = db_funcs.classe_da_nome(nome_classe).id
-        utente.squadra_id = db_funcs.squadra_da_nome(squadra).id
+        utente.classe_id = Classe.da_nome(nome_classe).id
+        utente.squadra_id = Squadra.da_nome(squadra).id
 
     else:
         auth_utils.crea_user(
@@ -156,7 +152,8 @@ def processa_riga_dataset(
     nominativo: str = mc_utils.capitalize_all(riga[3])
     attivita: str = riga[4]
     punti: float = riga[5]
-    if not db_funcs.user_da_nominativo(nominativo):
+    utente=Utente.da_nominativo(nominativo)
+    if not utente:
         error_str = f"{datetime.datetime.now()} | errore alla linea {numero_riga} del database : non è stato possibile modificare i punti dell' utente {nominativo} della classe {nome_classe}. Controlla se ci sono errori nella scrittura del suo nome o se non è stato aggiunto ad una classe nel corrispettivo foglio .xlsx\n"
         mc_utils.append_to_file(ERROR_FILE, error_str)
         return stagione, ERROR
@@ -167,7 +164,7 @@ def processa_riga_dataset(
             stagione=stagione,
             attivita=attivita,
             modifica_punti=punti,
-            utente_id=db_funcs.user_da_nominativo(nominativo).id,
+            utente_id=utente.id,
         )
     )
     return stagione, NO_ERROR
@@ -186,14 +183,14 @@ def processa_dati_dataframe(file_sheets: Dict[str, pd.DataFrame]) -> int:
         last_season = stagione if stagione > last_season else last_season
         errori += errore
     db.session.query(Info).delete()
-    db.session.add(Info(last_season=last_season))
+    db.session.add(Info(ultima_stagione=last_season))
     db.session.commit()
     return errori
 
 
-def numero_massimo_componenti_squadra_in_classe(classe: Classi) -> int:
+def numero_massimo_componenti_squadra_in_classe(classe: Classe) -> int:
     componenti_massimi = 0
-    for squadra in list_database_elements.elenco_squadre_da_classe(classe):
+    for squadra in classe.squadre.all():
         if squadra.numero_componenti > componenti_massimi:
             componenti_massimi = squadra.numero_componenti
     return componenti_massimi

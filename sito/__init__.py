@@ -57,14 +57,15 @@ def crea_app():
 
     app.register_blueprint(pagine_sito, url_prefix="/")
     app.register_blueprint(autenticazione, url_prefix="/")
-    from .modelli import User, Classi
+    from .modelli import Utente, Classe,Squadra
 
     with app.app_context():
         db.create_all()
-        if not db_funcs.classe_da_nome("admin"):
-            db.session.add(Classi(classe="admin"))
+        if not Classe.query.filter_by(nome_classe="admin").first():
+            db.session.add(Classe(nome_classe="admin"))
 
-            db_funcs.crea_squadra(nome_squadra="admin", classe_name="admin")
+            if not Squadra.query.filter_by(nome_squadra="admin").first():
+                db_funcs.crea_squadra(nome_squadra="admin", classe_name="admin")
             db.session.commit()
     login_manager = LoginManager()
     login_manager.login_view = "autenticazione.pagina_login"
@@ -72,6 +73,6 @@ def crea_app():
 
     @login_manager.user_loader
     def load_user(id):
-        return User.query.get(int(id))
+        return Utente.query.get(int(id))
 
     return app

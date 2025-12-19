@@ -13,14 +13,13 @@ from sito.errors_utils.errors_classes.users_error_classes import (
     FailedLoginError,
 )
 from sito.pagine_sito import VUOTO
-from . import db, app
+from . import db
+from .modelli import Utente
 import sito.misc_utils_funcs as mc_utils
 import sito.auth_funcs as auth_utils
 import sito.errors_utils as e_utils
 from sito.errors_utils import InitPasswordNotSetError
 
-with app.app_context():
-    import sito.database_funcs as db_funcs
 from werkzeug.security import generate_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
 import os
@@ -76,11 +75,11 @@ def pagina_sign_up() -> str | Response:
 
         email = dati["email"].strip().lower()
         nominativo = dati["nominativo"].strip()
-        password = dati.get("password")
+        password = dati["password"]
         password_di_conferma = dati.get("password_di_conferma")
         nominativo = mc_utils.capitalize_all(nominativo)
-        user = db_funcs.user_da_nominativo(nominativo)
-        if db_funcs.user_da_email(email) and user.account_attivo:
+        user = Utente.da_nominativo(nominativo)
+        if Utente.query.filter_by(email=email).first() and user.account_attivo:
             flash(
                 "Esiste già un altro account con questa email in uso", category="error"
             )
@@ -112,7 +111,7 @@ def pagina_sign_up() -> str | Response:
             return e_utils.redirect_home()
 
     return render_template(
-        "sign_up.html", user=current_user, studenti=db_funcs.elenco_studenti()
+        "sign_up.html", user=current_user, studenti=Utente.elenco_utenti()
     )
 
 
@@ -122,11 +121,11 @@ def pagina_sign_up() -> str | Response:
 def pagina_crea_admin() -> str | Response:
     if request.method == "POST":
         dati = request.form
-        email = dati.get("email").lower()
-        nome = dati.get("nome").capitalize()
-        cognome = dati.get("cognome").capitalize()
-        password = dati.get("password")
-        password_di_conferma = dati.get("password_di_conferma")
+        email = dati["email"].lower()
+        nome = dati["nome"].capitalize()
+        cognome = dati["cognome"].capitalize()
+        password = dati["password"]
+        password_di_conferma = dati["password_di_conferma"]
 
         nominativo = f"{cognome} {nome}"
 

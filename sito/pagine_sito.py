@@ -9,17 +9,17 @@ from flask import (
     send_from_directory,
 )
 from sito.costanti import COEFFICIENTI_ASSENZE, COEFFICIENTI_VOTI, NOMI_CHECKBOX
-from sito.database_funcs import list_database_elements
 import sito.errors_utils as e_utils
 from sito.errors_utils.errors_classes.data_error_classes import InvalidSeasonError
 from sito.misc_utils_funcs import parse_utils
 from sito.misc_utils_funcs.misc_utils import aggiungi_frase, query_json_by_nominativo_and_date, rimuovi_frase
+from sito.modelli.classe import Classe
+from sito.modelli.utente import Utente
 from . import db, app
 
 with app.app_context():
     import sito.database_funcs as db_funcs
 import sito.misc_utils_funcs as mc_utils
-import sito.chart_funcs as ct_funcs
 import sito.excel_funcs as xlsx_funcs
 
 from sito.errors_utils import admin_permission_required
@@ -63,11 +63,11 @@ ALLOWED_EXTENSIONS = set(["xlsx"])
 def pagina_home() -> str:
     classe_name = None
     if current_user.is_authenticated:
-        classe_name = db_funcs.classe_da_id(current_user.classe_id).classe
+        classe_name = Classe.da_id(current_user.classe_id).nome_classe
     loghi = [logo for logo in listdir(PATH_CARTELLA_LOGHI)]
     lenght_square_of_loghi = ceil(sqrt(len(loghi)))
     frase = mc_utils.get_random_json_item(FRASI_PATH)
-    last_season = list_database_elements.get_last_season()
+    last_season = Info.ottieni_ultima_stagione()
     return render_template(
         "home.html",
         user=current_user,
@@ -86,11 +86,11 @@ def pagina_classe(
     stagione: int,
 ) -> str:
     if current_user.admin_user:
-        classe = db_funcs.classe_da_nome(classe_name)
+        classe = Classe.da_nome(classe_name)
     else:
-        classe = db_funcs.classe_da_id(current_user.classe_id)
+        classe = Classe.da_id(current_user.classe_id)
     studenti = db_funcs.classifica_studenti_di_una_classe(stagione, classe)
-    n_stagioni = db_funcs.get_last_season()
+    n_stagioni = Info.ottieni_ultima_stagione()
     loghi = {logo.rsplit(".", 1)[0]: logo for logo in listdir(PATH_CARTELLA_LOGHI)}
     return render_template(
         "classe.html",
@@ -100,8 +100,7 @@ def pagina_classe(
         n_stagioni=n_stagioni,
         stagione_corrente=stagione,
         get_season_points=parse_utils.get_season_points,
-        cronologia_da_user=db_funcs.cronologia_user,
-        elenco_date=ct_funcs.elenco_date,
+        elenco_date=lambda eventi: [evento.data for evento in eventi],
         calcola_valore_rgb=mc_utils.calcola_valore_rgb,
         zip=zip,
         url_name=mc_utils.insert_underscore_name,
@@ -132,12 +131,10 @@ def pagina_info_studente(
         "info_studente.html",
         user=current_user,
         stagione_corrente=stagione,
-        studente=db_funcs.user_da_nominativo(nominativo),
-        cronologia_da_user=db_funcs.cronologia_user,
-        elenco_date=ct_funcs.elenco_date,
+        studente=Utente.da_nominativo(nominativo),
+        elenco_date=lambda eventi: [evento.data for evento in eventi],
         calcola_valore_rgb=mc_utils.calcola_valore_rgb,
-        elenco_attivita=ct_funcs.elenco_attivita,
-        cronologia_stagione=db_funcs.cronologia_user_di_una_stagione,
+        elenco_attivita=lambda eventi: [evento.attivita for evento in eventi],
         zip=zip,
         classe=classe_name,
         loghi=loghi,
@@ -148,7 +145,7 @@ def pagina_info_studente(
 def pagina_regole() -> str:
     classe_name = None
     if current_user.is_authenticated:
-        classe_name = db_funcs.classe_da_id(current_user.classe_id).classe
+        classe_name = Classe.da_id(current_user.classe_id).nome_classe
     return render_template("regole.html", user=current_user, classe_name=classe_name)
 
 
@@ -156,7 +153,7 @@ def pagina_regole() -> str:
 def pagina_comingsoon() -> str:
     classe_name = None
     if current_user.is_authenticated:
-        classe_name = db_funcs.classe_da_id(current_user.classe_id).classe
+        classe_name = Classe.da_id(current_user.classe_id).nome_classe
     return render_template(
         "coming_soon.html", user=current_user, classe_name=classe_name
     )
@@ -167,15 +164,12 @@ def pagina_comingsoon() -> str:
 @admin_permission_required
 def pagina_admin_dashboard() -> str:
     errori = not mc_utils.is_empty(FILE_ERRORE)
-    numero_degli_studenti = len(db_funcs.elenco_studenti())
-    numero_delle_classi = len(db_funcs.elenco_classi_studenti())
-    numero_degli_admin = len(db_funcs.elenco_admin())
-    numero_studenti_registrati = len(db_funcs.elenco_studenti_registrati())
-    numero_studenti_non_registrati = len(db_funcs.elenco_studenti_non_registrati())
+    numero_degli_studenti = len(Utente.elenco_studenti())
+    numero_delle_classi = len(Classe.elenco_classi_studenti())
+    numero_degli_admin = len(Utente.elenco_admin())
+    numero_studenti_registrati = len(Utente.elenco_studenti_registrati())
+    numero_studenti_non_registrati = len(Utente.elenco_studenti_non_registrati())
 
-    if not Info.query.filter_by().first():
-        db.session.add(Info(last_season=0))
-        db.session.commit()
     return render_template(
         "admin_dashboard.html",
         numero_studenti=numero_degli_studenti,
@@ -183,12 +177,11 @@ def pagina_admin_dashboard() -> str:
         numero_admin=numero_degli_admin,
         numero_studenti_registrati=numero_studenti_registrati,
         numero_studenti_non_registrati=numero_studenti_non_registrati,
-        novita=db_funcs.classifica_studenti(db_funcs.get_last_season())[0:8],
+        novita=db_funcs.classifica_studenti(Info.ottieni_ultima_stagione())[0:8],
         errori=errori,
-        classe_da_id=db_funcs.classe_da_id,
         calcola_valore_rgb=mc_utils.calcola_valore_rgb,
         get_season_points=parse_utils.get_season_points,
-        last_season=list_database_elements.get_last_season(),
+        last_season=Info.ottieni_ultima_stagione(),
     )
 
 
@@ -196,8 +189,8 @@ def pagina_admin_dashboard() -> str:
 @login_required
 @admin_permission_required
 def pagina_menu_classi() -> str:
-    classi = db_funcs.elenco_classi_studenti()
-    last_season = list_database_elements.get_last_season()
+    classi = Classe.elenco_classi_studenti()
+    last_season = Info.ottieni_ultima_stagione()
     return render_template("menu_classi.html", classi=classi, last_season=last_season)
 
 
@@ -225,16 +218,16 @@ def pagina_versioni() -> str:
 def pagina_create_event(classe_name: str, studente_id: int, stagione: int) -> Response:
     data = request.form["data"]
     attivita = request.form["attivita"]
-    modifica_punti = request.form["modifica_punti"]
-    stagione = float(request.form["stagione"])
+    modifica_punti = float(request.form["modifica_punti"])
+    stagione = int(request.form["stagione"])
 
-    if stagione > db_funcs.get_last_season():
+    if stagione > Info.ottieni_ultima_stagione():
         raise InvalidSeasonError("La season che hai inserito non esiste")
     xlsx_funcs.aggiungi_riga_excel(
         data,
         stagione,
         classe_name,
-        db_funcs.user_da_id(studente_id).nominativo,
+        Utente.da_id(studente_id).nominativo,
         attivita,
         modifica_punti,
     )
@@ -249,7 +242,6 @@ def pagina_create_event(classe_name: str, studente_id: int, stagione: int) -> Re
     db.session.add(nuovo_evento)
     db.session.commit()
 
-    db_funcs.aggiorna_punti_composto(db_funcs.user_da_id(studente_id))
 
     mc_utils.set_item_of_json(
         GLOBAL_DATA, "ultima_modifica", str(datetime.datetime.now().date())
@@ -259,7 +251,7 @@ def pagina_create_event(classe_name: str, studente_id: int, stagione: int) -> Re
             "pagine_sito.pagina_info_studente",
             classe_name=classe_name,
             nominativo_con_underscore="_".join(
-                db_funcs.user_da_id(studente_id).nominativo.split()
+                Utente.da_id(studente_id).nominativo.split()
             ),
             stagione=stagione,
         )
@@ -275,19 +267,18 @@ def pagina_create_event(classe_name: str, studente_id: int, stagione: int) -> Re
 def pagina_delete_event(
     classe_name: str, studente_id: int, stagione: int, event_id: int
 ) -> Response:
-    evento = db_funcs.evento_da_id(event_id)
+    evento = Cronologia.da_id(event_id)
     xlsx_funcs.elimina_riga_excel(
         evento.data,
         evento.stagione,
         classe_name,
-        db_funcs.user_da_id(studente_id).nominativo,
+        Utente.da_id(studente_id).nominativo,
         evento.attivita,
         evento.modifica_punti,
     )
     if evento:
-        db_funcs.elimina_evento_cronologia(evento)
+        db.session.delete(evento)
 
-        db_funcs.aggiorna_punti_composto(db_funcs.user_da_id(studente_id))
 
         mc_utils.set_item_of_json(
             GLOBAL_DATA, "ultima_modifica", str(datetime.datetime.now().date())
@@ -301,7 +292,7 @@ def pagina_delete_event(
             "pagine_sito.pagina_info_studente",
             classe_name=classe_name,
             nominativo_con_underscore=mc_utils.insert_underscore_name(
-                db_funcs.user_da_id(studente_id).nominativo
+                Utente.da_id(studente_id).nominativo
             ),
             stagione=stagione,
         )
@@ -313,17 +304,17 @@ def pagina_delete_event(
 @admin_permission_required
 def pagina_elenco_user_display(elenco_type: str) -> str:
     if elenco_type == "tutti_gli_studenti_registrati":
-        utenti = db_funcs.elenco_studenti_registrati()
+        utenti = Utente.elenco_studenti_registrati()
 
     elif elenco_type == "studenti_non_registrati":
-        utenti = db_funcs.elenco_studenti_non_registrati()
+        utenti = Utente.elenco_studenti_non_registrati()
 
     elif elenco_type == "tutti_gli_admin":
-        utenti = db_funcs.elenco_admin()
+        utenti = Utente.elenco_admin()
     else:
-        utenti = db_funcs.elenco_studenti()
+        utenti = Utente.elenco_studenti()
     return render_template(
-        "elenco_user.html", utenti=utenti, classe_da_id=db_funcs.classe_da_id
+        "elenco_user.html", utenti=utenti
     )
 
 
@@ -342,20 +333,20 @@ def pagina_gestione_dati_r(classe_name:str) -> str:
 @admin_permission_required
 def pagina_gestione_dati(classe_name:str,data_str:str) -> str:
     data_str = datetime.datetime.today().strftime('%Y-%m-%d') if data_str=="none" else data_str
-    elenco_classi =[x.classe for x in list_database_elements.elenco_classi_studenti()]
+    elenco_classi =[x.nome_classe for x in Classe.elenco_classi_studenti()]
     if request.method == "POST":
         returned_form = request.form
         form_id = returned_form.get("form_id")
         if form_id == "classSelector":
-            classe_name = returned_form.get("classSelector")
+            classe_name = returned_form["classSelector"]
             return redirect(url_for("pagine_sito.pagina_gestione_dati",classe_name=classe_name,data_str=data_str))
         elif form_id == "dateSelector":
-            data_str = returned_form.get("dateSelector")
+            data_str = returned_form["dateSelector"]
 
             return redirect(url_for("pagine_sito.pagina_gestione_dati",classe_name=classe_name,data_str=data_str))
 
         elif form_id == "students_data":
-            valori_ritornati={str(x.id):{"USER":x} for x in db_funcs.studenti_da_classe(db_funcs.classe_da_nome(classe_name))}
+            valori_ritornati={str(x.id):{"USER":x} for x in Classe.da_nome(classe_name).studenti.all()}
 
             for identificativo,valore in returned_form.items():
                 if identificativo == "form_id": continue
@@ -371,7 +362,7 @@ def pagina_gestione_dati(classe_name:str,data_str:str) -> str:
 
 
                 valori_ritornati[Uid][tipo] = valore
-            stagione = list_database_elements.get_last_season()
+            stagione = Info.ottieni_ultima_stagione()
 
             for Uid,value_dict in valori_ritornati.items():
                 user = value_dict["USER"]
@@ -414,13 +405,12 @@ def pagina_gestione_dati(classe_name:str,data_str:str) -> str:
                                         utente_id=user.id
                                         ))
                 db.session.commit()                 
-                db_funcs.aggiorna_punti_composto(user) # inefficiente perchè ricacola subito anche i punti di tutta la squadra,
         else:
             print("you alone in this one lil blud")
     if classe_name=="admin":
         classe_name="none"
     if classe_name != "none":
-        lista_studenti_v=[[x,dict()] for x in db_funcs.studenti_da_classe(db_funcs.classe_da_nome(classe_name))]
+        lista_studenti_v=[[x,dict()] for x in Classe.da_nome(classe_name).studenti.all()]
         lista_studenti_v.sort(key=lambda x: x[0].nominativo)
 
         if Cronologia.query.filter_by(data=data_str).first() is not None:

@@ -16,7 +16,7 @@ def login(email: str, password: str) -> None:
     """
     data un email ed una password fa il login di un account
     """
-    user = Utente.da_email(email)
+    user = Utente.query.filter_by(email=email).first()
     if not user:
         raise FailedLoginError("Questo utente non esiste")
     if not user.account_attivo:
@@ -38,9 +38,7 @@ def crea_user(**kwargs) -> None:
     -nome della classe
     crea un utente
     """
-    user = Utente.da_email(kwargs["email"]) or Utente.da_nominativo(
-        kwargs["nominativo"]
-    )
+    user = Utente.query.filter_by(email=kwargs["email"]).first() or Utente.query.filter_by(nominativo=kwargs["nominativo"]).first() 
     if user:
         raise FailedSignUpError("Questo utente esiste già")
     nuovo_utente = Utente(

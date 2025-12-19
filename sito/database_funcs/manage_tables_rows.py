@@ -1,20 +1,18 @@
-import sqlalchemy
-from ..modelli import Classi, Squadra
-from .. import db, app
+from ..modelli import Classe, Squadra
+from .. import db
 from ..errors_utils import ClasseAlreadyExistsError
 
-with app.app_context():
-    import sito.database_funcs as db_funcs
 
 
-def crea_classe(classe_name):
+def crea_classe(nome_classe:str):
     """
     dato un nome crea una classe
     """
-    try:
-        db.session.add(Classi(classe=classe_name))
-    except sqlalchemy.exc.IntegrityError:
+    classe=Classe.query.filter_by(nome_classe=nome_classe).first()
+
+    if classe:
         raise ClasseAlreadyExistsError("Esiste già una classe con questo nome")
+    db.session.add(Classe(nome_classe=nome_classe))
 
     db.session.commit()
 
@@ -29,7 +27,8 @@ def crea_squadra(**kwargs):
     classe_name
     crea una squadra
     """
-    squadra = db_funcs.squadra_da_nome(kwargs["nome_squadra"])
+    squadra = Squadra.query.filter_by(nome_squadra=kwargs["nome_squadra"]).first()
+
     if squadra:
         raise ValueError(
             "questa squadra esiste gia'"
@@ -37,9 +36,7 @@ def crea_squadra(**kwargs):
     nuova_squadra = Squadra(
         nome_squadra=kwargs["nome_squadra"],
         numero_componenti=int(kwargs.get("numero_componenti", 0)),
-        punti_reali=kwargs.get("punti_reali", "0.0"),
-        punti_compensati=kwargs.get("punti_compensati", "0.0"),
-        classe_id=db_funcs.classe_da_nome(kwargs["classe_name"]).id,
+        classe_id=Classe.da_nome(kwargs["classe_name"]).id,
     )
     db.session.add(nuova_squadra)
     db.session.commit()
