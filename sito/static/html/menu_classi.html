@@ -272,7 +272,7 @@ textarea {
             <div class="button-list">
                 <hr style="border: none; border-top: 2px solid black;" />
                 {% for classe in classi %}
-                <form method="POST" action="/classe/{{ classe.classe }}/{{last_season}}">
+                <form method="POST" action="/classe/{{ classe.nome_classe }}/{{last_season}}">
                     <div class="container">
                         <button type='submit' class="button" name='bottone' value="raggiungi">
                             {% if loop.index % 5 == 1 %}
@@ -286,7 +286,7 @@ textarea {
                             {% else %}
                                 <img class="zoom-image" src="{{ url_for('static', filename='images/logo_classe_5.png') }}">
                             {% endif %}
-                            <h1 style="color: black;">{{ classe.classe }}</h1>
+                            <h1 style="color: black;">{{ classe.nome_classe }}</h1>
                         </button>
                     </div>
                 </form>

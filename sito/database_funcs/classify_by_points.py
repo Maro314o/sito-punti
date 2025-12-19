@@ -1,5 +1,7 @@
+from sito.database_funcs.cronology_utils_funcs import ordina_cronologicamente
+from sito.modelli.cronologia import Cronologia
 from ..modelli import Utente, Classe
-
+from itertools import accumulate
 
 
 def classifica_user(stagione: int, utenti: list[Utente]) -> list[Utente]:
@@ -42,3 +44,10 @@ def classifica_squadre(
     return dict(
         sorted(punti_squadre, key=lambda item: item[1], reverse=True)
     )
+def ottieni_punti_parziali(eventi : list[Cronologia]) -> list[float]:
+    eventi=ordina_cronologicamente(eventi)
+    punti = [x.modifica_punti for x in eventi]
+    return     list(accumulate(punti))
+
+
+

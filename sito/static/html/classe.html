@@ -43,7 +43,7 @@
                     <input type="checkbox" id="export-file">
                     <div class="season_btn-options">
                         {% for i in range(n_stagioni) %}
-                <a href="/classe/{{classe.classe}}/{{i+1}}">
+                <a href="/classe/{{classe.nome_classe}}/{{i+1}}">
                 <label for="{{i+1}}">Season {{i+1}}</label>
                 </a>
                         {% endfor %}
@@ -91,9 +91,9 @@
 <img src="{{ url_for('static', filename='images/loghi/' + loghi.get(studente.squadra, '../default.png')) }}">
                         </td>
 
-                        <td style="text-align:center">{{ studente.punti.split(',')[stagione_corrente-1] }}
+                        <td style="text-align:center">{{ studente.punti_stagione(stagione_corrente) }}
                             {% if user.admin_user or user.nominativo==studente.nominativo %}
-            <a href="/classe/{{classe.classe}}/{{stagione_corrente}}/{{url_name(studente.nominativo)}}">
+            <a href="/classe/{{classe.nome_classe}}/{{stagione_corrente}}/{{url_name(studente.nominativo)}}">
 
                                 <button class="material-symbols--info-outline"></button>
                             </a>

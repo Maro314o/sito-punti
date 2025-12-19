@@ -14,7 +14,7 @@ class Utente(db.Model, UserMixin):
     password = db.Column(db.String(150))
     admin_user = db.Column(db.Integer)
     account_attivo = db.Column(db.Integer)
-    cronologia_studente = db.relationship("Cronologia")
+    cronologia_studente = db.relationship("Cronologia",lazy="dynamic")
     classe_id = db.Column(db.Integer, db.ForeignKey("classe.id"))
     squadra_id = db.Column(db.Integer, db.ForeignKey("squadra.id"))
 

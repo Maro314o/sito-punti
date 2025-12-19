@@ -9,6 +9,7 @@ from flask import (
     send_from_directory,
 )
 from sito.costanti import COEFFICIENTI_ASSENZE, COEFFICIENTI_VOTI, NOMI_CHECKBOX
+from sito.database_funcs.classify_by_points import ottieni_punti_parziali
 import sito.errors_utils as e_utils
 from sito.errors_utils.errors_classes.data_error_classes import InvalidSeasonError
 from sito.misc_utils_funcs import parse_utils
@@ -127,13 +128,15 @@ def pagina_info_studente(
         return e_utils.redirect_home()
     nominativo = mc_utils.remove_underscore_name(nominativo_con_underscore)
     loghi = {logo.rsplit(".", 1)[0]: logo for logo in listdir(PATH_CARTELLA_LOGHI)}
+    studente = Utente.da_nominativo(nominativo)
     return render_template(
         "info_studente.html",
         user=current_user,
         stagione_corrente=stagione,
-        studente=Utente.da_nominativo(nominativo),
+        studente=studente,
         elenco_date=lambda eventi: [evento.data for evento in eventi],
         calcola_valore_rgb=mc_utils.calcola_valore_rgb,
+        lista_parziale=ottieni_punti_parziali(studente.elenco_cronologia_stagione(stagione)),
         elenco_attivita=lambda eventi: [evento.attivita for evento in eventi],
         zip=zip,
         classe=classe_name,
@@ -173,6 +176,7 @@ def pagina_admin_dashboard() -> str:
     return render_template(
         "admin_dashboard.html",
         numero_studenti=numero_degli_studenti,
+        Classe=Classe,
         numero_classi=numero_delle_classi,
         numero_admin=numero_degli_admin,
         numero_studenti_registrati=numero_studenti_registrati,
@@ -314,7 +318,7 @@ def pagina_elenco_user_display(elenco_type: str) -> str:
     else:
         utenti = Utente.elenco_studenti()
     return render_template(
-        "elenco_user.html", utenti=utenti
+        "elenco_user.html", utenti=utenti,Classe=Classe
     )
 
 

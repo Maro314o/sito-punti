@@ -64,9 +64,9 @@ def crea_app():
         if not Classe.query.filter_by(nome_classe="admin").first():
             db.session.add(Classe(nome_classe="admin"))
 
-            if not Squadra.query.filter_by(nome_squadra="admin").first():
-                db_funcs.crea_squadra(nome_squadra="admin", classe_name="admin")
-            db.session.commit()
+        if not Squadra.query.filter_by(nome_squadra="admin").first():
+            db_funcs.crea_squadra(nome_squadra="admin", classe_name="admin")
+        db.session.commit()
     login_manager = LoginManager()
     login_manager.login_view = "autenticazione.pagina_login"
     login_manager.init_app(app)

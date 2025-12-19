@@ -6,14 +6,14 @@ class Squadra(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome_squadra = db.Column(db.String(150), unique=True)
     numero_componenti = db.Column(db.Integer)
-    studenti_componenti = db.relationship("Utente")
+    studenti_componenti = db.relationship("Utente",lazy="dynamic")
     classe_id = db.Column(db.Integer, db.ForeignKey("classe.id"))
     @classmethod
     def da_id(cls,id:int) -> "Squadra":
        return cls.query.filter_by(id=id).one()
     @classmethod
-    def da_nome(cls,nome_classe:str) -> "Squadra":
-       return cls.query.filter_by(nome_classe=nome_classe).one()
+    def da_nome(cls,nome_squadra:str) -> "Squadra":
+       return cls.query.filter_by(nome_squadra=nome_squadra).one()
 
 
     def punti_stagione(self,stagione:int) -> float:

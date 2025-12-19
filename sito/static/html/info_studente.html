@@ -65,13 +65,14 @@
                         {% endif %}
                     </tr>
                 </thead>
-                <tbody>
-                    {% for evento in cronologia_stagione(studente, stagione_corrente)[::-1] %}
+                <tbody>{% set ns = namespace(carry=studente.punti_stagione(stagione_corrente)) %}
+                    {% for evento in studente.elenco_cronologia_stagione(stagione_corrente)[::-1] %}
                     <tr>
                         <td>{{ evento.data }}</td>
                         <td>{{ evento.attivita }}</td>
                         <td>{{ evento.modifica_punti }}</td>
-                        <td>{{ evento.punti_cumulativi }}</td>
+                        <td>{{ ns.carry }}</td>
+						{% set ns.carry = ns.carry - evento.modifica_punti %}
                         {% if user.admin_user %}
                         <td>
                             <form action="{{ url_for('pagine_sito.pagina_delete_event', classe_name=classe, studente_id=studente.id, stagione=stagione_corrente, event_id=evento.id) }}" method="POST" style="display:inline;">
@@ -135,15 +136,15 @@
     <div class="grafico">
         <canvas id="lineChart-{{ studente.id }}" width="650" height="400"></canvas>
         <script>
-            const attivita_tooltip={{ elenco_attivita(cronologia_da_user(studente),stagione_corrente)| tojson}}
+            const attivita_tooltip={{ elenco_attivita(studente.elenco_cronologia_stagione(stagione_corrente))| tojson}}
             var ctx = document.getElementById("lineChart-{{ studente.id }}").getContext("2d");
             var lineChart = new Chart(ctx, {
                 type: "line",
                 data: {
-                    labels: {{ elenco_date(cronologia_da_user(studente), stagione_corrente) | safe }},
+                    labels: {{ elenco_date(studente.elenco_cronologia_stagione(stagione_corrente))| safe }},
                     datasets: [{
                         label: "Punti di {{ studente.nominativo | safe }}",
-                        //data: {{ "hi" | safe }},
+                        data: {{ lista_parziale | safe }},
                         fill: false,
                         borderColor: "rgb{{ calcola_valore_rgb(studente.squadra) }}",
                         backgroundColor: "rgb{{ calcola_valore_rgb(studente.squadra) }}",

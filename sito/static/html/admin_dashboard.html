@@ -131,8 +131,8 @@
 
                               <td>{{utente.nominativo}}</td>
                               <td>{{utente.email}}</td>
-                              <td>{{get_season_points(utente.punti,last_season)}}</td>
-                              <td><a href="/classe/{{classe_da_id(utente.classe_id).classe}}/{{last_season}}"span class="status completed" style="background-color:rgb{{calcola_valore_rgb(classe_da_id(utente.classe_id).classe)}}">{{classe_da_id(utente.classe_id).classe}}</span></td>
+							  <td>{{utente.punti_stagione(last_season)}}</td>
+                              <td><a href="/classe/{{Classe.da_id(utente.classe_id).nome_classe}}/{{last_season}}"span class="status completed" style="background-color:rgb{{calcola_valore_rgb(Classe.da_id(utente.classe_id).nome_classe)}}">{{Classe.da_id(utente.classe_id).nome_classe}}</span></td>
                             </tr>
                             
                             {% endfor %}
