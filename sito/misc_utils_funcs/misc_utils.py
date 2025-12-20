@@ -1,33 +1,49 @@
 import json
 import random
-
 from sito.costanti import FRASI_PATH
 
-ALLOWED_EXTENSIONS = set(["xlsx"])
+ALLOWED_EXTENSIONS = {"xlsx"}
 
 
 def allowed_files(filename: str) -> bool:
     """
-    restituisce true se il file fa parte della lista delle estensioni supportate
+    Verifica se il file ha un'estensione consentita.
+
+    Args:
+        filename (str): Nome del file da verificare.
+
+    Returns:
+        bool: True se il file ha un'estensione consentita, False altrimenti.
     """
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 def calcola_valore_rgb(stringa: str) -> tuple[int, int, int, float]:
     """
-    trasforma una stringa in un valore rgb dipendente da essa
+    Genera un valore RGB dipendente dalla stringa.
+
+    Args:
+        stringa (str): Stringa da convertire in colore.
+
+    Returns:
+        tuple[int, int, int, float]: Tupla con valori RGB e alpha fisso a 0.3.
     """
     numero_hashato = hash(stringa) * len(stringa)
     r = numero_hashato % 201
     g = (numero_hashato // 2) % 201
     b = (numero_hashato // 3) % 201
-
     return r, g, b, 0.3
 
 
 def is_empty(file_path: str) -> bool:
     """
-    se il file specificato e' vuoto ritorna True
+    Verifica se un file di testo è vuoto.
+
+    Args:
+        file_path (str): Percorso del file.
+
+    Returns:
+        bool: True se il file è vuoto, False altrimenti.
     """
     with open(file_path, "r") as file:
         return file.read() == ""
@@ -35,7 +51,10 @@ def is_empty(file_path: str) -> bool:
 
 def clear_file(file_path: str) -> None:
     """
-    elimina tutti i contenuti di un file (di testo)
+    Elimina tutto il contenuto di un file di testo.
+
+    Args:
+        file_path (str): Percorso del file.
     """
     with open(file_path, "w") as file:
         file.write("")
@@ -43,75 +62,113 @@ def clear_file(file_path: str) -> None:
 
 def get_item_of_json(file_path: str, field: str) -> str | int:
     """
-    ritorna un il valore di un campo di un file json
+    Restituisce il valore di un campo da un file JSON.
+
+    Args:
+        file_path (str): Percorso del file JSON.
+        field (str): Campo da leggere.
+
+    Returns:
+        str | int: Valore del campo specificato.
     """
     with open(file_path, "r") as file:
         data = json.load(file)
     return data[field]
 
-def query_json_by_nominativo_and_date(nominativo : str,data : str) -> str | None:
-    """
-    cerca una frase dal file delle frasi dato un nominativo e una data (in stringa)
-    se non è presente ritorna None
-    """
-    with open(FRASI_PATH, "r") as file:
-        json_data = json.load(file)
-    frase = None
-    for elemento in json_data:
-
-        if elemento["autore"]==nominativo and elemento["data"]==data:
-            frase = elemento["frase"] 
-            break
-    return frase
-    
-
-def aggiungi_frase(autore:str,frase:str,data:str) -> None:
-    with open(FRASI_PATH, "r") as file:
-        json_data = json.load(file)
-    json_data.append(
-            {
-                "autore": autore,
-                "frase":frase,
-                "data": data,
-                }
-            )
-    with open(FRASI_PATH, "w") as file:
-        json.dump(json_data, file, indent=4)
-def rimuovi_frase(autore:str,data:str)-> bool:
-    with open(FRASI_PATH, "r") as file:
-        json_data = json.load(file)
-    s = len(json_data)
-    json_data = [x for x in json_data if not x["autore"]==autore or  not x["data"]==data]
-
-    with open(FRASI_PATH, "w") as file:
-        json.dump(json_data, file, indent=4)
-    return s!=len(json_data)
 
 def set_item_of_json(file_path: str, field: str, data: str) -> None:
     """
-    imposta il campo di un file json ad un certo dato
+    Imposta un campo di un file JSON a un dato valore.
+
+    Args:
+        file_path (str): Percorso del file JSON.
+        field (str): Campo da modificare.
+        data (str): Nuovo valore del campo.
     """
     with open(file_path, "r") as file:
-       json_data = json.load(file)
+        json_data = json.load(file)
     json_data[field] = data
     with open(file_path, "w") as file:
         json.dump(json_data, file, indent=4)
 
 
+def query_json_by_nominativo_and_date(nominativo: str, data: str) -> str | None:
+    """
+    Cerca una frase in FRASI_PATH dato un nominativo e una data.
+
+    Args:
+        nominativo (str): Nome dell'autore della frase.
+        data (str): Data della frase.
+
+    Returns:
+        str | None: Frase trovata, None se non presente.
+    """
+    with open(FRASI_PATH, "r") as file:
+        json_data = json.load(file)
+    for elemento in json_data:
+        if elemento["autore"] == nominativo and elemento["data"] == data:
+            return elemento["frase"]
+    return None
+
+
+def aggiungi_frase(autore: str, frase: str, data: str) -> None:
+    """
+    Aggiunge una nuova frase al file FRASI_PATH.
+
+    Args:
+        autore (str): Autore della frase.
+        frase (str): Contenuto della frase.
+        data (str): Data associata alla frase.
+    """
+    with open(FRASI_PATH, "r") as file:
+        json_data = json.load(file)
+    json_data.append({"autore": autore, "frase": frase, "data": data})
+    with open(FRASI_PATH, "w") as file:
+        json.dump(json_data, file, indent=4)
+
+
+def rimuovi_frase(autore: str, data: str) -> bool:
+    """
+    Rimuove una frase dal file FRASI_PATH dato autore e data.
+
+    Args:
+        autore (str): Autore della frase.
+        data (str): Data della frase.
+
+    Returns:
+        bool: True se è stata rimossa almeno una frase, False altrimenti.
+    """
+    with open(FRASI_PATH, "r") as file:
+        json_data = json.load(file)
+    lunghezza_iniziale = len(json_data)
+    json_data = [x for x in json_data if x["autore"] != autore or x["data"] != data]
+    with open(FRASI_PATH, "w") as file:
+        json.dump(json_data, file, indent=4)
+    return lunghezza_iniziale != len(json_data)
+
+
 def get_random_json_item(file_path: str) -> str | int:
     """
-    dato un file json restituisce un elemento a caso
-    """
+    Restituisce un elemento casuale da un file JSON.
 
+    Args:
+        file_path (str): Percorso del file JSON.
+
+    Returns:
+        str | int: Elemento casuale del file.
+    """
     with open(file_path, "r") as file:
         data = json.load(file)
-    elemento_random = random.choice(data)
-    return elemento_random
+    return random.choice(data)
 
 
 def append_to_file(file: str, contents: str) -> None:
     """
-    dato un file aggiunge una stringa alla sua fine
+    Aggiunge una stringa alla fine di un file di testo.
+
+    Args:
+        file (str): Percorso del file.
+        contents (str): Contenuto da aggiungere.
     """
     with open(file, "a") as f:
         f.write(contents)

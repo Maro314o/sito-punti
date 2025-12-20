@@ -1,25 +1,39 @@
 import time
-
 from datetime import datetime
 
 
 def insert_underscore_name(stringa: str) -> str:
-    """
-    sostituisce tutti gli spazi di una stringa con un underscore
+    """Sostituisce tutti gli spazi di una stringa con un underscore.
+
+    Args:
+        stringa (str): La stringa da trasformare.
+
+    Returns:
+        str: La stringa con gli spazi sostituiti da underscore.
     """
     return stringa.replace(" ", "_")
 
 
 def remove_underscore_name(stringa: str) -> str:
-    """
-    sostituisce tutti gli underscore di una stringa con uno spazio
+    """Sostituisce tutti gli underscore di una stringa con uno spazio.
+
+    Args:
+        stringa (str): La stringa da trasformare.
+
+    Returns:
+        str: La stringa con gli underscore sostituiti da spazi.
     """
     return stringa.replace("_", " ")
 
 
 def capitalize_all(stringa: str) -> str:
-    """
-    data una stringa la restituisce facendo diventare maiuscole la prima lettera di ogni parola separata da uno spazio
+    """Rende maiuscola la prima lettera di ogni parola nella stringa.
+
+    Args:
+        stringa (str): La stringa da trasformare.
+
+    Returns:
+        str: La stringa con la prima lettera di ogni parola in maiuscolo.
     """
     stringa_list = stringa.split()
     stringa_list = [parola.capitalize() for parola in stringa_list]
@@ -28,23 +42,27 @@ def capitalize_all(stringa: str) -> str:
 
 
 def converti_a_unix(data_str: str) -> int:
-    """
-    converte una stringa data in formato y-m-d nella corrispondente unix timestamp
+    """Converte una stringa di data in formato YYYY-MM-DD in Unix timestamp.
+
+    Args:
+        data_str (str): Data in formato 'YYYY-MM-DD'.
+
+    Returns:
+        int: Unix timestamp corrispondente alla mezzanotte della data.
     """
     data = datetime.strptime(data_str, "%Y-%m-%d")
-
     unix_timestamp = int(time.mktime(data.timetuple()))
-
     return unix_timestamp
 
 
 def to_datetime_object(data: str) -> datetime:
-    """
-    converte una stringa che specifica la data con formato Y-m-d in un oggetto datetime
+    """Converte una stringa data in un oggetto datetime con ora impostata a mezzanotte.
+
+    Args:
+        data (str): Data in formato 'YYYY-MM-DD'.
+
+    Returns:
+        datetime: Oggetto datetime corrispondente alla data.
     """
     data = " ".join([data, "00:00:00"])
     return datetime.strptime(data, "%Y-%m-%d %H:%M:%S")
-
-
-
-

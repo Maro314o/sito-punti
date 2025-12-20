@@ -8,7 +8,7 @@ from flask import (
     flash,
     send_from_directory,
 )
-from sito.costanti import COEFFICIENTI_ASSENZE, COEFFICIENTI_VOTI, NOMI_CHECKBOX
+from sito.costanti import ALLOWED_EXTENSIONS, COEFFICIENTI_ASSENZE, COEFFICIENTI_VOTI, CONFERMA_CAMBIAMENTI_DATABASE, DOWNLOAD_DIRECTORY_PATH, EXCEL_PRE_MERGE_PATH, FRASI_PATH, LEGGI, LOGHI_DIRECTORY_PATH, NOMI_CHECKBOX, RETURN_VALUE, VERSION_PATH
 from sito.database_funcs.classify_by_points import ottieni_punti_parziali
 import sito.errors_utils as e_utils
 from sito.errors_utils.errors_classes.data_error_classes import InvalidSeasonError
@@ -27,36 +27,14 @@ from sito.errors_utils import admin_permission_required
 
 from flask_login import login_required, current_user
 from .modelli import Info, Cronologia
-from os import path, listdir
-from .load_data import load_data, merge_excel
+from os import  listdir
+from .load_data import ERROR_FILE, GLOBAL_DATA, LOG_FILE, load_data, merge_excel
 
-from pathlib import Path
 import datetime
 import json
 from math import ceil, sqrt
 
 pagine_sito = Blueprint("pagine_sito", __name__)
-FILE_ERRORE = path.join(Path.cwd(), "data", "errore.txt")
-FILE_VERSIONI = path.join(Path.cwd(), "versioni.txt")
-FILE_LOG = path.join(Path.cwd(), "data", "log.txt")
-PATH_CARTELLA_LOGHI = path.join(Path.cwd(), "sito", "static", "images", "loghi")
-FRASI_PATH = path.join(Path.cwd(), "data", "frasi.json")
-
-GLOBAL_DATA = path.join(Path.cwd(), "data", "global_data.json")
-
-
-SAVE_LOCATION_PATH = path.join(path.join(Path.cwd(), "data"), "foglio_pre-merge.xlsx")
-DOWNLOAD_PATH = path.join(Path.cwd(), "data")
-LEGGI = "r"
-RETURN_VALUE = "bottone"
-ELIMINA_UTENTE = "elimina"
-AGGIUNGI_CLASSE = "nuova"
-ENTRA_NELLA_CLASSE = "raggiunti"
-CONFERMA_CAMBIAMENTI_DATABASE = "load_database"
-VUOTO = ""
-
-
-ALLOWED_EXTENSIONS = set(["xlsx"])
 
 
 @pagine_sito.route("/")
@@ -64,7 +42,7 @@ def pagina_home() -> str:
     classe_name = None
     if current_user.is_authenticated:
         classe_name = Classe.da_id(current_user.classe_id).nome_classe
-    loghi = [logo for logo in listdir(PATH_CARTELLA_LOGHI)]
+    loghi = [logo for logo in listdir(LOGHI_DIRECTORY_PATH)]
     lenght_square_of_loghi = ceil(sqrt(len(loghi)))
     frase = mc_utils.get_random_json_item(FRASI_PATH)
     last_season = Info.ottieni_ultima_stagione()
@@ -91,7 +69,7 @@ def pagina_classe(
         classe = Classe.da_id(current_user.classe_id)
     studenti = db_funcs.classifica_studenti_di_una_classe(stagione, classe)
     n_stagioni = Info.ottieni_ultima_stagione()
-    loghi = {logo.rsplit(".", 1)[0]: logo for logo in listdir(PATH_CARTELLA_LOGHI)}
+    loghi = {logo.rsplit(".", 1)[0]: logo for logo in listdir(LOGHI_DIRECTORY_PATH)}
     return render_template(
         "classe.html",
         user=current_user,
@@ -125,7 +103,7 @@ def pagina_info_studente(
     ):
         return e_utils.redirect_home()
     nominativo = mc_utils.remove_underscore_name(nominativo_con_underscore)
-    loghi = {logo.rsplit(".", 1)[0]: logo for logo in listdir(PATH_CARTELLA_LOGHI)}
+    loghi = {logo.rsplit(".", 1)[0]: logo for logo in listdir(LOGHI_DIRECTORY_PATH)}
     studente = Utente.da_nominativo(nominativo)
     return render_template(
         "info_studente.html",
@@ -164,7 +142,7 @@ def pagina_comingsoon() -> str:
 @login_required
 @admin_permission_required
 def pagina_admin_dashboard() -> str:
-    errori = not mc_utils.is_empty(FILE_ERRORE)
+    errori = not mc_utils.is_empty(ERROR_FILE)
     numero_degli_studenti = len(Utente.elenco_studenti())
     numero_delle_classi = len(Classe.elenco_classi_studenti())
     numero_degli_admin = len(Utente.elenco_admin())
@@ -199,7 +177,7 @@ def pagina_menu_classi() -> str:
 @login_required
 @admin_permission_required
 def pagina_db_errori() -> str:
-    with open(FILE_ERRORE, LEGGI) as file_errore:
+    with open(ERROR_FILE, LEGGI) as file_errore:
         content_error = file_errore.read().splitlines()
     return "<br><br>".join(content_error)
 
@@ -208,7 +186,7 @@ def pagina_db_errori() -> str:
 @login_required
 @admin_permission_required
 def pagina_versioni() -> str:
-    return "<br>".join(reversed(open(FILE_VERSIONI, LEGGI).read().splitlines()))
+    return "<br>".join(reversed(open(VERSION_PATH, LEGGI).read().splitlines()))
 
 
 @pagine_sito.route(
@@ -332,7 +310,7 @@ def pagina_gestione_dati_r(classe_name:str) -> str:
 )
 @login_required
 @admin_permission_required
-def pagina_gestione_dati(classe_name:str,data_str:str) -> str:
+def pagina_gestione_dati(classe_name:str,data_str:str) -> Response | str:
     data_str = datetime.datetime.today().strftime('%Y-%m-%d') if data_str=="none" else data_str
     elenco_classi =[x.nome_classe for x in Classe.elenco_classi_studenti()]
     if request.method == "POST":
@@ -451,13 +429,13 @@ def pagina_load_db() -> Response:
         if dati[RETURN_VALUE] == CONFERMA_CAMBIAMENTI_DATABASE:
             file = request.files["file_db"]
             if not mc_utils.allowed_files(file.filename):
-                with open(FILE_ERRORE, "w") as f:
+                with open(ERROR_FILE, "w") as f:
                     f.write(
                         f"Impossibile aprire questa estensione dei file, per adesso puoi caricare il database sono in questo/i formato/i : {ALLOWED_EXTENSIONS}"
                     )
 
                 return redirect(url_for("pagine_sito.pagina_gestione_dati"))
-            file.save(SAVE_LOCATION_PATH)
+            file.save(EXCEL_PRE_MERGE_PATH)
             merge_excel()
             load_data(current_user)
 
@@ -468,14 +446,14 @@ def pagina_load_db() -> Response:
 @login_required
 @admin_permission_required
 def download_file(filename):
-    return send_from_directory(DOWNLOAD_PATH, filename, as_attachment=True)
+    return send_from_directory(DOWNLOAD_DIRECTORY_PATH, filename, as_attachment=True)
 
 
 @app.route("/log_excel")
 @login_required
 @admin_permission_required
 def pagina_log_excel():
-    return "<br>".join(reversed(open(FILE_LOG, LEGGI).read().splitlines()))
+    return "<br>".join(reversed(open(LOG_FILE, LEGGI).read().splitlines()))
 
 
 @pagine_sito.route("/aggiunta_frase", methods=["POST"])

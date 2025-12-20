@@ -7,12 +7,12 @@ from flask import (
     flash,
 )
 
+from sito.costanti import SECRET_PASSWORD_PATH,VUOTO
 from sito.errors_utils import admin_permission_required
 from sito.errors_utils.errors_classes.users_error_classes import (
     FailedSignUpError,
     FailedLoginError,
 )
-from sito.pagine_sito import VUOTO
 from . import db
 from .modelli import Utente
 import sito.misc_utils_funcs as mc_utils
@@ -25,13 +25,21 @@ from flask_login import login_user, login_required, logout_user, current_user
 import os
 
 autenticazione = Blueprint("autenticazione", __name__)
-SECRET_PASSWORD_PATH = os.path.join(
-    Path.cwd(), "secrets", "secret_starter_admin_password.txt"
-)
 
 
 @autenticazione.route("/init_starter_admin")
 def pagina_init_admin_starter() -> Response:
+    """Inizializza l'account admin starter.
+
+    Legge la password segreta iniziale da file, crea l'admin starter se non esiste
+    e rimuove il file contenente la password.
+
+    Raises:
+        InitPasswordNotSetError: Se la password segreta iniziale non è stata impostata.
+
+    Returns:
+        Response: Reindirizza alla home page.
+    """
     with open(SECRET_PASSWORD_PATH) as f:
         starter_admin_password = f.read().strip()
     if starter_admin_password == VUOTO:
@@ -53,6 +61,15 @@ def pagina_init_admin_starter() -> Response:
 
 @autenticazione.route("/login", methods=["GET", "POST"])
 def pagina_login() -> str | Response:
+    """Gestisce la pagina di login.
+
+    Permette agli utenti di effettuare il login con email e password.
+    Visualizza messaggi di errore tramite `flash` in caso di fallimento.
+
+    Returns:
+        str | Response: Ritorna il template della pagina login o reindirizza alla home
+        in caso di login corretto.
+    """
     if request.method == "POST":
         dati = request.form
         email = dati["email"]
@@ -70,6 +87,15 @@ def pagina_login() -> str | Response:
 
 @autenticazione.route("/sign_up", methods=["GET", "POST"])
 def pagina_sign_up() -> str | Response:
+    """Gestisce la registrazione degli utenti.
+
+    Controlla la correttezza dei dati inseriti, verifica la disponibilità dell'utente,
+    e crea un account attivo se tutti i controlli superano.
+
+    Returns:
+        str | Response: Ritorna il template della pagina di sign up o reindirizza alla home
+        in caso di successo.
+    """
     if request.method == "POST":
         dati = request.form
 
@@ -81,9 +107,10 @@ def pagina_sign_up() -> str | Response:
         nominativo = mc_utils.capitalize_all(nominativo)
         print(nominativo,"Ciao")
         user = Utente.esiste_da_nominativo(nominativo)
-        if Utente.esiste_da_email(email) and user.account_attivo:
+        if not user:
             flash(
-                "Esiste già un altro account con questa email in uso", category="error"
+                "Non hai selezionato l'opzione Cognome e Nome correttamente. Assicurati di selezionarne uno solo tra quelli proposti e di non inserire altre lettere/caratteri",
+                category="error",
             )
         elif "'" in email:
             flash("L'email non può contenere apici", category="error")
@@ -91,11 +118,12 @@ def pagina_sign_up() -> str | Response:
             flash("Il dominio dell' email é sbagliato", category="error")
         elif "s-" != email[:2]:
             flash("hai dimenticato di mettere 's-' nell' email", category="error")
-        elif not user:
+        elif Utente.esiste_da_email(email) and user.account_attivo:
             flash(
-                "Non hai selezionato l'opzione Cognome e Nome correttamente. Assicurati di selezionarne uno solo tra quelli proposti e di non inserire altre lettere/caratteri",
-                category="error",
+                "Esiste già un altro account con questa email in uso", category="error"
             )
+
+
         elif user.account_attivo:
             flash("Esiste gia' un account associato a questa persona", category="error")
         elif len(password) < 5:
@@ -113,7 +141,7 @@ def pagina_sign_up() -> str | Response:
             return e_utils.redirect_home()
 
     return render_template(
-        "sign_up.html", user=current_user, studenti=Utente.elenco_utenti()
+        "sign_up.html", user=current_user, studenti=Utente.elenco_studenti()
     )
 
 
@@ -121,6 +149,15 @@ def pagina_sign_up() -> str | Response:
 @login_required
 @admin_permission_required
 def pagina_crea_admin() -> str | Response:
+    """Gestisce la creazione di nuovi account admin.
+
+    Controlla la validità dei dati inseriti (email, password, nominativo) e
+    crea un nuovo admin se i controlli passano.
+
+    Returns:
+        str | Response: Ritorna il template della pagina di creazione admin
+        o reindirizza alla home in caso di successo.
+    """
     if request.method == "POST":
         dati = request.form
         email = dati["email"].lower()
@@ -152,5 +189,10 @@ def pagina_crea_admin() -> str | Response:
 @autenticazione.route("/logout")
 @login_required
 def pagina_logout() -> Response:
+    """Effettua il logout dell'utente corrente.
+
+    Returns:
+        Response: Reindirizza alla home page.
+    """
     logout_user()
     return e_utils.redirect_home()

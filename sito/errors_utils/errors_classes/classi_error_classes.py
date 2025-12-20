@@ -1,9 +1,18 @@
 class ClasseAlreadyExistsError(Exception):
     """
-    errore per la creazione di classi già esistenti
+    Eccezione sollevata quando si tenta di creare una classe
+    che esiste già nel database.
+
+    Attributes:
+        message (str): Messaggio di errore.
     """
 
-    def __init__(self, message):
+    def __init__(self, message: str):
+        """
+        Inizializza l'eccezione ClasseAlreadyExistsError.
+
+        Args:
+            message (str): Messaggio di errore da associare all'eccezione.
+        """
         self.message = message
         super().__init__(self.message)
-
