@@ -122,3 +122,16 @@ function removeVoteRow(btn) {
         inputs.forEach(input => input.value = '');
     }
 }
+document.getElementById("reset").addEventListener("click", () => {
+  const form = document.getElementById("students_data");
+
+  form.querySelectorAll("input").forEach(el => {
+    if (el.type === "checkbox" || el.type === "radio") {
+      el.checked = false;
+    } else {
+      el.value = "";
+    }
+  });
+
+  form.querySelectorAll("select").forEach(sel => sel.selectedIndex = 0);
+});
