@@ -110,5 +110,8 @@ def get_random_json_item(file_path: str) -> str | int:
 
 
 def append_to_file(file: str, contents: str) -> None:
+    """
+    dato un file aggiunge una stringa alla sua fine
+    """
     with open(file, "a") as f:
         f.write(contents)
