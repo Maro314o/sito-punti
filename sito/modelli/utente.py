@@ -28,6 +28,15 @@ class Utente(db.Model, UserMixin):
     def da_email(cls,email: str) -> "Utente":
         return cls.query.filter_by(email=email).one()
 
+    @classmethod
+    def esiste_da_id(cls,id:int) ->"Utente | None":
+       return cls.query.filter_by(id=id).first() 
+    @classmethod
+    def esiste_da_nominativo(cls,nominativo:str) -> "Utente | None":
+       return cls.query.filter_by(nominativo=nominativo).first()
+    @classmethod
+    def esiste_da_email(cls,email:str) ->  "Utente | None":
+       return cls.query.filter_by(email=email).first()
     def punti_stagione(self,stagione:int) -> float:
         from .cronologia import Cronologia
         return db.session.scalar(

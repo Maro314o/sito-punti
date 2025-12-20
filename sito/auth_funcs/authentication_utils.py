@@ -38,8 +38,7 @@ def crea_user(**kwargs) -> None:
     -nome della classe
     crea un utente
     """
-    user = Utente.query.filter_by(email=kwargs["email"]).first() or Utente.query.filter_by(nominativo=kwargs["nominativo"]).first() 
-    if user:
+    if Utente.esiste_da_email(kwargs["email"]) or Utente.esiste_da_nominativo(kwargs["nominativo"]):
         raise FailedSignUpError("Questo utente esiste già")
     nuovo_utente = Utente(
         email=kwargs["email"],

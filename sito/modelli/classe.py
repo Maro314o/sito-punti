@@ -14,6 +14,12 @@ class Classe(db.Model):
     def da_nome(cls,nome_classe:str) -> "Classe":
        return cls.query.filter_by(nome_classe=nome_classe).one()
     @classmethod
+    def esiste_da_id(cls,id:int) ->"Classe | None":
+       return cls.query.filter_by(id=id).first()
+    @classmethod
+    def esiste_da_nome(cls,nome_classe:str) -> "Classe | None":
+       return cls.query.filter_by(nome_classe=nome_classe).first() 
+    @classmethod
     def elenco_classi(cls) -> list["Classe"]:
         """
         Restituisce l'elenco di tutte le classi.

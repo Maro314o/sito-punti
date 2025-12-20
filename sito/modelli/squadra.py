@@ -14,7 +14,12 @@ class Squadra(db.Model):
     @classmethod
     def da_nome(cls,nome_squadra:str) -> "Squadra":
        return cls.query.filter_by(nome_squadra=nome_squadra).one()
-
+    @classmethod
+    def esiste_da_id(cls,id:int) ->"Squadra | None":
+       return cls.query.filter_by(id=id).first()
+    @classmethod
+    def esiste_da_nome(cls,nome_squadra:str) -> "Squadra | None":
+       return cls.query.filter_by(nome_squadra=nome_squadra).first()
 
     def punti_stagione(self,stagione:int) -> float:
         from .cronologia import Cronologia

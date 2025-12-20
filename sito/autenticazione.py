@@ -77,9 +77,11 @@ def pagina_sign_up() -> str | Response:
         nominativo = dati["nominativo"].strip()
         password = dati["password"]
         password_di_conferma = dati.get("password_di_conferma")
+        print(nominativo,"Ciao")
         nominativo = mc_utils.capitalize_all(nominativo)
-        user = Utente.da_nominativo(nominativo)
-        if Utente.query.filter_by(email=email).first() and user.account_attivo:
+        print(nominativo,"Ciao")
+        user = Utente.esiste_da_nominativo(nominativo)
+        if Utente.esiste_da_email(email) and user.account_attivo:
             flash(
                 "Esiste già un altro account con questa email in uso", category="error"
             )

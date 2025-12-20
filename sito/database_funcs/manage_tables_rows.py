@@ -8,9 +8,8 @@ def crea_classe(nome_classe:str):
     """
     dato un nome crea una classe
     """
-    classe=Classe.query.filter_by(nome_classe=nome_classe).first()
 
-    if classe:
+    if Classe.esiste_da_nome(nome_classe):
         raise ClasseAlreadyExistsError("Esiste già una classe con questo nome")
     db.session.add(Classe(nome_classe=nome_classe))
 
@@ -27,9 +26,8 @@ def crea_squadra(**kwargs):
     classe_name
     crea una squadra
     """
-    squadra = Squadra.query.filter_by(nome_squadra=kwargs["nome_squadra"]).first()
 
-    if squadra:
+    if Squadra.esiste_da_nome("nome_squadra"):
         raise ValueError(
             "questa squadra esiste gia'"
         )  # TODO : implementare l'errore corretto per questo caso

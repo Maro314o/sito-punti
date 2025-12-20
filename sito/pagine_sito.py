@@ -12,7 +12,6 @@ from sito.costanti import COEFFICIENTI_ASSENZE, COEFFICIENTI_VOTI, NOMI_CHECKBOX
 from sito.database_funcs.classify_by_points import ottieni_punti_parziali
 import sito.errors_utils as e_utils
 from sito.errors_utils.errors_classes.data_error_classes import InvalidSeasonError
-from sito.misc_utils_funcs import parse_utils
 from sito.misc_utils_funcs.misc_utils import aggiungi_frase, query_json_by_nominativo_and_date, rimuovi_frase
 from sito.modelli.classe import Classe
 from sito.modelli.utente import Utente
@@ -100,7 +99,6 @@ def pagina_classe(
         studenti=studenti,
         n_stagioni=n_stagioni,
         stagione_corrente=stagione,
-        get_season_points=parse_utils.get_season_points,
         elenco_date=lambda eventi: [evento.data for evento in eventi],
         calcola_valore_rgb=mc_utils.calcola_valore_rgb,
         zip=zip,
@@ -184,7 +182,6 @@ def pagina_admin_dashboard() -> str:
         novita=db_funcs.classifica_studenti(Info.ottieni_ultima_stagione())[0:8],
         errori=errori,
         calcola_valore_rgb=mc_utils.calcola_valore_rgb,
-        get_season_points=parse_utils.get_season_points,
         last_season=Info.ottieni_ultima_stagione(),
     )
 
