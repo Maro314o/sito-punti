@@ -1,4 +1,6 @@
 from .. import db
+from sqlalchemy import JSON
+from sqlalchemy.ext.mutable import MutableDict
 
 
 class Cronologia(db.Model):
@@ -14,6 +16,7 @@ class Cronologia(db.Model):
     stagione = db.Column(db.Integer)
     attivita = db.Column(db.String(150))
     modifica_punti = db.Column(db.Float)
+    extra_info= db.Column(MutableDict.as_mutable(JSON))
 
     utente_id = db.Column(db.Integer, db.ForeignKey("utente.id"))
 
