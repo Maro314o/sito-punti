@@ -52,10 +52,12 @@ def crea_app():
     db.init_app(app)
 
     from .pagine_sito import pagine_sito
+    from .pagine_admin import pagine_admin
     from .autenticazione import autenticazione
     import sito.database_funcs as db_funcs
 
     app.register_blueprint(pagine_sito, url_prefix="/")
+    app.register_blueprint(pagine_admin, url_prefix="/")
     app.register_blueprint(autenticazione, url_prefix="/")
     from .modelli import Utente, Classe,Squadra
 
