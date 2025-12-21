@@ -30,6 +30,7 @@ def costruisci_json_manage_data(nome_classe:str,data_str:str)-> list:
              "valori":costruisci_json_studente(studente,data_str)}
             for studente in studenti
             ]
+    valori_studenti.sort(key=lambda x: x["studente"].nominativo)
     return valori_studenti
 
 

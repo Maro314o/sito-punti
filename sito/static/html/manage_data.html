@@ -1,59 +1,111 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/manage_data.css') }}">
-  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
-  <title>Gestisci dati</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static',filename='images/logo.png')}}" type="image/icon">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="icon" href="{{ url_for('static',filename='images/logo.png')}}" type="image/icon type">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/manage_data.css') }}">
+	<script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js" integrity="sha384-/TgkGk7p307TH7EXJDuUlgG3Ce1UVolAOFopFekQkkXihi5u/6OCvVKyz1W+idaz" crossorigin="anonymous"></script>
+    <title>Gestisci dati</title>
 </head>
+
 <body>
 
-<div class="sidebar">
-  <!-- sidebar invariata -->
-</div>
-
-<div class="content">
-  <nav><!-- menu --></nav>
-
-  <main>
-    <h1>Gestione Classe</h1>
-
-    <!-- Selettore classe + data -->
-    <div
-      hx-get="{{ url_for('pagine_admin.invia_tabella') }}"
-      hx-trigger="change from:#classe-select changed delay:200ms, change from:#data-input changed delay:200ms"
-      hx-target="#student-table-container"
-      hx-include="#classe-select, #data-input"
-      hx-push-url="true"
-    >
-      <label>
-        Classe:
-        <select id="classe-select" name="classe">
-          <option value="" disabled selected>Seleziona classe...</option>
-          {% for classe in elenco_classi %}
-            <option value="{{ classe.nome_classe }}" {% if classe.nome_classe == request.args.get('classe') %}selected{% endif %}>
-              {{ classe.nome_classe }}
-            </option>
-          {% endfor %}
-        </select>
-      </label>
-
-      <label>
-        Data:
-        <input type="date" id="data-input" name="data" value="{{ request.args.get('data', oggi) }}">
-      </label>
+    <div class="sidebar">
+        <a href="/admin_dashboard" class="logo">
+            <i class='bx bx-code-alt'></i>
+            <div class="logo-name"><span>ADMIN</span>MENU</div>
+        </a>
+        <ul class="side-menu">
+            <li><a href="/"><i class='bx bx-home'></i>Home</a></li>
+            <li><a href="/admin_dashboard"><i class='bx bx-cog'></i>Dashboard</a></li>
+            <li><a href="/classi"><i class='bx bx-show'></i>Classi</a></li>
+            <li><a href="/crea_admin"><i class='bx bx-shield-alt-2'></i>Crea admin</a></li>
+            <li class="active"><a href="/gestione_dati"><i class='bx bx-data'></i>Gestione dati</a></li>
+        </ul>
+        <ul class="side-menu">
+            <li>
+                <a href="/logout" class="logout">
+                    <i class='bx bx-log-out'></i>
+                    Esci dall' account
+                </a>
+            </li>
+        </ul>
     </div>
 
-    <hr>
+    <div class="content">
+        <nav>
+            <i class='bx bx-menu'></i>
+            <form action="#"></form>
+        </nav>
 
-    <!-- Container che verrà popolato da HTMX -->
-    <div id="student-table-container">
-      <p>Seleziona classe e data per vedere la tabella.</p>
+        <main>
+            <div class="header">
+                <div class="left">
+                    <h1>Dashboard</h1>
+                    <ul class="breadcrumb">
+                        <li><a href="#">Admin Menu</a></li> /
+                        <li><a href="#" class="active">Gestione dati</a></li>
+                    </ul>
+                </div>
+            </div>
+
+
+
+            <!-- Class Management Section -->
+            <div class="boxelementiadd" style="margin-top: 40px;">
+                <h3 class="custom-heading">Gestione Classe</h3>
+
+						<div class="classSelector-container">
+							<label for="classSelector">Seleziona Classe:</label>
+							<select name="classSelector" id="classSelector" class="classSelector"
+    hx-get="/gestione_dati/stato"
+    hx-target="#table-responsive"
+    hx-include="#classSelector, #dateSelector"
+    hx-trigger="change"
+								>
+  <option value="" disabled selected>Scegli una classe...</option>
+							  {% for classe in elenco_classi %}
+								<option value="{{ classe.nome_classe}}"
+								>
+								  {{ classe.nome_classe }}
+								</option>
+							  {% endfor %}
+							</select>
+
+						</div>
+
+						<div class="classSelector-container">
+							<label for="dateSelector">Seleziona Data:</label>
+								<input
+								  type="date"
+								  id="dateSelector"
+								  name="dateSelector"
+								  class="classSelector"
+								  value="{{ oggi }}"
+    hx-get="/gestione_dati/stato"
+    hx-target="#table-responsive"
+    hx-include="#classSelector, #dateSelector"
+    hx-trigger="change"
+
+								  >
+						</div>
+
+
+                <div id="table-responsive" class="table-responsive">
+					<p>Seleziona una classe</p>
+                </div>
+            </div>
+
+        </main>
     </div>
 
-  </main>
-</div>
-
+    <script src="{{ url_for('static', filename='js/manage_data.js')}}"></script>
 </body>
+
 </html>

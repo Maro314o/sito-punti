@@ -60,6 +60,7 @@ COEFFICIENTI_VOTI: dict[str, int] = {
 
 SELECTORS ={
 "Presenza" : {
+    "Presente":0,
     "Assenza": -1,
     "Assenza+": -3
 }
@@ -69,7 +70,7 @@ COEFFICIENTI_ASSENZE = SELECTORS["Presenza"]
 NOMI_CHECKBOX: dict[str, int] = {
     "Bug": 1,
     "Cellulare": 1,
-    "Cellulare-minus": -1,
+    "Beccato Cellulare": -1,
     "Multiverso": 3,
     "Ansia": -3,
     "Memoria": 2,

@@ -1,57 +1,63 @@
+                    <table class="student-table" id="studentTable">
+                        <thead>
+                            <tr>
 
-<table class="student-table">
-  <thead>
-    <tr>
-      <th>N.</th>
-      <th>Alunno</th>
-      <th>Presenza</th>
-      {% for cb in stato[0].valori.checkboxes.keys() %}
-        <th>{{ cb }}</th>
-      {% endfor %}
-      <th>Frase del giorno</th>
-      <th>Voti</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for studente_t in stato %}
-    <tr>
-      <td>{{ loop.index }}</td>
-      <td>{{ studente_t.studente.nominativo }}</td>
+                                <th>N.</th>
+                                <th>Alunno</th>
+								{% for selectors in nomi_selectors.keys() %}
+									<th> {{ selectors }} </th>
+								{% endfor %}
+								{% for checkbox in nomi_checkbox.keys() %}
+									<th> {{ checkbox}} </th>
+								{% endfor %}
+								<th>Frase </th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentTableBody">
+							{% for studente_d in stato %}
+								<tr>
+									<td>{{ loop.index }}</td>
+									<td>{{ studente_d["studente"].nominativo }}</td>
+									{% for selector,v in studente_d["valori"]["selectors"].items() %}
+										<td>
+											<select class="{{selector}}"
+													name="{{selector}}" 
+												    hx-post="/gestione_dati/selector" 
+												    hx-trigger="change" 
+												    hx-swap="none"
+													hx-include="#dateSelector"
+												   hx-vals='js:{"uid":{{studente_d["studente"].id}}}'
+											>
+												{% for valore in nomi_selectors[selector].keys() %}
+													<option value="{{valore}}"
+													{% if valore == v %}
+														selected
+													{% endif %}
+													>{{valore}}</option>
+												{% endfor %}
+											</select>
+										</td>
+									{% endfor %}
+									{% for nome_singola_checkbox,v in studente_d["valori"]["checkboxes"].items()%}
+										<td><input type="checkbox" 
+												   class="{{nome_singola_checkbox}}"
+												   name="{{nome_singola_checkbox}}"
+												   hx-post="/gestione_dati/checkbox" 
+												   hx-trigger="change" 
+												   hx-swap="none"
+												   hx-include="#dateSelector"
+												   hx-vals='js:{"{{nome_singola_checkbox}}": this.checked, "uid":{{studente_d["studente"].id}}}'
 
-      <!-- Selector presenza -->
-      <td>
-        <select name="{{ studente_t.studente.id }}_Presenza">
-          {% for opzione in ["Presente","Assenza","Assenza+"] %}
-            <option value="{{ opzione }}"
-              {% if studente_t.valori.selectors.Presenza == opzione %}selected{% endif %}
-            >{{ opzione }}</option>
-          {% endfor %}
-        </select>
-      </td>
-
-      <!-- Checkbox dinamici -->
-      {% for nome_cb, stato_cb in studente_t.valori.checkboxes.items() %}
-      <td>
-        <input type="checkbox" name="{{ studente_t.studente.id }}_{{ nome_cb }}" {% if stato_cb %}checked{% endif %}>
-      </td>
-      {% endfor %}
-
-      <!-- Frase del giorno -->
-      <td>
-        <input type="text" name="{{ studente_t.studente.id }}_frase-del-giorno"
-               value="{{ studente_t.valori.frase }}">
-      </td>
-
-      <!-- Voti -->
-      <td>
-        {% for voto in studente_t.valori.voti %}
-          {% for tipo, valore in voto.items() %}
-            {{ tipo }}: {{ valore }}<br>
-          {% endfor %}
-        {% endfor %}
-      </td>
-
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+										{% if v %}
+											checked
+										{% endif %}
+										></td>
+									{% endfor %}
+									<td>
+										<input type="text" name="frase" placeholder="Inserisci la frase" value="{{studente_d["valori"]["frase"]}}"
+										class="text-box">
+									</td>
+								</tr>
+							{% endfor %}
+				</tbody>
+			</table>
