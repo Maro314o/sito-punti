@@ -47,7 +47,7 @@ def classifica_studenti(stagione: int) -> list[Utente]:
     Returns:
         list[Utente]: Lista di studenti ordinata dal punteggio più alto al più basso.
     """
-    studenti = Utente.elenco_utenti()
+    studenti = Utente.elenco_studenti()
     return classifica_user(stagione, studenti)
 
 

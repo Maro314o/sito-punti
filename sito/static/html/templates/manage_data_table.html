@@ -1,0 +1,57 @@
+
+<table class="student-table">
+  <thead>
+    <tr>
+      <th>N.</th>
+      <th>Alunno</th>
+      <th>Presenza</th>
+      {% for cb in stato[0].valori.checkboxes.keys() %}
+        <th>{{ cb }}</th>
+      {% endfor %}
+      <th>Frase del giorno</th>
+      <th>Voti</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for studente_t in stato %}
+    <tr>
+      <td>{{ loop.index }}</td>
+      <td>{{ studente_t.studente.nominativo }}</td>
+
+      <!-- Selector presenza -->
+      <td>
+        <select name="{{ studente_t.studente.id }}_Presenza">
+          {% for opzione in ["Presente","Assenza","Assenza+"] %}
+            <option value="{{ opzione }}"
+              {% if studente_t.valori.selectors.Presenza == opzione %}selected{% endif %}
+            >{{ opzione }}</option>
+          {% endfor %}
+        </select>
+      </td>
+
+      <!-- Checkbox dinamici -->
+      {% for nome_cb, stato_cb in studente_t.valori.checkboxes.items() %}
+      <td>
+        <input type="checkbox" name="{{ studente_t.studente.id }}_{{ nome_cb }}" {% if stato_cb %}checked{% endif %}>
+      </td>
+      {% endfor %}
+
+      <!-- Frase del giorno -->
+      <td>
+        <input type="text" name="{{ studente_t.studente.id }}_frase-del-giorno"
+               value="{{ studente_t.valori.frase }}">
+      </td>
+
+      <!-- Voti -->
+      <td>
+        {% for voto in studente_t.valori.voti %}
+          {% for tipo, valore in voto.items() %}
+            {{ tipo }}: {{ valore }}<br>
+          {% endfor %}
+        {% endfor %}
+      </td>
+
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
