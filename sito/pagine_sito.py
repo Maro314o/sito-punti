@@ -10,6 +10,7 @@ from flask import (
 )
 from sito.costanti import ALLOWED_EXTENSIONS, COEFFICIENTI_ASSENZE, COEFFICIENTI_VOTI, CONFERMA_CAMBIAMENTI_DATABASE, DOWNLOAD_DIRECTORY_PATH, EXCEL_PRE_MERGE_PATH, FRASI_PATH, LEGGI, LOGHI_DIRECTORY_PATH, NOMI_CHECKBOX, RETURN_VALUE, VERSION_PATH
 from sito.database_funcs.classify_by_points import ottieni_punti_parziali
+from sito.database_funcs.cronology_utils_funcs import ordina_cronologicamente
 import sito.errors_utils as e_utils
 from sito.errors_utils.errors_classes.data_error_classes import InvalidSeasonError
 from sito.misc_utils_funcs.misc_utils import aggiungi_frase, query_json_by_nominativo_and_date, rimuovi_frase
@@ -345,7 +346,7 @@ def pagina_gestione_dati(classe_name:str,data_str:str) -> Response | str:
 
             for Uid,value_dict in valori_ritornati.items():
                 user = value_dict["USER"]
-                eventi_da_eliminare = [evento for evento in user.cronologia_studente if evento.data == data_str]
+                eventi_da_eliminare = user.cronologia_studente.filter_by(data=data_str).all()
                 rimuovi_frase(user.nominativo,data_str)
                 for evento in eventi_da_eliminare:
                     db.session.delete(evento)
@@ -397,7 +398,7 @@ def pagina_gestione_dati(classe_name:str,data_str:str) -> Response | str:
                 frase = query_json_by_nominativo_and_date(studente.nominativo,data_str)
                 if frase is not None:
                     lista_studenti_v[ind][1]["frase"]=frase
-                cron = filter(lambda x: x.data==data_str,studente.cronologia_studente)
+                cron = studente.cronologia_studente.filter_by(data=data_str).all()
                 for evento in cron:
                     v = 1
                     if evento.attivita in COEFFICIENTI_VOTI:
