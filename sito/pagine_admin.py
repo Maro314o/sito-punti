@@ -180,19 +180,23 @@ def gestisci_selector():
             data_str=valore
         else:
             selector={"nome":chiave,"valore":valore}
+    print(selector)
     studente = Utente.da_id(studente_id)
     stored_selector=studente.cronologia_studente.filter_by(data=data_str,attivita=selector["nome"]).first()
-    if stored_check:
-        if selector["valore"]=="Presente":
-            db.session.delete(stored_check)
+    if stored_selector:
+        if selector["valore"] in ["Presente"]:
+            db.session.delete(stored_selector)
+        else:
+            stored_selector.extra_info[selector["nome"]]=selector["valore"]
     else:
         if selector["valore"]:
             db.session.add(Cronologia(
                 attivita=selector["nome"],
-                modifica_punti=NOMI_CHECKBOX[selector["nome"]],
+                modifica_punti=SELECTORS[selector["nome"]][selector["valore"]],
                 data=data_str,
                 stagione=Info.ottieni_ultima_stagione(),# TODO : MODIFICARE CON VERA STAGIONE
                 utente_id=studente_id,
+                extra_info={selector["nome"]:selector["valore"]},
                 ))
     db.session.commit()
 
