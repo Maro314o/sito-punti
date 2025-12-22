@@ -139,7 +139,6 @@ def invia_tabella() -> Response | str:
 @login_required
 @admin_permission_required
 def gestisci_checkbox():
-    print(request.form)
     studente_id=0
     data_str=""
     checkbox={}
@@ -171,7 +170,32 @@ def gestisci_checkbox():
 @login_required
 @admin_permission_required
 def gestisci_selector():
-    print(request.form.keys())
+    studente_id=0
+    data_str=""
+    selector={}
+    for chiave,valore in request.form.items():
+        if chiave == "uid":
+            studente_id=int(valore)
+        elif chiave == "dateSelector":
+            data_str=valore
+        else:
+            selector={"nome":chiave,"valore":valore}
+    studente = Utente.da_id(studente_id)
+    stored_selector=studente.cronologia_studente.filter_by(data=data_str,attivita=selector["nome"]).first()
+    if stored_check:
+        if selector["valore"]=="Presente":
+            db.session.delete(stored_check)
+    else:
+        if selector["valore"]:
+            db.session.add(Cronologia(
+                attivita=selector["nome"],
+                modifica_punti=NOMI_CHECKBOX[selector["nome"]],
+                data=data_str,
+                stagione=Info.ottieni_ultima_stagione(),# TODO : MODIFICARE CON VERA STAGIONE
+                utente_id=studente_id,
+                ))
+    db.session.commit()
+
     return '',204
 
 
