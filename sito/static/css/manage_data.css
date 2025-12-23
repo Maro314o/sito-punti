@@ -433,6 +433,13 @@ h3.custom-heading {
     border-radius: 5px;
 }
 
+.stagione-container {
+    margin-bottom: 10px;
+	width: 15%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 .classSelector-container {
     margin-bottom: 10px;
     display: flex;

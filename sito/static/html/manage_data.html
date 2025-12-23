@@ -75,7 +75,6 @@
           </div>
 
         </form>
-        <div class="data-voti-block">
           <form id="dataForm" method="POST">
           <input type="hidden" name="form_id" value="dateSelector"> <!-- identifica il form ritornato NON RIMUOVERE -->
           <div class="classSelector-container">
@@ -83,8 +82,18 @@
             <input type="date" name="dateSelector" id="dateSelector" class="classSelector" value="{{ data }}">
           </div>
 
+
         </form>
+          <form id="stagioneForm" method="POST">
+          <input type="hidden" name="form_id" value="stagioneSelector"> <!-- identifica il form ritornato NON RIMUOVERE -->
+		          <div class="stagione-container">
+            <label for="stagione">Inserisci stagione:</label>
+			<input type="number" min="1" name="stagione" value="{{stagione}}"  class="input-modern vote-input">
+		  </div>
+        </form>
+
         {% if classe_name != 'none' and data != 'none'%}
+        <div class="data-voti-block">
         <div class="block-voti">
           <button type="button" class="btn open-modal-btn block-voti-btn">Voti</button>
         </div>
