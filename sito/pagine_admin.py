@@ -114,6 +114,7 @@ def pagina_gestione_dati() -> Response | str:
 @login_required
 @admin_permission_required
 def invia_tabella() -> Response | str:
+    print("ciao")
     nome_classe = request.args.get("classSelector")
     data = request.args.get("dateSelector")
 
