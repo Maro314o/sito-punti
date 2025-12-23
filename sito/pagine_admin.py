@@ -202,6 +202,41 @@ def gestisci_selector():
 
     return '',204
 
+@pagine_admin.route("/gestione_dati/frase",methods=["POST"])
+@login_required
+@admin_permission_required
+def gestisci_frase():
+    studente_id=0
+    data_str=""
+    frase={}
+    print(request.form.items)
+    for chiave,valore in request.form.items():
+        if chiave == "uid":
+            studente_id=int(valore)
+        elif chiave == "dateSelector":
+            data_str=valore
+        else:
+            frase=valore
+    studente = Utente.da_id(studente_id)
+    stored_frase=studente.cronologia_studente.filter_by(data=data_str,attivita="Frase").first()
+    if stored_frase:
+        if frase=="":
+            db.session.delete(stored_frase)
+        else:
+            stored_frase.extra_info["Frase"]=frase
+    else:
+        if frase!="":
+            db.session.add(Cronologia(
+                attivita="Frase",
+                modifica_punti=1.0,
+                data=data_str,
+                stagione=Info.ottieni_ultima_stagione(),# TODO : MODIFICARE CON VERA STAGIONE
+                utente_id=studente_id,
+                extra_info={"Frase":frase},
+                ))
+    db.session.commit()
+
+    return '',204
 
 
 

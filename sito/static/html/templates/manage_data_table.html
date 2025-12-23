@@ -54,8 +54,16 @@
 										></td>
 									{% endfor %}
 									<td>
-										<input type="text" name="frase" placeholder="Inserisci la frase" value="{{studente_d["valori"]["frase"]}}"
-										class="text-box">
+										<input type="text" name="Frase" placeholder="Inserisci la frase" value="{{studente_d["valori"]["frase"]}}"
+										class="text-box"
+										 hx-post="/gestione_dati/frase" 
+												   hx-trigger="input changed delay:1500ms" 
+												   hx-swap="none"
+												   hx-include="#dateSelector"
+												   hx-vals='js:{"Frase": this.value, "uid":{{studente_d["studente"].id}}}'
+
+
+										>
 									</td>
 								</tr>
 							{% endfor %}

@@ -20,7 +20,7 @@ def costruisci_json_studente(studente: Utente,data_str : str) -> dict:
             row["voti"].append({evento.extra_info[evento.attivita]
                                 :evento.modifica_punti/COEFFICIENTI_VOTI[evento.extra_info[evento.attivita]]})
         elif evento.attivita == "Frase":
-            row["frase"]=evento.extra_info["frase"]
+            row["frase"]=evento.extra_info["Frase"]
     return row
 
 def costruisci_json_manage_data(nome_classe:str,data_str:str)-> list:
