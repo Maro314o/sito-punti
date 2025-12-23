@@ -64,10 +64,10 @@
 						<div class="classSelector-container">
 							<label for="classSelector">Seleziona Classe:</label>
 							<select name="classSelector" id="classSelector" class="classSelector"
-    hx-get="/gestione_dati/stato"
-    hx-target="#table-responsive"
-    hx-include="#classSelector, #dateSelector"
-    hx-trigger="change"
+								hx-get="/gestione_dati/stato"
+								hx-target="#table-responsive"
+								hx-include="#classSelector, #dateSelector"
+								hx-trigger="change"
 								>
   <option value="" disabled selected>Scegli una classe...</option>
 							  {% for classe in elenco_classi %}
@@ -88,11 +88,10 @@
 								  name="dateSelector"
 								  class="classSelector"
 								  value="{{ oggi }}"
-    hx-get="/gestione_dati/stato"
-    hx-target="#table-responsive"
-    hx-include="#classSelector, #dateSelector"
-    hx-trigger="change"
-
+								  hx-get="/gestione_dati/stato"
+								  hx-target="#table-responsive"
+								  hx-include="#classSelector, #dateSelector"
+								  hx-trigger="change"
 								  >
 						</div>
 

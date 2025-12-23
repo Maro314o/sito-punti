@@ -1,3 +1,6 @@
+        <div class="block-voti">
+          <button type="button" class="btn open-modal-btn block-voti-btn">Voti</button>
+        </div>
                     <table class="student-table" id="studentTable">
                         <thead>
                             <tr>
@@ -69,3 +72,49 @@
 							{% endfor %}
 				</tbody>
 			</table>
+			 <div id="overlay" class="overlay">
+    <div class="modal">
+      <h2>Inserisci i voti</h2>
+      <div class="modal-content">
+        <!-- Qui andrà il contenuto futuro -->
+        <table>
+          <thead>
+            <tr>
+              <th>N.</th>
+              <th>Alunno</th>
+              <th>Voti</th>
+            </tr>
+          </thead>
+          <tbody id="voteTableBody">
+            {% for studente_t in stato%}
+            <tr >
+              <td>{{ loop.index }}</td>
+              <td class="student-name">{{ studente_t["studente"].nominativo }}</td>
+              <td class="vote-container-td">
+                <div class="votes-container">
+                  <div class="vote-row">
+                    <input type="number" name="voto" min="0" max="10" step="0.5"
+                      class="input-modern vote-input" placeholder="Voto">
+                    <select name="nota" class="input-modern note-input">
+                      <option value="Verifica">Verifica</option>
+                      <option value="Interrogazione">Interrogazione</option>
+                      <option value="Progetto">Progetto</option>
+                    </select>
+                    <div class="action-buttons">
+                      <button type="button" class="btn round-btn remove-vote-row"><i class='bx bx-minus'></i></button>
+                      <button type="button" class="btn round-btn add-vote-row"><i class='bx bx-plus'></i></button>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-actions">
+        <button type="button" id="confirmBtn" class="btn confirm">Chiudi</button>
+      </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/table.js')}}"></script>
+
