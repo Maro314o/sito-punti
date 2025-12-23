@@ -102,9 +102,7 @@ def pagina_sign_up() -> str | Response:
         nominativo = dati["nominativo"].strip()
         password = dati["password"]
         password_di_conferma = dati.get("password_di_conferma")
-        print(nominativo,"Ciao")
         nominativo = mc_utils.capitalize_all(nominativo)
-        print(nominativo,"Ciao")
         user = Utente.esiste_da_nominativo(nominativo)
         if not user:
             flash(

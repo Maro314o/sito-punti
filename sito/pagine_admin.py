@@ -4,14 +4,10 @@ from flask import (
     Response,
     render_template,
     request,
-    redirect,
-    url_for,
-    flash,
-    send_from_directory,
 )
-from sito.costanti import ALLOWED_EXTENSIONS, COEFFICIENTI_ASSENZE, COEFFICIENTI_VOTI, CONFERMA_CAMBIAMENTI_DATABASE, DOWNLOAD_DIRECTORY_PATH, EXCEL_PRE_MERGE_PATH, FRASI_PATH, LEGGI,  NOMI_CHECKBOX, RETURN_VALUE, SELECTORS, VERSION_PATH
-from sito.errors_utils.errors_classes.data_error_classes import InvalidSeasonError
-from sito.misc_utils_funcs.misc_utils import aggiungi_frase, query_json_by_nominativo_and_date, rimuovi_frase
+from flask_login import login_required
+from sito.costanti import  LEGGI,  NOMI_CHECKBOX,  SELECTORS, VERSION_PATH
+from sito.load_data import ERROR_FILE
 from sito.modelli.classe import Classe
 from sito.modelli.utente import Utente
 from . import db, app
@@ -19,18 +15,14 @@ from . import db, app
 with app.app_context():
     import sito.database_funcs as db_funcs
 import sito.misc_utils_funcs as mc_utils
-import sito.excel_funcs as xlsx_funcs
 
 from sito.errors_utils import admin_permission_required
 
 
-from flask_login import login_required, current_user
 from .modelli import Info, Cronologia
-from .load_data import ERROR_FILE, GLOBAL_DATA, LOG_FILE, load_data, merge_excel
 from .database_funcs.ui_apis import costruisci_json_manage_data
 
 import datetime
-import json
 
 pagine_admin = Blueprint("pagine_admin", __name__)
 
@@ -124,9 +116,7 @@ def pagina_gestione_dati() -> Response | str:
 def invia_tabella() -> Response | str:
     nome_classe = request.args.get("classSelector")
     data = request.args.get("dateSelector")
-    print(request.args)
 
-    print(nome_classe)
     if not nome_classe :
         return "<p>Seleziona una classe classe</p>"
     if not data:
@@ -180,7 +170,6 @@ def gestisci_selector():
             data_str=valore
         else:
             selector={"nome":chiave,"valore":valore}
-    print(selector)
     studente = Utente.da_id(studente_id)
     stored_selector=studente.cronologia_studente.filter_by(data=data_str,attivita=selector["nome"]).first()
     if stored_selector:
@@ -209,7 +198,6 @@ def gestisci_frase():
     studente_id=0
     data_str=""
     frase={}
-    print(request.form.items)
     for chiave,valore in request.form.items():
         if chiave == "uid":
             studente_id=int(valore)
